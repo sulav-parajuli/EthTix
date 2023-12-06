@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./App.css";
 import abi from "../../artifacts/contracts/Tickets.sol/Tickets.json";
+// Import the contract addresses from the JSON file
+import contractAddresses from "../../contractAddresses.json";
 import { ethers } from "ethers";
 import CreateEvent from "./component/CreateEvent";
 
@@ -16,7 +16,7 @@ function App() {
   //When react app is running this will automatically fetch contract instance
   useEffect(() => {
     const template = async () => {
-      const contractAddress = "0x0dc22ED7E9B51a9f259e0B205661355Ec487443E";
+      const contractAddress = contractAddresses.tickets;
       const contractABI = abi.abi;
       //code to connect to metamask wallet
       //if we want to change the state of blockchain then we need to pay certain amount
