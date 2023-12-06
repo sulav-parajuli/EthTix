@@ -10,9 +10,9 @@ async function main() {
   const Tickets = await hre.ethers.getContractFactory("Tickets");
   const tickets = await Tickets.deploy();
 
-  await tickets.waitForDeployment();
+  await tickets.deployed();
 
-  console.log("Tickets deployed to:", tickets.target);
+  console.log("Tickets deployed to:", tickets.address);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
