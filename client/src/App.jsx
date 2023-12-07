@@ -5,6 +5,8 @@ import abi from "../../artifacts/contracts/Tickets.sol/Tickets.json";
 import contractAddresses from "../../contractAddresses.json";
 import { ethers } from "ethers";
 import CreateEvent from "./component/CreateEvent";
+import "bootstrap/dist/css/bootstrap.min.css";
+import Navbar from "./component/Navbar";
 
 function App() {
   const [state, setState] = useState({
@@ -52,6 +54,7 @@ function App() {
   return (
     <>
       <div className="App">
+        <Navbar state={state} />
         ConnectedAccount:{account}
         <CreateEvent state={state} />
       </div>
