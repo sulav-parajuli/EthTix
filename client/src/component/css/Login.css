@@ -1,0 +1,154 @@
+.login-container {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+}
+
+.left-section {
+  text-align: left;
+}
+
+.login-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #008eb0;
+}
+
+.sub-title {
+  font-size: 14px;
+  color: #008eb0;
+}
+
+.wallet-image {
+  width: 300px;
+  height: 300px;
+  margin-top: 10px;
+}
+
+.right-section {
+  width: 50%;
+}
+
+.toggle-buttons {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 10px;
+}
+
+.toggle-button {
+  padding: 8px 16px;
+  border: none;
+  cursor: pointer;
+  color: #9eadc8;
+  background-color: transparent;
+  font-size: 16px;
+  outline: none;
+}
+
+.toggle-button.active {
+  color: #2b50aa;
+  border-bottom: 2px solid #2b50aa;
+}
+
+.login-form {
+  text-align: center;
+  position: relative;
+  top: 100px;
+}
+
+.connect-wallet,
+.login-button {
+  padding: 10px 20px;
+  margin: 10px;
+  border: none;
+  cursor: pointer;
+  color: #fff;
+  font-size: 16px;
+  outline: none;
+}
+
+.connect-wallet {
+  background-color: #008eb0;
+}
+
+.login-button {
+  background-color: #008eb0;
+}
+
+.line {
+  border: 0.5px solid #9eadc8;
+  width: 80%;
+  margin: 10px auto;
+}
+
+#username,
+#email {
+  width: 80%;
+  padding: 10px;
+  margin: 10px auto;
+  border: 1px solid #9eadc8;
+  border-radius: 5px;
+  outline: none;
+}
+
+/* Responsive styles for smaller screens */
+@media only screen and (max-width: 768px) {
+  .login-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .login-form {
+    text-align: center;
+    position: static;
+    top: 0px;
+  }
+
+  .left-section {
+    text-align: center;
+  }
+
+  .wallet-image {
+    width: 200px;
+    height: 200px;
+    margin-top: 10px;
+  }
+
+  .right-section {
+    width: 80%;
+  }
+
+  .toggle-buttons {
+    margin-bottom: 20px;
+  }
+
+  .toggle-button {
+    font-size: 14px;
+  }
+
+  .login-title {
+    font-size: 20px;
+  }
+
+  .sub-title {
+    font-size: 12px;
+  }
+
+  .connect-wallet,
+  .login-button,
+  .register-button {
+    padding: 8px 16px;
+    margin: 8px;
+    font-size: 14px;
+  }
+
+  .line {
+    width: 60%;
+  }
+
+  #username,
+  #email {
+    width: 90%;
+    font-size: 14px;
+  }
+}

@@ -1,21 +1,28 @@
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+  /* max-width: 1280px; */
+  /* margin: 0 auto; */
+  /* padding: 2rem; */
   text-align: center;
 }
 
+* {
+  color: #5a5a5a;
+}
+
 .logo {
-  height: 6em;
+  /* height: 6em; */
   padding: 1.5em;
   will-change: filter;
   transition: filter 300ms;
 }
+.logo img {
+  height: auto;
+  width: 200px;
+  object-fit: cover;
+  cursor: pointer;
+}
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
 }
 
 @keyframes logo-spin {
@@ -39,4 +46,69 @@
 
 .read-the-docs {
   color: #888;
+}
+
+/*container to show components below navbar*/
+.mcontainer {
+  padding: 0px;
+  padding-top: 86px;
+  margin: 0px;
+}
+
+.close {
+  float: right;
+}
+.login-button {
+  padding-right: 5%;
+}
+
+.login-button:hover {
+  background-color: #008eb0 !important;
+  color: white;
+}
+
+.nav-item {
+  padding-bottom: 0px !important;
+}
+
+.nav-link {
+  font-size: 20px;
+  font-weight: light;
+  color: #5a5a5a !important;
+  cursor: pointer;
+  padding-bottom: 0px !important;
+}
+
+.nav-link:hover {
+  /* color: #2b50aa; */
+  color: #008eb0 !important;
+}
+
+.logincontainer {
+  display: flex;
+  padding-right: 5%;
+}
+
+/* Popup login form */
+.popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.popup-inner {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.createevent {
+  margin: 5%;
+  margin-top: 2%;
 }
