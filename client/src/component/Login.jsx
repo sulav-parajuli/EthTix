@@ -22,7 +22,7 @@ const Login = () => {
   }, []);
 
   const connectToWallet = async () => {
-    await template();
+    await template(true);
     async function handleLogin() {
       try {
         if (!isConnected) {

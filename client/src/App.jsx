@@ -13,7 +13,10 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Home from "./component/Home.jsx";
 import CreateEvent from "./component/CreateEvent.jsx";
 import Navbar from "./component/Navbar.jsx";
+import Footer from "./component/footer.jsx";
 import { AppProvider, useAppContext } from "./component/AppContext.jsx"; // Import useAppContext
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
 
 function App() {
   const [state, setState] = useState({
@@ -23,7 +26,7 @@ function App() {
   });
   const [account, setAccount] = useState("Not connected");
   //When react app is running this will automatically fetch contract instance
-  const template = async () => {
+  const template = async (connectWallet) => {
     const contractAddress = contractAddresses.tickets;
     const contractABI = abi.abi;
     //code to connect to metamask wallet
@@ -31,10 +34,19 @@ function App() {
 
     try {
       const { ethereum } = window; //metamask inject ethereum object in window
-      const account = await ethereum.request({
-        method: "eth_requestAccounts",
+      if (connectWallet) {
+        //if connectWallet is true then only user wallet is requested.
+        await ethereum.request({
+          method: "eth_requestAccounts",
+        });
+      }
+      // Fetch the connected account
+      const account = await window.ethereum.request({
+        method: "eth_accounts",
       });
-      setAccount(account);
+      if (account.length !== 0) {
+        setAccount(account);
+      }
       //changing account address
       window.ethereum.on("accountsChanged", () => {
         window.location.reload();
@@ -64,7 +76,7 @@ function App() {
     }
   };
   useEffect(() => {
-    template();
+    template(false);
   }, []);
   return (
     <BrowserRouter>
@@ -78,16 +90,17 @@ function App() {
                 path="/createevent"
                 element={<CreateEvent state={state} />}
               />
-              <Route path="events" element={<BrowseEvent />} />
+              <Route path="/events" element={<BrowseEvent />} />
             </>
           </Routes>
+          <Footer />
         </div>
       </AppProvider>
     </BrowserRouter>
   );
 }
 
-ReactDOM.createRoot(document.getElementById("root")).render(
+root.render(
   <React.StrictMode>
     <App />
   </React.StrictMode>

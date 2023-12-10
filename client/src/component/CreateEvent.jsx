@@ -1,6 +1,7 @@
 import { React, useState } from "react";
 import { ethers } from "ethers";
 import { useAppContext } from "./AppContext";
+import eventcreation from "../assets/images/eventcreation.png";
 
 const CreateEvent = ({ state }) => {
   const [eventName, setEventName] = useState("");
@@ -158,7 +159,10 @@ const CreateEvent = ({ state }) => {
           </div>
         </>
       ) : (
-        <div>Connect your wallet first, to get started.</div>
+        <div className="createevent">
+          <img src={eventcreation} alt="Event Creation" />
+          <div>Connect your wallet first, to get started.</div>
+        </div>
       )}
     </div>
   );

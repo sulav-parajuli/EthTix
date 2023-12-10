@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 
 const AppContext = createContext();
 
@@ -10,6 +10,21 @@ const AppProvider = ({ children, template, account }) => {
     account,
     template,
   };
+
+  useEffect(() => {
+    async function fetchAccount() {
+      try {
+        if ((await account) !== "Not connected") {
+          setConnected(true);
+        } else {
+          setConnected(false);
+        }
+      } catch (error) {
+        console.error("Error fetching account:", error);
+      }
+    }
+    fetchAccount();
+  }, []);
 
   return (
     <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>
