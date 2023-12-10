@@ -102,7 +102,7 @@ const CreateEvent = ({ state }) => {
         totalTickets,
         location,
         {
-          value: priceInWei.add(additionalValue),
+          value: additionalValue.add(10000),
         }
       );
 
