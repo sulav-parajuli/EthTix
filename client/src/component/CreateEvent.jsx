@@ -38,7 +38,7 @@ const CreateEvent = ({ state }) => {
         (parseFloat(totalTickets) * parseFloat(priceInEther) * 3) / 100;
 
       const FeeData = await provider.getFeeData(); //retrieve gas related details
-      console.log(FeeData);
+      //console.log(FeeData);
       const gasPrice = ethers.utils.formatUnits(FeeData.gasPrice, "wei"); //Get the gas price
       const gasPriceInEth = ethers.utils.formatEther(gasPrice); //convert gas price to ether
       return (parseFloat(fee) + parseFloat(gasPriceInEth)).toFixed(2); //calculate fee with gas fee

@@ -24,6 +24,8 @@ contract Tickets{
     //State variables
     uint256 public eventId;
     address payable public owner;
+    event EventCreated(uint256 indexed eventId);
+
 
     constructor(){
         owner = payable(msg.sender);
@@ -52,9 +54,9 @@ contract Tickets{
 
     //send fee to owner
     owner.transfer(eventCreationFee);
-
+ emit EventCreated(eventId);
     eventId++;
-    
+   
     events[eventId] = Event(
         _eventName,
         _price,
@@ -66,6 +68,30 @@ contract Tickets{
     );
     
 }
+
+function getEvent(uint256 _eventId) public view returns (
+    string memory eventName,
+    uint256 price,
+    uint256 timestamp,
+    uint256 totalTickets,
+    uint256 remTickets,
+    string memory location,
+    address payable creator
+) {
+    require(_eventId <= eventId, "Event does not exist");
+    
+    Event storage retrievedEvent = events[_eventId];
+    return (
+        retrievedEvent.eventName,
+        retrievedEvent.price,
+        retrievedEvent.timestamp,
+        retrievedEvent.totalTickets,
+        retrievedEvent.remTickets,
+        retrievedEvent.location,
+        retrievedEvent.creator
+    );
+}
+
 
     //funtion to  buy Tickets
     function buyTicket(uint256 _eventId,uint256 _totalTicketsToBuy) public payable{
