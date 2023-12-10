@@ -90,7 +90,7 @@ function App() {
                 path="/createevent"
                 element={<CreateEvent state={state} />}
               />
-              <Route path="/events" element={<BrowseEvent />} />
+              <Route path="events" element={<BrowseEvent state={state} />} />
             </>
           </Routes>
           <Footer />
