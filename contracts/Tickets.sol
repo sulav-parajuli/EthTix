@@ -22,7 +22,7 @@ contract Tickets{
     mapping(address => TicketHolder[]) public ticketHolders;
     //event mapping address
     //State variables
-    uint256 public eventId;
+    uint256 eventId;
     address payable public owner;
     event EventCreated(uint256 indexed eventId);
 
@@ -54,8 +54,9 @@ contract Tickets{
 
     //send fee to owner
     owner.transfer(eventCreationFee);
- emit EventCreated(eventId);
     eventId++;
+    emit EventCreated(eventId);
+    
    
     events[eventId] = Event(
         _eventName,
@@ -78,7 +79,7 @@ function getEvent(uint256 _eventId) public view returns (
     string memory location,
     address payable creator
 ) {
-    require(_eventId <= eventId, "Event does not exist");
+    require(_eventId>0 &&_eventId <= eventId, "Event does not exist");
     
     Event storage retrievedEvent = events[_eventId];
     return (

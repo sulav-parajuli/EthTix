@@ -1,37 +1,58 @@
 import React, { useState, useEffect } from "react";
+import { ethers } from "ethers";
 import "./css/Main.css";
 import ticket from "../assets/images/tickets.png";
 import search from "../assets/images/search symbol.png";
 
 const BrowseEvent = ({ state }) => {
   const [events, setEvents] = useState([]);
-  const [eventId, setEventId] = useState(0);
+  const [isContractReady, setIsContractReady] = useState(false);
+
   const { contract } = state;
+  // console.log(contract);
+
   useEffect(() => {
-    const loadEvents = async () => {
+    const initializeContract = async () => {
+      if (!contract) {
+        return; //Exist if contract is not available yet
+      }
       try {
-        const fetchedEvents = await fetchEvents();
-        setEvents(fetchedEvents);
+        //Subscribe to EventCreated event
+        contract.on("EventCreated", (eventId) => handleEventCreated(eventId));
+        setIsContractReady(true);
       } catch (error) {
-        console.error("Error loading events:", error);
+        console.error("Error subscribing to EventCreated event:", error);
       }
     };
-
-    loadEvents();
-  }, []);
-
-  const fetchEvents = async () => {
-    const fetchedEvents = [];
-    for (let i = 0; i <= eventId; i++) {
+    const handleEventCreated = async (eventId) => {
       try {
-        const event = await contract.getEvent(i);
-        fetchedEvents.push(event);
+        if (!contract) {
+          alert("Contract not found");
+          return;
+        }
+        // const testid = 1;
+        // const testEvent = await contract.getEvent(testid);
+        // console.log(testEvent);
+        const newEvent = await contract.getEvent(eventId);
+        console.log("New event created:", newEvent);
+        setEvents((prevEvents) => [...prevEvents, newEvent]);
       } catch (error) {
-        console.error("Error fetching event:", error);
+        console.error("Error fetching and updating new event:", error);
       }
-    }
-    return fetchedEvents;
-  };
+    };
+    initializeContract();
+
+    return () => {
+      if (isContractReady && contract) {
+        try {
+          // Unsubscribe from the EventCreated event when component unmounts
+          contract.removeAllListeners("EventCreated");
+        } catch (error) {
+          console.error("Error unsubscribing from EventCreated event:", error);
+        }
+      }
+    };
+  }, [contract, setEvents, isContractReady]);
 
   return (
     <>
@@ -64,20 +85,22 @@ const BrowseEvent = ({ state }) => {
         <div>
           Event cards and other logic goes here.
           <div className="text-block">
-            <p className="main-text">Events</p>
+            {events.length === 0 && <p>No events found.</p>}
+            {events.map((event, index) => (
+              <div key={index}>
+                <h2>{event.eventName}</h2>
+                <p>Price: {ethers.utils.formatEther(event.price)} ETH</p>
+                <p>Total Tickets: {event.totalTickets}</p>
+                <p>Remaining Tickets: {event.remTickets}</p>
+                <p>Location: {event.location}</p>
+                <p>Creator: {event.creator}</p>
+                <p>
+                  Timestamp: {new Date(event.timestamp * 1000).toLocaleString()}
+                </p>
+                <button>Buy Ticket</button>
+              </div>
+            ))}
           </div>
-          {events.map((event, index) => (
-            <div key={index}>
-              <h2>{event.eventName}</h2>
-              <p>Price: {ethers.utils.formatEther(event.price)} ETH</p>
-              <p>Total Tickets: {event.totalTickets}</p>
-              <p>Remaining Tickets: {event.remTickets}</p>
-              <p>Location: {event.location}</p>
-              <p>Creator: {event.creator}</p>
-              <p>Timestamp: {getReadableDate(event.timestamp)}</p>
-              <button>Buy Ticket</button>
-            </div>
-          ))}
         </div>
       </div>
     </>

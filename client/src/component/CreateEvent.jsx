@@ -34,14 +34,22 @@ const CreateEvent = ({ state }) => {
   const calculateFee = async () => {
     try {
       const { provider } = state;
-      const fee =
-        (parseFloat(totalTickets) * parseFloat(priceInEther) * 3) / 100;
+      const priceInWei = ethers.utils.parseEther(priceInEther);
+      const totalTicketsInt = ethers.BigNumber.from(totalTickets);
 
-      const FeeData = await provider.getFeeData(); //retrieve gas related details
-      //console.log(FeeData);
-      const gasPrice = ethers.utils.formatUnits(FeeData.gasPrice, "wei"); //Get the gas price
-      const gasPriceInEth = ethers.utils.formatEther(gasPrice); //convert gas price to ether
-      return (parseFloat(fee) + parseFloat(gasPriceInEth)).toFixed(2); //calculate fee with gas fee
+      // Calculate fee in wei
+      const feeWei = priceInWei.mul(totalTicketsInt).mul(3).div(100);
+
+      // Convert gas price to ether
+      const FeeData = await provider.getFeeData();
+      const gasPrice = ethers.utils.formatUnits(FeeData.gasPrice, "wei");
+      //const gasPriceInEth = ethers.utils.formatEther(gasPrice);
+
+      // Calculate total fee in ether
+      const totalFeeInWei = feeWei.add(gasPrice);
+      const totalFeeInEth = ethers.utils.formatEther(totalFeeInWei);
+
+      return totalFeeInEth;
     } catch (error) {
       console.log(error);
       return null;
