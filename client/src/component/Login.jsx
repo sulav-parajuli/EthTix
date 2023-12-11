@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import "./css/Login.css";
 import walletImage from "../assets/images/wallet.png";
 import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css"; // Import the default styles
 import { useAppContext } from "./AppContext";
 
 const Login = () => {
@@ -23,34 +24,10 @@ const Login = () => {
 
   const connectToWallet = async () => {
     await template(true);
-    async function handleLogin() {
-      try {
-        if (!isConnected) {
-          console.error(
-            "User is not connected. Please connect to your wallet."
-          );
-          toast.error("User is not connected. Please connect to your wallet.", {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-          });
-          return;
-        } else {
-          toast.success("Wallet connected successfully!", {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-          });
-        }
-      } catch (error) {
-        console.error("Error in wallet connection:", error);
-        toast.error("Error in wallet connection.", {
+    try {
+      if (!isConnected) {
+        console.error("User is not connected. Please connect to your wallet.");
+        toast.error("User is not connected. Please connect to your wallet.", {
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
@@ -58,9 +35,28 @@ const Login = () => {
           pauseOnHover: true,
           draggable: true,
         });
+        return;
+      } else {
+        toast.success("Wallet connected successfully!", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
       }
+    } catch (error) {
+      console.error("Error in wallet connection:", error);
+      toast.error("Error in wallet connection.", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
     }
-    await handleLogin();
   };
 
   return (
