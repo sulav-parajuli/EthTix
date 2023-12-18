@@ -7,6 +7,7 @@ import search from "../assets/images/search symbol.png";
 const BrowseEvent = ({ state }) => {
   const [events, setEvents] = useState([]);
   const [isContractReady, setIsContractReady] = useState(false);
+  //const [uinqueEventId, setUniqueEventId] = useState([]);
 
   const { contract } = state;
   // console.log(contract);
@@ -26,7 +27,10 @@ const BrowseEvent = ({ state }) => {
     };
     const handleEventCreated = async (eventId) => {
       try {
-        if (!contract) {
+        if (
+          !contract
+          //events.some((singleEvent) => singleEvent.eventId.eq(eventId))
+        ) {
           alert("Contract not found");
           return;
         }
@@ -34,8 +38,9 @@ const BrowseEvent = ({ state }) => {
         // const testEvent = await contract.getEvent(testid);
         // console.log(testEvent);
         const newEvent = await contract.getEvent(eventId);
-        console.log("New event created:", newEvent);
+        //console.log("New event created:", newEvent);
         setEvents((prevEvents) => [...prevEvents, newEvent]);
+        //setUniqueEventId((prevIds) => [...prevIds, eventId]);
       } catch (error) {
         console.error("Error fetching and updating new event:", error);
       }
@@ -52,7 +57,7 @@ const BrowseEvent = ({ state }) => {
         }
       }
     };
-  }, [contract, setEvents, isContractReady]);
+  }, [contract, setEvents, isContractReady]); //uinqueEventId]);
 
   return (
     <>
@@ -83,23 +88,31 @@ const BrowseEvent = ({ state }) => {
           <p className="main-text">Events</p>
         </div>
         <div>
-          Event cards and other logic goes here.
           <div className="text-block">
-            {events.length === 0 && <p>No events found.</p>}
-            {events.map((event, index) => (
-              <div key={index}>
-                <h2>{event.eventName}</h2>
-                <p>Price: {ethers.utils.formatEther(event.price)} ETH</p>
-                <p>Total Tickets: {event.totalTickets}</p>
-                <p>Remaining Tickets: {event.remTickets}</p>
-                <p>Location: {event.location}</p>
-                <p>Creator: {event.creator}</p>
-                <p>
-                  Timestamp: {new Date(event.timestamp * 1000).toLocaleString()}
-                </p>
-                <button>Buy Ticket</button>
-              </div>
-            ))}
+            {events.length === 0 ? (
+              <p>Loading events...</p>
+            ) : (
+              events.map((event, index) => (
+                <div key={index}>
+                  <h2>{event.eventName.toString()}</h2>
+                  <p>
+                    Price: {ethers.utils.formatEther(event.price).toString()}{" "}
+                    ETH
+                  </p>
+                  <p>Total Tickets: {event.totalTickets.toNumber()}</p>
+
+                  <p>Location: {event.location.toString()}</p>
+                  {/* <p>Creator: {event.creator}</p> */}
+                  <p>
+                    Timestamp:{" "}
+                    {new Date(
+                      event.timestamp.toNumber() * 1000
+                    ).toLocaleString()}
+                  </p>
+                  <button>Buy Ticket</button>
+                </div>
+              ))
+            )}
           </div>
         </div>
       </div>

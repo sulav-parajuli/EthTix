@@ -25,6 +25,7 @@ contract Tickets{
     uint256 eventId;
     address payable public owner;
     event EventCreated(uint256 indexed eventId);
+    event TicketPurchased(uint256 indexed eventId,uint256 indexed ticketsBought,address indexed buyer);
 
 
     constructor(){
@@ -113,7 +114,7 @@ function getEvent(uint256 _eventId) public view returns (
         
         TicketHolder[] storage userTickets = ticketHolders[msg.sender];
         userTickets.push(TicketHolder(msg.sender,events[_eventId].eventName,_eventId,_totalTicketsToBuy));
-        
+        emit TicketPurchased(_eventId,_totalTicketsToBuy,msg.sender);
 
     }
    
