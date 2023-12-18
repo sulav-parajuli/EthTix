@@ -93,7 +93,16 @@ function getEvent(uint256 _eventId) public view returns (
         retrievedEvent.creator
     );
 }
+ function getAllEvents() public view returns (Event[] memory) {
+    //creates a new dynamic array of type Event with a length equal to the current value of the eventId variable
+        Event[] memory allEvents = new Event[](eventId);
 
+        for (uint256 i = 1; i <= eventId; i++) {
+            allEvents[i - 1] = events[i];
+        }
+
+        return allEvents;
+    }
 
     //funtion to  buy Tickets
     function buyTicket(uint256 _eventId,uint256 _totalTicketsToBuy) public payable{

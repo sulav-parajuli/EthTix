@@ -10,7 +10,7 @@ const BrowseEvent = ({ state }) => {
   //const [uinqueEventId, setUniqueEventId] = useState([]);
 
   const { contract } = state;
-  // console.log(contract);
+  //console.log(contract);
 
   useEffect(() => {
     const initializeContract = async () => {
@@ -18,8 +18,14 @@ const BrowseEvent = ({ state }) => {
         return; //Exist if contract is not available yet
       }
       try {
-        //Subscribe to EventCreated event
-        contract.on("EventCreated", (eventId) => handleEventCreated(eventId));
+        //Fetch all events when the component mounts
+        const allEvents = await contract.getAllEvents();
+
+        setEvents(allEvents);
+        //console.log(allEvents);
+
+        // Subscribe to the EventCreated event
+        contract.on("EventCreated", handleEventCreated);
         setIsContractReady(true);
       } catch (error) {
         console.error("Error subscribing to EventCreated event:", error);
@@ -38,9 +44,8 @@ const BrowseEvent = ({ state }) => {
         // const testEvent = await contract.getEvent(testid);
         // console.log(testEvent);
         const newEvent = await contract.getEvent(eventId);
-        //console.log("New event created:", newEvent);
+        //Append newly created events to the list of events
         setEvents((prevEvents) => [...prevEvents, newEvent]);
-        //setUniqueEventId((prevIds) => [...prevIds, eventId]);
       } catch (error) {
         console.error("Error fetching and updating new event:", error);
       }
@@ -90,7 +95,7 @@ const BrowseEvent = ({ state }) => {
         <div>
           <div className="text-block">
             {events.length === 0 ? (
-              <p>Loading events...</p>
+              <p>Events not available....</p>
             ) : (
               events.map((event, index) => (
                 <div key={index}>
@@ -105,9 +110,7 @@ const BrowseEvent = ({ state }) => {
                   {/* <p>Creator: {event.creator}</p> */}
                   <p>
                     Timestamp:{" "}
-                    {new Date(
-                      event.timestamp.toNumber() * 1000
-                    ).toLocaleString()}
+                    {new Date(event.timestamp.toNumber()).toLocaleString()}
                   </p>
                   <button>Buy Ticket</button>
                 </div>
