@@ -178,3 +178,23 @@
   color: #5a5a5a;
   margin-bottom: 0px;
 }
+.event-blocks {
+  display: flex;
+  flex-direction: row;
+  margin-right: 5%;
+  margin-left: 5%;
+  display: flex;
+  text-align: left;
+}
+.col-6 {
+  flex: 0 0 auto;
+  width: 100% !important;
+}
+.card-body .buttons {
+  padding: 0px !important;
+}
+@media screen and (max-width: 768px) {
+  .event-blocks {
+    flex-direction: column;
+  }
+}
