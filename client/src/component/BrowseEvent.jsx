@@ -12,7 +12,7 @@ const Popup = ({ isOpen, onClose, ke, event }) => {
         <button className="close" onClick={onClose}>
           Close
         </button>
-        <EventDetail key={ke} event={event} />
+        <EventDetail index={ke} event={event} />
       </div>
     </div>
   ) : null;
@@ -20,11 +20,13 @@ const Popup = ({ isOpen, onClose, ke, event }) => {
 
 const BrowseEvent = ({ state }) => {
   const [events, setEvents] = useState([]);
+  const [selectedEventIndex, setSelectedEventIndex] = useState(null);
   const [isContractReady, setIsContractReady] = useState(false);
   //const [uinqueEventId, setUniqueEventId] = useState([]);
 
   const [isPopupOpen, setPopupOpen] = useState(false);
-  const handleOpenPopup = () => {
+  const handleOpenPopup = (index) => {
+    setSelectedEventIndex(index);
     setPopupOpen(true);
   };
 
@@ -178,7 +180,7 @@ const BrowseEvent = ({ state }) => {
                               <div className="buttons">
                                 <button
                                   className="icon-move-right main-button color-white"
-                                  onClick={handleOpenPopup}
+                                  onClick={() => handleOpenPopup(index)}
                                 >
                                   Buy Ticket
                                   {/* <i
@@ -194,9 +196,12 @@ const BrowseEvent = ({ state }) => {
                     </div>
                     <Popup
                       isOpen={isPopupOpen}
-                      onClose={handleClosePopup}
-                      ke={index}
-                      event={event}
+                      onClose={() => {
+                        setPopupOpen(false);
+                        setSelectedEventIndex(null);
+                      }}
+                      ke={selectedEventIndex}
+                      event={events[selectedEventIndex]}
                     />
                   </div>
                 ))}
