@@ -170,7 +170,7 @@ const BrowseEvent = ({ state }) => {
                               <p>Location: {event.location.toString()}</p>
                               {/* <p>Creator: {event.creator}</p> */}
                               <p>
-                                Date and Time :{" "}
+                                Date and Time :
                                 {new Date(
                                   event.timestamp.toNumber()
                                 ).toLocaleString()}
