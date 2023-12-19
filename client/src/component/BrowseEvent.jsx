@@ -93,7 +93,7 @@ const BrowseEvent = ({ state }) => {
           <p className="main-text">Events</p>
         </div>
         <div>
-          <div className="text-block">
+          <div className="text-block ">
             {events.length === 0 ? (
               <p>Events not available....</p>
             ) : (
@@ -101,15 +101,15 @@ const BrowseEvent = ({ state }) => {
                 <div key={index}>
                   <h2>{event.eventName.toString()}</h2>
                   <p>
-                    Price: {ethers.utils.formatEther(event.price).toString()}{" "}
+                    Price : {ethers.utils.formatEther(event.price).toString()}
                     ETH
                   </p>
-                  <p>Total Tickets: {event.totalTickets.toNumber()}</p>
+                  <p>Total Tickets : {event.totalTickets.toNumber()}</p>
 
-                  <p>Location: {event.location.toString()}</p>
+                  <p>Location : {event.location.toString()}</p>
                   {/* <p>Creator: {event.creator}</p> */}
                   <p>
-                    Timestamp:{" "}
+                    Date and Time :
                     {new Date(event.timestamp.toNumber()).toLocaleString()}
                   </p>
                   <button>Buy Ticket</button>

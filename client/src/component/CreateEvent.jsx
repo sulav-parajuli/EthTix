@@ -7,6 +7,7 @@ const CreateEvent = ({ state }) => {
   const [eventName, setEventName] = useState("");
   const [priceInEther, setPriceInEther] = useState("");
   const [date, setDate] = useState("");
+  const [time, setTime] = useState("");
   const [totalTickets, setTotalTickets] = useState("");
   const [location, setLocation] = useState("");
   const { account, isConnected } = useAppContext();
@@ -21,7 +22,15 @@ const CreateEvent = ({ state }) => {
   };
 
   const handleDateChange = (event) => {
-    setDate(event.target.value);
+    //check if date is greater than today
+    const today = new Date();
+    const selectedDate = new Date(event.target.value);
+    if (selectedDate < today) {
+      alert("Please select a date greater than today");
+      return;
+    } else {
+      setDate(event.target.value);
+    }
   };
 
   const handleTotalTicketsChange = (event) => {
@@ -30,6 +39,10 @@ const CreateEvent = ({ state }) => {
 
   const handleLocationChange = (event) => {
     setLocation(event.target.value);
+  };
+
+  const handleTimeChange = (event) => {
+    setTime(event.target.value);
   };
 
   const calculateFee = async () => {
@@ -66,8 +79,11 @@ const CreateEvent = ({ state }) => {
       parseFloat(priceInEther) <= 0 &&
       isNaN(parseFloat(priceInEther)) && // Check if priceInEther is a valid number
       isNaN(new Date(date).getTime()) &&
+      new Date(date) < new Date() &&
       isNaN(parseInt(totalTickets)) &&
-      location.trim() === ""
+      parseInt(totalTickets) <= 0 &&
+      location.trim() === "" &&
+      time.trim() === ""
     ) {
       // Show an alert or handle the validation error
       alert("Please fill in all fields with valid data.");
@@ -78,6 +94,7 @@ const CreateEvent = ({ state }) => {
 
   const handleConfirmation = async (event) => {
     event.preventDefault();
+
     const fee = await calculateFee();
     const confirmationMessage = `You will be charged ${fee} ETH for creating this event. Are you sure you want to continue?`;
     if (window.confirm(confirmationMessage)) {
@@ -103,11 +120,14 @@ const CreateEvent = ({ state }) => {
 
       const additionalValue = ethers.utils.parseEther(await calculateFee());
 
+      //convet date and time to timestamp
+      const eventTimestamp = new Date(`${date} ${time}`).getTime();
+
       // Send transaction with estimated gas and additional value
       const transaction = await contract.createEvent(
         eventName,
         priceInWei,
-        new Date(date).getTime(),
+        eventTimestamp,
         totalTickets,
         location,
         {
@@ -130,7 +150,7 @@ const CreateEvent = ({ state }) => {
         <>
           <div className="createevent">
             <h1>Create Event</h1>
-            <p className="connected"> ConnectedAccount:{account}</p>
+
             <form
               onSubmit={
                 confirmationNeeded ? handleConfirmation : handleFormSubmit
@@ -172,6 +192,21 @@ const CreateEvent = ({ state }) => {
                   id="date"
                   value={date}
                   onChange={handleDateChange}
+                  onKeyDown={(e) => e.preventDefault()}
+                />
+              </div>
+
+              <div className="mb-3">
+                <label htmlFor="location" className="form-label">
+                  Time
+                </label>
+                <input
+                  type="time"
+                  className="form-control"
+                  id="location"
+                  value={time}
+                  onChange={handleTimeChange}
+                  onKeyDown={(e) => e.preventDefault()}
                 />
               </div>
 
