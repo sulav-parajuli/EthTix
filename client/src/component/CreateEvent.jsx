@@ -21,7 +21,20 @@ const CreateEvent = ({ state }) => {
   };
 
   const handleDateChange = (event) => {
-    setDate(event.target.value);
+    //Timestamp validation
+    try {
+      const date = new Date(event.target.value);
+      const currentDate = new Date();
+      if (date.getTime() < currentDate.getTime()) {
+        alert("Please select a valid date");
+        return;
+      } else {
+        setDate(event.target.value);
+      }
+    } catch (error) {
+      console.log(error);
+      return;
+    }
   };
 
   const handleTotalTicketsChange = (event) => {
