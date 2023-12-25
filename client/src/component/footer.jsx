@@ -1,6 +1,6 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import etherTixLogo from "../assets/images/logo/etherTixlogo4.png";
+import etherTixLogo from "../assets/images/logo/etherTixlogooff1.png";
 import {
   faFacebook,
   faXTwitter,
@@ -15,6 +15,7 @@ const Footer = () => {
         <div className="footer-row">
           <div className="footer-logo">
             <img src={etherTixLogo} />
+            {/* <div className="ethtix">EthTix</div> */}
           </div>
         </div>
         <div className="footer-row">

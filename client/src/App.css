@@ -3,6 +3,7 @@
   /* margin: 0 auto; */
   /* padding: 2rem; */
   text-align: center;
+  font-family: "Quicksand", sans-serif;
 }
 
 * {
@@ -11,14 +12,26 @@
 
 .logo {
   /* height: 6em; */
-  padding: 1.5em;
+  display: flex;
+  padding: 0.5em;
+  padding-bottom: 0px !important;
   will-change: filter;
   transition: filter 300ms;
 }
 .logo img {
-  height: auto;
-  width: 200px;
+  height: 35px;
+  width: auto;
+  /* width: 200px; */
   object-fit: cover;
+  cursor: pointer;
+}
+.ethtix {
+  display: flex;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #5a5a5a;
+  align-items: center;
+  margin-left: 5px;
   cursor: pointer;
 }
 .logo:hover {
@@ -58,6 +71,7 @@
 /*navbar and login styles*/
 .close {
   float: right;
+  border-radius: 15px;
 }
 .login-button {
   padding-right: 5%;
@@ -69,7 +83,28 @@
 }
 
 .nav-item {
-  padding-bottom: 0px !important;
+  z-index: 1000;
+}
+.navbar-nav {
+  align-items: flex-start;
+}
+
+.container-fluid {
+  height: 70px;
+}
+
+.Menuitem {
+  display: none;
+  position: fixed;
+  top: 85px;
+  right: 0;
+  height: 100%;
+  width: 50%;
+  padding-bottom: 100%;
+  background-color: #fff; /* Set the background color */
+  overflow-x: hidden;
+  animation: ease-in-out;
+  transition: 0.5s; /* Set the transition duration */
 }
 
 .nav-link {
@@ -92,15 +127,27 @@
 
 /* Popup login form */
 .popup {
+  justify-content: center;
+  align-items: flex-start;
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.2);
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 1000;
+}
+
+.logincontainer .popup {
+  top: 320px !important;
+  background: none;
+}
+
+body.popup-open {
+  overflow: hidden;
 }
 
 .popup-inner {
@@ -171,7 +218,6 @@
   align-items: center;
 }
 .mytickets {
-  font-family: "Poppins", sans-serif;
   font-size: 40px;
   font-weight: bold;
   line-height: normal;
@@ -190,11 +236,56 @@
   flex: 0 0 auto;
   width: 100% !important;
 }
+
 .card-body .buttons {
   padding: 0px !important;
 }
+@media screen and (max-width: 992px) {
+  button.btn.btn-outline-success.login-button {
+    margin-left: 57% !important;
+    background-color: white;
+    opacity: 0.9;
+    color: #333;
+    z-index: 1000;
+  }
+  .Menuitem {
+    display: flex;
+  }
+  .navbar-nav {
+    margin-left: 50% !important;
+  }
+  .col-4 {
+    flex: 0 0 auto;
+    width: 50% !important;
+  }
+}
 @media screen and (max-width: 768px) {
-  .event-blocks {
+  .row {
     flex-direction: column;
   }
+  .col-4 {
+    flex: 0 0 auto;
+    width: 100% !important;
+  }
+}
+
+.navbar {
+  background-color: rgba(
+    255,
+    255,
+    255,
+    0.9
+  ) !important; /* White background with 90% opacity */
+  backdrop-filter: blur(
+    10px
+  ); /* Apply a blur effect to create a frosted glass effect */
+  transition: background-color 0.3s ease; /* Smooth transition for the background color */
+}
+.navbar-toggler {
+  margin-right: 4%;
+}
+
+button.btn.btn-danger {
+  background-color: #c1292e;
+  border-color: #c1292e;
 }

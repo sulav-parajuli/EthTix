@@ -6,15 +6,19 @@ const MainEvent = () => {
   return (
     <div className="main-event">
       <div className="maine image-container">
-        <img src={ticketcounter} className="ticketevent" />
+        <img src={ticketcounter} className="ticketcounter" />
       </div>
       <div
         className="text-container"
         style={{ justifyContent: "center", paddingLeft: "0px" }}
       >
         <div className="maine text-block">
-          <p className="main-text">
-            Join the excitement. Buy your ticket today!
+          <p className="main-text">Smart Ticket Solutions</p>
+          <p className="sub-text">
+            Traditional ticketing systems are prone to issues like counterfeit
+            tickets, fake entries, and high fees. Step into a secure and
+            transparent future with our decentralized ticketing platform.
+            Embrace the revolution. Secure your tickets now.
           </p>
         </div>
         <div className="maine buttons">

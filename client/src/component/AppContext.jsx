@@ -4,9 +4,15 @@ const AppContext = createContext();
 
 const AppProvider = ({ children, template, account }) => {
   const [isConnected, setConnected] = useState(false);
+  const [isUserConnected, setUserConnected] = useState(false);
+  const [isEventOrganizer, setEventOrganizer] = useState(false);
   const contextValue = {
     isConnected,
     setConnected,
+    isUserConnected,
+    setUserConnected,
+    isEventOrganizer,
+    setEventOrganizer,
     account,
     template,
   };

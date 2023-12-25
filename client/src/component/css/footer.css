@@ -18,13 +18,18 @@
 }
 
 .footer-logo {
-  font-size: 36px;
+  display: flex;
   font-weight: bold;
 }
 
+.footer-logo .ethtix {
+  color: #fff;
+  font-size: xxx-large;
+}
+
 .footer-logo img {
-  height: auto;
-  width: 300px;
+  height: 100px;
+  width: auto;
   object-fit: cover;
   cursor: pointer;
 }
@@ -96,10 +101,10 @@
 
 /* Media Query for smaller screens */
 @media screen and (max-width: 768px) {
-  .footer-logo img {
+  /* .footer-logo img {
     height: 80px;
     width: 180px;
-  }
+  } */
 
   .footer-logo {
     font-size: 24px;
