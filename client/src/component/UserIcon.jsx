@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 // import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { faCircleUser } from "@fortawesome/free-regular-svg-icons";
 // import { faCircleUser } from "@fortawesome/free-solid-svg-icons";
-import "./css/UserIcon.css";
+import "../assets/css/UserIcon.css";
 import { useAppContext } from "./AppContext";
 
 const UserIcon = () => {

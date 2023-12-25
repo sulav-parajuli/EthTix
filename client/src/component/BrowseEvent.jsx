@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { ethers } from "ethers";
-import "./css/Main.css";
+import "../assets/css/Main.css";
 import ticket from "../assets/images/tickets.png";
 import search from "../assets/images/search symbol.png";
 import EventDetail from "./EventDetail";

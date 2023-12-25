@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "./css/Login.css";
+import "../assets/css/Login.css";
 import walletImage from "../assets/images/wallet.png";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; // Import the default styles
