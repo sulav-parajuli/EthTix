@@ -1,12 +1,20 @@
-import React, { useEffect } from "react";
-import "./css/Login.css";
+import React, { useEffect, useState } from "react";
+import "../assets/css/Login.css";
 import walletImage from "../assets/images/wallet.png";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; // Import the default styles
 import { useAppContext } from "./AppContext";
 
 const Login = () => {
-  const { isConnected, setConnected, account, template } = useAppContext();
+  const {
+    isConnected,
+    setConnected,
+    setUserConnected,
+    // setEventOrganizer,
+    account,
+    template,
+  } = useAppContext();
+  const [isRegister, setRegister] = useState(false);
   useEffect(() => {
     async function fetchAccount() {
       try {
@@ -22,7 +30,12 @@ const Login = () => {
     fetchAccount();
   }, []);
 
-  const connectToWallet = async () => {
+  const handlelink = () => {
+    setRegister((prev) => !prev);
+  };
+
+  const connectToWallet = async (event) => {
+    event.preventDefault();
     await template(true);
     try {
       if (!isConnected) {
@@ -37,14 +50,11 @@ const Login = () => {
         });
         return;
       } else {
-        toast.success("Wallet connected successfully!", {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-        });
+        //Write your logic here when user clicks on submit button
+        //user validation logic
+        // fetch if user is registered or not, eventorganizer or not from contract and set it's state.
+        // setEventOrganizer(true);
+        setUserConnected(true); // Set isUserConnected to true when user gets logged in
       }
     } catch (error) {
       console.error("Error in wallet connection:", error);
@@ -62,28 +72,68 @@ const Login = () => {
   return (
     <div className="login-container">
       <div className="left-section">
-        <div className="login-title">Connect</div>
+        {isRegister ? (
+          <div className="login-title">Register</div>
+        ) : (
+          <div className="login-title">Login</div>
+        )}
         <div className="sub-title">
           {isConnected
             ? "You're connected"
-            : "Connect to get your tickets within a few clicks!"}
+            : "Connect your wallet first to get started"}
         </div>
         <img src={walletImage} alt="Wallet" className="wallet-image" />
       </div>
       <div className="right-section">
         <form className="login-form">
+          <div className="mb-3">
+            <input
+              type="text"
+              placeholder="Username"
+              className="form-control"
+              id="username"
+            />
+          </div>
+          {/* <div className="mb-3">
+            <input
+              type="password"
+              placeholder="Password"
+              className="form-control"
+              id="password"
+            />
+          </div>
+          {isRegister ? (
+            <div className="mb-3">
+              <input
+                type="password"
+                placeholder="Confirm Password"
+                className="form-control"
+                id="password"
+              />
+            </div>
+          ) : null} */}
           <hr className="line" />
           {isConnected ? (
-            <div className="user-address">{`Connected: ${account}`}</div>
+            <div className="user-address">{`Connected Wallet: ${account}`}</div>
+          ) : null}
+          {isRegister ? (
+            <p>
+              <b>Already have an account?</b>
+              <a onClick={handlelink} className="link">
+                Login
+              </a>
+            </p>
           ) : (
-            <button
-              className="connect-wallet"
-              onClick={connectToWallet}
-              disabled={isConnected}
-            >
-              Connect to your wallet
-            </button>
+            <p>
+              <b>Don't have an account?</b>
+              <a onClick={handlelink} className="link">
+                Register
+              </a>
+            </p>
           )}
+          <button className="login-button" onClick={connectToWallet}>
+            {isConnected ? "Submit" : "Connect Wallet"}
+          </button>
         </form>
       </div>
     </div>

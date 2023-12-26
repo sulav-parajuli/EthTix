@@ -1,10 +1,54 @@
 import React, { useState } from "react";
 import mainimage from "../assets/images/work anniversary2.png";
-import { Link, animateScroll as scroll } from "react-scroll";
-import { Link as RouterLink } from "react-router-dom";
+import { Link } from "react-scroll";
+import { useNavigate } from "react-router-dom";
+import EventOrganizer from "./EventOrganizer";
+
+import { useAppContext } from "./AppContext";
+
+const Popup = ({ isOpen, onClose }) => {
+  const { isUserConnected, isEventOrganizer } = useAppContext();
+  return isOpen ? (
+    <div className="popup">
+      <div className="popup-inner">
+        <button className="close" onClick={onClose}>
+          Close
+        </button>
+        {isUserConnected && !isEventOrganizer ? (
+          <EventOrganizer />
+        ) : (
+          <p>Sign in to create event</p>
+        )}
+      </div>
+    </div>
+  ) : null;
+};
 
 const Main = () => {
   const [showMoreInfo, setShowMoreInfo] = useState(false);
+  const [isPopupOpen, setPopupOpen] = useState(false);
+  const navigate = useNavigate(); //to redirect to another page
+  const { isUserConnected, isEventOrganizer } = useAppContext();
+
+  const handleOpenPopup = () => {
+    setPopupOpen(true);
+    document.body.classList.add("popup-open"); // Prevent scrolling
+    document.querySelector(".App").background = "rgba(0,0,0,0.9)";
+  };
+
+  const handleClosePopup = async () => {
+    setPopupOpen(false);
+    document.body.classList.remove("popup-open"); // Allow scrolling
+  };
+
+  const handleUser = () => {
+    if (isUserConnected && isEventOrganizer) {
+      document.body.classList.remove("popup-open"); // Allow scrolling
+      navigate("/createevent");
+    } else {
+      handleOpenPopup();
+    }
+  };
 
   const handleLearnMoreClick = () => {
     setShowMoreInfo(true);
@@ -26,13 +70,13 @@ const Main = () => {
           </p>
         </div>
         <div className="buttons">
-          <RouterLink
+          <button
             style={{ display: showMoreInfo ? "block" : "none" }}
             className="main-button"
-            to="/createevent"
+            onClick={handleUser}
           >
             Create Event
-          </RouterLink>
+          </button>
           <Link
             to="main-event" // This should match the target component's name
             smooth={true}
@@ -51,6 +95,7 @@ const Main = () => {
           </button>
         </div>
       </div>
+      <Popup isOpen={isPopupOpen} onClose={handleClosePopup} />
       <div className="image-container">
         <img src={mainimage} className="main-image" alt="Coming Soon" />
       </div>

@@ -1,9 +1,7 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 //Import etherTix logo
-import etherTixLogo from "../assets/images/logo/etherTixlogo3.png";
-// import Hamburger from "hamburger-react";
-// import { useClickAway } from "react-use";
+import etherTixLogo from "../assets/images/logo/etherTixlogooff.png";
 import { useAppContext } from "./AppContext";
 //Import other components
 import Login from "./Login";
@@ -25,36 +23,39 @@ const Popup = ({ isOpen, onClose }) => {
 //Navbar containaing home , Events, about us and login button
 const Navbar = () => {
   const [isPopupOpen, setPopupOpen] = useState(false);
-  // const [isMenuOpen, setMenuOpen] = useState(false);
-  // const [isLargeScreen, setIsLargeScreen] = useState(false);
-  const { isConnected, setConnected, account } = useAppContext();
-  // const ref = useRef(null);
-
-  // useClickAway(ref, () => setMenuOpen(false));
+  const [isNavbarOpen, setNavbarOpen] = useState(false);
+  const { setConnected, account, isUserConnected } = useAppContext();
 
   const handleOpenPopup = () => {
     setPopupOpen(true);
+    document.body.classList.add("popup-open"); // Prevent scrolling
+    document.querySelector(".App").background = "rgba(0,0,0,0.9)";
     // If you want to close the popup after successful connection
-    if (isConnected) {
+    if (isUserConnected) {
       setPopupOpen(false);
     }
   };
 
   const handleClosePopup = async () => {
-    setPopupOpen(false);
     if ((await account) !== "Not connected") {
       setConnected(true);
     } else {
       setConnected(false);
     }
+    setPopupOpen(false);
+    document.body.classList.remove("popup-open"); // Allow scrolling
+  };
+
+  const handleToggleNavbar = () => {
+    setNavbarOpen((prev) => !prev);
   };
   return (
     <>
-      <nav className="navbar navbar-expand-lg bg-light fixed-top mb-5">
+      <nav className="navbar navbar-expand-lg fixed-top mb-5">
         <div className="container-fluid">
           <Link to="/" className="navbar-brand ms-5 logo">
             <img src={etherTixLogo} alt="EtherTix Logo" />
-            {/* EthTix */}
+            {/* <div className="ethtix">EthTix</div> */}
           </Link>
           <button
             className="navbar-toggler"
@@ -64,10 +65,34 @@ const Navbar = () => {
             aria-controls="navbarSupportedContent"
             aria-expanded="false"
             aria-label="Toggle navigation"
+            onClick={handleToggleNavbar}
           >
-            <span className="navbar-toggler-icon"></span>
+            {isNavbarOpen ? (
+              // <span>&#10006;</span> //bold X
+              <span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  height="24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </span> //normal X
+            ) : (
+              <span className="navbar-toggler-icon"></span>
+            )}
           </button>
-          <div className="collapse navbar-collapse" id="navbarSupportedContent">
+          <div
+            className={`collapse navbar-collapse ${isNavbarOpen ? "show" : ""}`}
+            id="navbarSupportedContent"
+          >
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
               <li className="nav-item ms-5">
                 <Link to="/" className="nav-link active" aria-current="page">
@@ -81,112 +106,24 @@ const Navbar = () => {
               </li>
             </ul>
             <div className="logincontainer">
-              {isConnected ? (
+              {isUserConnected ? (
                 <UserIcon /> // Render user icon when logged in
               ) : (
                 <button
                   className="btn btn-outline-success login-button"
                   onClick={handleOpenPopup}
                 >
-                  Connect
+                  Login/Register
                 </button>
               )}
               <Popup isOpen={isPopupOpen} onClose={handleClosePopup} />
             </div>
           </div>
         </div>
+        {isNavbarOpen ? <div className="Menuitem"></div> : null}
       </nav>
     </>
   );
 };
 
 export default Navbar;
-
-// useEffect(() => {
-//   const handleResize = () => {
-//     setIsLargeScreen(window.innerWidth > 768);
-//   };
-
-//   handleResize(); // Set initial screen size
-//   window.addEventListener("resize", handleResize);
-
-//   return () => {
-//     window.removeEventListener("resize", handleResize);
-//   };
-// }, []);
-// useEffect(() => {
-//   // Additional logic you may want to execute when isConnected changes
-//   // For example, fetching user data, updating UI, etc.
-//   const logincontainer = document.querySelector(".logincontainer");
-//   if (isConnected) {
-//     if (logincontainer) {
-//       logincontainer.style.paddingTop = "0px";
-//     }
-//   }
-// }, [isConnected]);
-
-// const handleToggleMenu = () => {
-//   setMenuOpen(!isMenuOpen);
-// };
-
-// return (
-//   <div className="navbar">
-//     <div className="logo">
-
-//     </div>
-
-//     <ul
-//       className={`nav-list ${isLargeScreen || isMenuOpen ? "open" : ""}`}
-//       ref={ref}
-//     >
-//       {isLargeScreen || isMenuOpen ? (
-//         <>
-//           <Link to="/" className="nav-item">
-//             Home
-//           </Link>
-//           <Link to="/events" className="nav-item">
-//             Events
-//           </Link>
-//           <Link to="/" className="nav-item">
-//             About Us
-//           </Link>
-//           <Link to="/contact" className="nav-item">
-//             Contact
-//           </Link>
-//           <div className="loginmenu">
-//             {isConnected ? (
-//               <UserIcon /> // Render user icon when logged in
-//             ) : (
-//               <button onClick={handleOpenPopup}>Connect</button>
-//             )}
-//             <Popup
-//               isOpen={isPopupOpen}
-//               onClose={handleClosePopup}
-//               onConnect={handleWalletConnect}
-//             />
-//           </div>
-//         </>
-//       ) : null}
-//     </ul>
-
-//     <div className="logincontainer">
-//       {isConnected ? (
-//         <UserIcon /> // Render user icon when logged in
-//       ) : (
-//         <button className="login-button" onClick={handleOpenPopup}>
-//           Connect
-//         </button>
-//       )}
-//       <Popup
-//         isOpen={isPopupOpen}
-//         onClose={handleClosePopup}
-//         onConnect={handleWalletConnect}
-//       />
-//     </div>
-//     <div className="menu-container">
-//       <div className="menu" onClick={handleToggleMenu}>
-//         <Hamburger toggled={isMenuOpen} size={20} direction="right" />
-//       </div>
-//     </div>
-//   </div>
-// );

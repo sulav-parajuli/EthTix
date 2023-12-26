@@ -2,6 +2,7 @@ import { React, useState } from "react";
 import { ethers } from "ethers";
 import { useAppContext } from "./AppContext";
 import eventcreation from "../assets/images/eventcreation.png";
+import { useNavigate } from "react-router-dom";
 
 const CreateEvent = ({ state }) => {
   const [eventName, setEventName] = useState("");
@@ -10,8 +11,9 @@ const CreateEvent = ({ state }) => {
   const [time, setTime] = useState("");
   const [totalTickets, setTotalTickets] = useState("");
   const [location, setLocation] = useState("");
-  const { account, isConnected } = useAppContext();
+  const { isUserConnected } = useAppContext();
   const [confirmationNeeded, setConfirmationNeeded] = useState(false);
+  const navigate = useNavigate(); //to redirect to another page
 
   const handleEventNameChange = (event) => {
     setEventName(event.target.value);
@@ -22,30 +24,7 @@ const CreateEvent = ({ state }) => {
   };
 
   const handleDateChange = (event) => {
-    // //check if date is greater than today
-    // const today = new Date();
-    // const selectedDate = new Date(event.target.value);
-    // if (selectedDate < today) {
-    //   alert("Please select a date greater than today");
-    //   return;
-    // } else {
-    //   setDate(event.target.value);
-
-    //Timestamp validation
-    // try {
-    //   const date = new Date(event.target.value);
-    //   const currentDate = new Date();
-    //   if (date.getTime() < currentDate.getTime()) {
-    //     alert("Please select a valid date");
-    //     return;
-    //   } else {
     setDate(event.target.value);
-    //   }
-    // } catch (error) {
-    //   console.log(error);
-    //   return;
-
-    // }
   };
 
   const handleTotalTicketsChange = (event) => {
@@ -154,6 +133,8 @@ const CreateEvent = ({ state }) => {
       await transaction.wait();
 
       console.log("Event Created");
+      // Redirect to a events route when event created successfully
+      navigate("/events");
     } catch (error) {
       console.log(error);
     }
@@ -161,7 +142,7 @@ const CreateEvent = ({ state }) => {
 
   return (
     <div className="mcontainer">
-      {isConnected ? (
+      {isUserConnected ? (
         <>
           <div className="createevent">
             <h1>Create Event</h1>

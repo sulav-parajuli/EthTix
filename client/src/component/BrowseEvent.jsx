@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { ethers } from "ethers";
-import "./css/Main.css";
+import "../assets/css/Main.css";
 import ticket from "../assets/images/tickets.png";
 import search from "../assets/images/search symbol.png";
 import EventDetail from "./EventDetail";
@@ -28,10 +28,7 @@ const BrowseEvent = ({ state }) => {
   const handleOpenPopup = (index) => {
     setSelectedEventIndex(index);
     setPopupOpen(true);
-  };
-
-  const handleClosePopup = async () => {
-    setPopupOpen(false);
+    document.body.classList.add("popup-open"); // Prevent scrolling
   };
 
   const { contract } = state;
@@ -126,22 +123,6 @@ const BrowseEvent = ({ state }) => {
             ) : (
               <div className="row">
                 {events.map((event, index) => (
-                  // <div key={index}>
-                  //   <h2>{event.eventName.toString()}</h2>
-                  //   <p>
-                  //     Price: {ethers.utils.formatEther(event.price).toString()}{" "}
-                  //     ETH
-                  //   </p>
-                  //   <p>Total Tickets: {event.totalTickets.toNumber()}</p>
-
-                  //   <p>Location: {event.location.toString()}</p>
-                  //   {/* <p>Creator: {event.creator}</p> */}
-                  //   <p>
-                  //     Timestamp:{" "}
-                  //     {new Date(event.timestamp.toNumber()).toLocaleString()}
-                  //   </p>
-                  //   <button>Buy Ticket</button>
-                  // </div>
                   <div key={index} className="col-4 mb-4">
                     <div className="container">
                       <div className="row justify-space-between py-2">
@@ -198,6 +179,7 @@ const BrowseEvent = ({ state }) => {
                       isOpen={isPopupOpen}
                       onClose={() => {
                         setPopupOpen(false);
+                        document.body.classList.remove("popup-open"); // Allow scrolling
                         setSelectedEventIndex(null);
                       }}
                       ke={selectedEventIndex}

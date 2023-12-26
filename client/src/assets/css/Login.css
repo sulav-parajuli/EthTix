@@ -4,6 +4,12 @@
   padding: 20px;
 }
 
+.link {
+  text-decoration: underline;
+  color: #008eb0;
+  cursor: pointer;
+}
+
 .left-section {
   text-align: left;
 }
@@ -53,7 +59,7 @@
 .login-form {
   text-align: center;
   position: relative;
-  top: 100px;
+  top: 60px;
 }
 
 .connect-wallet,
@@ -64,7 +70,8 @@
   cursor: pointer;
   color: #fff;
   font-size: 16px;
-  outline: none;
+  /* outline: none; */
+  border-radius: 20px;
 }
 
 .connect-wallet {
@@ -79,16 +86,6 @@
   border: 0.5px solid #9eadc8;
   width: 80%;
   margin: 10px auto;
-}
-
-#username,
-#email {
-  width: 80%;
-  padding: 10px;
-  margin: 10px auto;
-  border: 1px solid #9eadc8;
-  border-radius: 5px;
-  outline: none;
 }
 
 /* Responsive styles for smaller screens */

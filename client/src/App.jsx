@@ -18,6 +18,7 @@ import CreateEvent from "./component/CreateEvent.jsx";
 import MyTickets from "./component/MyTickets.jsx";
 import Navbar from "./component/Navbar.jsx";
 import Footer from "./component/footer.jsx";
+import Admin from "./component/Admin.jsx";
 import { AppProvider } from "./component/AppContext.jsx"; // Import AppProvider
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -113,6 +114,7 @@ function App() {
           <Routes>
             <>
               <Route path="/" element={<Home />} />
+              <Route path="/admin" element={<Admin />} />
               <Route
                 path="/createevent"
                 element={<CreateEvent state={state} />}
@@ -122,8 +124,8 @@ function App() {
             </>
           </Routes>
           <Footer />
-          <ToastContainer /> {/* Add ToastContainer at the top level */}
         </div>
+        <ToastContainer /> {/* Add ToastContainer at the top level */}
       </AppProvider>
     </BrowserRouter>
   );

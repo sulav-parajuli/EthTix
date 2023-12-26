@@ -4,13 +4,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 // import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { faCircleUser } from "@fortawesome/free-regular-svg-icons";
 // import { faCircleUser } from "@fortawesome/free-solid-svg-icons";
-import "./css/UserIcon.css";
+import "../assets/css/UserIcon.css";
 import { useAppContext } from "./AppContext";
 
 const UserIcon = () => {
-  const { setConnected } = useAppContext();
+  const { setConnected, setUserConnected, isEventOrganizer } = useAppContext();
   const [isDropdownOpen, setDropdownOpen] = useState(false);
-  const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth < 768);
+  const [isSmallScreen, setIsSmallScreen] = useState(false);
 
   const handleToggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
@@ -27,23 +27,27 @@ const UserIcon = () => {
 
     // Additional cleanup if needed
 
+    setUserConnected(false); // Set isUserConnected to false when logging out
     setConnected(false); // Set isConnected to false when logging out
   };
 
   useEffect(() => {
     const handleResize = () => {
-      setIsSmallScreen(window.innerWidth < 768);
+      if (window.innerWidth <= 992) {
+        setIsSmallScreen(true);
+        setDropdownOpen(true);
+      }
     };
-
-    if (isSmallScreen) {
-      setDropdownOpen(true);
-    }
     window.addEventListener("resize", handleResize);
 
     return () => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+
+  useEffect(() => {
+    setDropdownOpen(true);
+  }, [isSmallScreen]);
 
   return (
     <div
@@ -59,26 +63,15 @@ const UserIcon = () => {
           <Link to="/mytickets" className="nav-item">
             My Tickets
           </Link>
-          <Link to="/createevent" className="nav-item">
-            Create Events
-          </Link>
-          <button className="nav-item" onClick={handleDisconnect}>
-            Disconnect Wallet
-          </button>
+          {isEventOrganizer ? (
+            <Link to="/createevent" className="nav-item">
+              Create Events
+            </Link>
+          ) : null}
+          <div className="nav-item" onClick={handleDisconnect}>
+            Logout
+          </div>
         </div>
-      )}
-      {isSmallScreen && (
-        <>
-          <Link to="/mytickets" className="nav-item">
-            My Tickets
-          </Link>
-          <Link to="/createevent" className="nav-item">
-            Create Events
-          </Link>
-          <button className="nav-item" onClick={handleDisconnect}>
-            Disconnect Wallet
-          </button>
-        </>
       )}
     </div>
   );

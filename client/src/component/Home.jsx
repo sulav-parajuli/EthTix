@@ -1,7 +1,7 @@
 import React from "react";
 import Main from "./Main";
 import MainEvent from "./MainEvent";
-import "./css/Main.css";
+import "../assets/css/Main.css";
 
 const Home = () => {
   return (
