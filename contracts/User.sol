@@ -1,11 +1,11 @@
 //SPDX-License-Identifier:MIT
 pragma solidity ^0.8.19;
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
-contract User{
+import "./AccessControl.sol";
+contract User is  AccessControl{
 using ECDSA for bytes32;
 
-//Mapping to track registered users
-mapping(address => bool) public UserHashes;
+
 
 //State variables to keep track of User
 uint256 public userCount;
