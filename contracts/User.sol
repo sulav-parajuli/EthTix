@@ -1,31 +1,37 @@
 //SPDX-License-Identifier:MIT
 pragma solidity ^0.8.19;
-import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "./AccessControl.sol";
-contract User is  AccessControl{
-using ECDSA for bytes32;
 
 
+contract User is AccessControl{
+//Mapping to store user CID
+   mapping (address=> string) public userCID;
 
-//State variables to keep track of User
-uint256 public userCount;
+   //bool mapping to check if user is registered
+   mapping(address=>bool) public isUsers;
 
-//Event to track user registration
- event UserRegistered(address indexed userAddress, bytes32 hashedDetails);
+   //event to be emitted when user is registered
+   event UserRegistered(address indexed userAddress,string indexed CID);
+   //Function to registera user and store their CID
+   function registerUser(string memory _CID) public{
+       require(bytes(_CID).length>0,"CID cannot be empty");
+       userCID[msg.sender]=_CID;
+       isUsers[msg.sender]=true;
+       emit UserRegistered(msg.sender,_CID);
+   }
 
- //Function to register user
- function registeredUser(bytes32 _hasheddetails,bytes memory _signedHash) public{
-    //Check if user is already registered
-    require(!UserHashes[msg.sender],"User already registered");
-
-    //Verify the user's signature
-    require(_hasheddetails.isValidSignatureNow(msg.sender,_signedHash),"Invalid signature");
-    //Mark the user as registered
-    UserHashes[msg.sender]= true;
-
-    //Increment user count
-    userCount++;
-    emit UserRegistered(msg.sender,_hasheddetails);
- }
+     modifier onlyUser(){
+       require(isUsers[msg.sender]==true,"Only registered users can call this function");
+       _;
+   }
+   //Function to get userId by particular address
+   function getUserCID(address _userAddress) public onlyUser view returns(string memory){
+      require(_userAddress!=address(0),"Invalid address");
+      require(msg.sender==owner || msg.sender==_userAddress ,"Only owner or user can call this function");
+      return userCID[_userAddress];
+   }
+   
+ 
+     
 
 }
