@@ -1,5 +1,6 @@
 import React from "react";
 import { useAppContext } from "./AppContext";
+import logo from "../assets/images/logo/etherTixLogo.png";
 
 const MyTickets = ({ state }) => {
   const { account } = useAppContext();
@@ -10,11 +11,7 @@ const MyTickets = ({ state }) => {
         <hr />
       </div>
       <div className="profile">
-        <img
-          src="https://i.imgur.com/G1pXs7D.jpg"
-          className="img-fluid profile-image"
-          width="70"
-        />
+        <img src={logo} className="img-fluid profile-image" width="70" />
         <div className="ml-3">
           <input type="text" placeholder="Input your name" className="name" />
           <p className="useraddress">{account}</p>

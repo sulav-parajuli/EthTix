@@ -51,7 +51,7 @@ const Navbar = () => {
   };
   return (
     <>
-      <nav className="navbar navbar-expand-lg fixed-top mb-5">
+      <nav className="navbar topnav navbar-expand-lg fixed-top mb-5">
         <div className="container-fluid">
           <Link to="/" className="navbar-brand ms-5 logo">
             <img src={etherTixLogo} alt="EtherTix Logo" />
@@ -69,7 +69,7 @@ const Navbar = () => {
           >
             {isNavbarOpen ? (
               // <span>&#10006;</span> //bold X
-              <span>
+              <span style={{ width: "1.5em", height: "1.5em" }}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
@@ -93,7 +93,7 @@ const Navbar = () => {
             className={`collapse navbar-collapse ${isNavbarOpen ? "show" : ""}`}
             id="navbarSupportedContent"
           >
-            <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+            <ul className="navbar-nav item me-auto mb-lg-0">
               <li className="nav-item ms-5">
                 <Link to="/" className="nav-link active" aria-current="page">
                   Home
@@ -102,6 +102,11 @@ const Navbar = () => {
               <li className="nav-item ms-5">
                 <Link to="/events" className="nav-link active">
                   Browse Event
+                </Link>
+              </li>
+              <li className="nav-item ms-5">
+                <Link to="/about" className="nav-link active">
+                  About
                 </Link>
               </li>
             </ul>

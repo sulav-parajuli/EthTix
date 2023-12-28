@@ -15,11 +15,12 @@
   display: flex;
   padding: 0.5em;
   padding-bottom: 0px !important;
+  padding-left: 0px !important;
   will-change: filter;
   transition: filter 300ms;
 }
 .logo img {
-  height: 35px;
+  height: 40px;
   width: auto;
   /* width: 200px; */
   object-fit: cover;
@@ -78,7 +79,7 @@
 }
 
 .login-button:hover {
-  background-color: #008eb0 !important;
+  background-color: #00a9b8 !important;
   color: white;
 }
 
@@ -87,6 +88,20 @@
 }
 .navbar-nav {
   align-items: flex-start;
+}
+
+.fixed-top {
+  position: fixed !important;
+}
+
+.topnav {
+  box-shadow: none !important;
+  background-color: rgba(
+    255,
+    255,
+    255,
+    0.9
+  ); /* White background with 90% opacity */
 }
 
 .container-fluid {
@@ -138,7 +153,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+  z-index: 10;
 }
 
 .logincontainer .popup {
@@ -166,6 +181,10 @@ body.popup-open {
   width: 40%;
   height: auto;
   object-fit: cover;
+}
+
+.form-label {
+  display: flex;
 }
 
 /*mytickets component styles*/
@@ -240,7 +259,14 @@ body.popup-open {
 .card-body .buttons {
   padding: 0px !important;
 }
+
+.card-text {
+  font-size: small;
+}
 @media screen and (max-width: 992px) {
+  .navbar-nav.item {
+    margin-left: 48% !important;
+  }
   button.btn.btn-outline-success.login-button {
     margin-left: 57% !important;
     background-color: white;
@@ -270,12 +296,7 @@ body.popup-open {
 }
 
 .navbar {
-  background-color: rgba(
-    255,
-    255,
-    255,
-    0.9
-  ) !important; /* White background with 90% opacity */
+  box-shadow: none !important;
   backdrop-filter: blur(
     10px
   ); /* Apply a blur effect to create a frosted glass effect */

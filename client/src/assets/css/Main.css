@@ -28,6 +28,18 @@
   width: 100%;
 }
 
+/* Define the fadeInUp animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .text-container {
   flex: 1;
   display: flex;
@@ -60,6 +72,7 @@
   line-height: normal;
   color: #5a5a5a;
   margin-bottom: 0px;
+  animation: fadeInUp 1s ease-in-out;
 }
 
 .maine .sub-text {
@@ -70,6 +83,7 @@
   font-size: 24px;
   font-weight: light;
   color: #5a5a5a;
+  animation: fadeInUp 1s ease-in-out;
 }
 
 .buttons {
@@ -94,12 +108,13 @@
   margin-right: 10px;
 }
 
-.main-button:last-child {
+.main-button:last-child,
+.sub-button:last-child {
   margin-right: 0;
 }
 
 .main-button:hover {
-  background-color: #008eb0;
+  background-color: #00a9b8;
 }
 
 .sub-button {
@@ -112,8 +127,9 @@
   margin-right: 10px;
 }
 
-.sub-button:last-child {
-  margin-right: 0;
+.main-button,
+.sub-button {
+  transition: background-color 0.3s ease-in-out;
 }
 
 .sub-button:hover {

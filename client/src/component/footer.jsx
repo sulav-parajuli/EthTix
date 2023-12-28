@@ -18,24 +18,62 @@ const Footer = () => {
             {/* <div className="ethtix">EthTix</div> */}
           </div>
         </div>
-        <div className="footer-row">
+        <hr className="footer-separator" />
+        <div className="footer-row row ">
           <div className="footer-links">
             <ul>
-              <li>
-                <a href="#">Home</a>
-              </li>
-              <li>
-                <a href="#">About Us</a>
-              </li>
-              <li>
-                <a href="#">Events</a>
-              </li>
-              <li>
-                <a href="#">Contact Us</a>
-              </li>
+              <ol>
+                Useful Links
+                <li>
+                  <a href="#">Home</a>
+                </li>
+                <li>
+                  <a href="#">About</a>
+                </li>
+                <li>
+                  <a href="#">Events</a>
+                </li>
+              </ol>
+              <ol>
+                Services
+                <li>
+                  <a href="#">Host Event</a>
+                </li>
+                <li>
+                  <a href="#">Open Dashboard</a>
+                </li>
+                <li>
+                  <a href="#">Tools</a>
+                </li>
+              </ol>
+              <ol>
+                Learn
+                <li>
+                  <a href="#">FAQs</a>
+                </li>
+                <li>
+                  <a href="#">Why EthTix</a>
+                </li>
+                <li>
+                  <a href="#">Marketing</a>
+                </li>
+              </ol>
+              <ol>
+                Explore
+                <li>
+                  <a href="#">Terms & Condition</a>
+                </li>
+                <li>
+                  <a href="#">Privacy Policy</a>
+                </li>
+                <li>
+                  <a href="#">Security</a>
+                </li>
+              </ol>
             </ul>
           </div>
         </div>
+
         <hr className="footer-separator" />
         <div className="footer-row">
           <div className="footer-social">
@@ -56,7 +94,7 @@ const Footer = () => {
       </div>
       <div className="footer-copyright">
         <hr className="footer-separator" />
-        &copy; 2023 EtherTix. All rights reserved.
+        &copy; 2023 EthTix. All rights reserved.
       </div>
     </footer>
   );

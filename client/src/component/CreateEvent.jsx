@@ -135,117 +135,115 @@ const CreateEvent = ({ state }) => {
       console.log("Event Created");
       // Redirect to a events route when event created successfully
       navigate("/events");
+      document.querySelector(".topnav").style.display = "flex";
+      document.querySelector(".footer-container").style.display = "block";
     } catch (error) {
       console.log(error);
     }
   };
 
   return (
-    <div className="mcontainer">
+    <>
       {isUserConnected ? (
-        <>
-          <div className="createevent">
-            <h1>Create Event</h1>
+        <div className="createevent">
+          <form
+            onSubmit={
+              confirmationNeeded ? handleConfirmation : handleFormSubmit
+            }
+          >
+            <div className="mb-4">
+              <label htmlFor="eventName" className="form-label">
+                Event Name
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                id="eventName"
+                value={eventName}
+                onChange={handleEventNameChange}
+              />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="price" className="form-label">
+                Price per Ticket(ETH)
+              </label>
+              <input
+                type="number"
+                step="0.01"
+                className="form-control"
+                id="price"
+                value={priceInEther}
+                onChange={handlePriceChange}
+              />
+            </div>
 
-            <form
-              onSubmit={
-                confirmationNeeded ? handleConfirmation : handleFormSubmit
-              }
-            >
-              <div className="mb-3">
-                <label htmlFor="eventName" className="form-label">
-                  Event Name
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="eventName"
-                  value={eventName}
-                  onChange={handleEventNameChange}
-                />
-              </div>
-              <div className="mb-3">
-                <label htmlFor="price" className="form-label">
-                  Price per Ticket
-                </label>
-                <input
-                  type="number"
-                  step="0.01"
-                  className="form-control"
-                  id="price"
-                  value={priceInEther}
-                  onChange={handlePriceChange}
-                />
-              </div>
+            <div className="mb-3">
+              <label htmlFor="date" className="form-label">
+                Date
+              </label>
+              <input
+                type="date"
+                className="form-control"
+                id="date"
+                value={date}
+                onChange={handleDateChange}
+                onKeyDown={(e) => e.preventDefault()}
+              />
+            </div>
 
-              <div className="mb-3">
-                <label htmlFor="date" className="form-label">
-                  Date
-                </label>
-                <input
-                  type="date"
-                  className="form-control"
-                  id="date"
-                  value={date}
-                  onChange={handleDateChange}
-                  onKeyDown={(e) => e.preventDefault()}
-                />
-              </div>
+            <div className="mb-3">
+              <label htmlFor="location" className="form-label">
+                Time
+              </label>
+              <input
+                type="time"
+                className="form-control"
+                id="location"
+                value={time}
+                onChange={handleTimeChange}
+                onKeyDown={(e) => e.preventDefault()}
+              />
+            </div>
 
-              <div className="mb-3">
-                <label htmlFor="location" className="form-label">
-                  Time
-                </label>
-                <input
-                  type="time"
-                  className="form-control"
-                  id="location"
-                  value={time}
-                  onChange={handleTimeChange}
-                  onKeyDown={(e) => e.preventDefault()}
-                />
-              </div>
+            <div className="mb-3">
+              <label htmlFor="totalTicket" className="form-label">
+                Total Number Of Tickets
+              </label>
+              <input
+                type="number"
+                step="1"
+                className="form-control"
+                id="TotalTickets"
+                value={totalTickets}
+                onChange={handleTotalTicketsChange}
+              />
+            </div>
 
-              <div className="mb-3">
-                <label htmlFor="totalTicket" className="form-label">
-                  Total number of Tickets
-                </label>
-                <input
-                  type="number"
-                  step="1"
-                  className="form-control"
-                  id="TotalTickets"
-                  value={totalTickets}
-                  onChange={handleTotalTicketsChange}
-                />
-              </div>
+            <div className="mb-3">
+              <label htmlFor="location" className="form-label">
+                Location
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                id="location"
+                value={location}
+                onChange={handleLocationChange}
+              />
+            </div>
 
-              <div className="mb-3">
-                <label htmlFor="location" className="form-label">
-                  Location
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="location"
-                  value={location}
-                  onChange={handleLocationChange}
-                />
-              </div>
-
-              <button type="submit" className="btn btn-danger">
-                {confirmationNeeded ? "Confirm Event Creation" : "Create Event"}
-              </button>
-            </form>
-          </div>
-        </>
+            <button type="submit" className="btn btn-danger">
+              {confirmationNeeded ? "Confirm Event Creation" : "Create Event"}
+            </button>
+          </form>
+        </div>
       ) : (
         <div className="createevent">
           <img src={eventcreation} alt="Event Creation" />
           <div>Connect your wallet first, to get started.</div>
         </div>
       )}
-    </div>
+    </>
   );
 };
 export default CreateEvent;

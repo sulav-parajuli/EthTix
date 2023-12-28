@@ -54,18 +54,20 @@ const UserIcon = () => {
       className={`user-icon-container ${isSmallScreen ? "nav-list" : ""}`}
       onClick={handleToggleDropdown}
     >
-      <div className="user-icon-image">
-        {/* <FontAwesomeIcon icon={faUser} /> */}
-        <FontAwesomeIcon icon={faCircleUser} />
-      </div>
+      {!isSmallScreen ? (
+        <div className="user-icon-image">
+          {/* <FontAwesomeIcon icon={faUser} /> */}
+          <FontAwesomeIcon icon={faCircleUser} />
+        </div>
+      ) : null}
       {isDropdownOpen && (
         <div className={"user-dropdown"}>
           <Link to="/mytickets" className="nav-item">
             My Tickets
           </Link>
           {isEventOrganizer ? (
-            <Link to="/createevent" className="nav-item">
-              Create Events
+            <Link to="/dashboard" className="nav-item">
+              Open Dashboard
             </Link>
           ) : null}
           <div className="nav-item" onClick={handleDisconnect}>
