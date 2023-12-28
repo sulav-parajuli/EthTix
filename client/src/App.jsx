@@ -5,7 +5,7 @@ import BrowseEvent from "./component/BrowseEvent.jsx";
 import "./App.css";
 
 // Import the contract ABI
-import accessControlAbi from "./artifacts/contracts/AccessContol.sol/AccessContol.json";
+import accessControlAbi from "./artifacts/contracts/AccessControl.sol/AccessControl.json";
 import userAbi from "./artifacts/contracts/User.sol/User.json";
 import eventOrganizerAbi from "./artifacts/contracts/EventOrganizer.sol/EventOrganizer.json";
 import ticketAbi from "./artifacts/contracts/Tickets.sol/Tickets.json";
