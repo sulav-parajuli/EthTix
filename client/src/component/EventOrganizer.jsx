@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 const EventOrganizer = () => {
   const [nextpage, setNextpage] = useState(false);
-  const { setEventOrganizer } = useAppContext();
+  const { setEventOrganizer, isEventOrganizer } = useAppContext();
   const navigate = useNavigate(); //to redirect to another page
 
   const buttonPressed = () => {
@@ -17,7 +17,7 @@ const EventOrganizer = () => {
     // fetch if user is eventorganizer or not from contract and set it's state.
     setEventOrganizer(true);
     //You might require local storage or session storage. It helps to set cookies.
-    // localStorage.setItem("isEventOrganizer", true);
+    localStorage.setItem("isEventOrganizer", isEventOrganizer);
     // sessionStorage.setItem("isEventOrganizer", true);
     document.body.classList.remove("popup-open"); // Allow scrolling
     navigate("/dashboard");

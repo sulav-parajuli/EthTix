@@ -5,7 +5,7 @@ import BrowseEvent from "./component/BrowseEvent.jsx";
 import "./App.css";
 
 // Import the contract ABI
-import accessControlAbi from "./artifacts/contracts/AccessContol.sol/AccessContol.json";
+import accessControlAbi from "./artifacts/contracts/AccessControl.sol/AccessControl.json";
 import userAbi from "./artifacts/contracts/User.sol/User.json";
 import eventOrganizerAbi from "./artifacts/contracts/EventOrganizer.sol/EventOrganizer.json";
 import ticketAbi from "./artifacts/contracts/Tickets.sol/Tickets.json";
@@ -43,8 +43,6 @@ function App() {
   const [account, setAccount] = useState("Not connected");
   //When react app is running this will automatically fetch contract instance
   const template = async (connectWallet) => {
-    // localStorage.setItem("connectWallet", connectWallet);
-
     //code to connect to metamask wallet
     //if we want to change the state of blockchain then we need to pay certain amount
 
@@ -139,19 +137,10 @@ function App() {
           draggable: true,
         });
       }
-      // if (connectWallet == true) {
-      //   toast.error("Error connecting to wallet.", {
-      //     position: "top-right",
-      //     autoClose: 5000,
-      //     hideProgressBar: false,
-      //     closeOnClick: true,
-      //     pauseOnHover: true,
-      //     draggable: true,
-      //   });
-      // }
     }
   };
   useEffect(() => {
+    //Setting parameter to 'false' means to skips wallet connection request but allows fetching the contract instance.
     template(false);
   }, []);
 

@@ -17,7 +17,9 @@ const Popup = ({ isOpen, onClose }) => {
         {isUserConnected && !isEventOrganizer ? (
           <EventOrganizer />
         ) : (
-          <p>Sign in to create event</p>
+          <div className="container mt-5">
+            <p>Sign in to create event</p>
+          </div>
         )}
       </div>
     </div>
