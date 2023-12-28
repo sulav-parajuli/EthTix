@@ -3,15 +3,23 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ReactDOM from "react-dom/client";
 import BrowseEvent from "./component/BrowseEvent.jsx";
 import "./App.css";
-import abi from "../../artifacts/contracts/Tickets.sol/Tickets.json";
+
+// Import the contract ABI
+import accessControlAbi from "./artifacts/contracts/AccessContol.sol/AccessContol.json";
+import userAbi from "./artifacts/contracts/User.sol/User.json";
+import eventOrganizerAbi from "./artifacts/contracts/EventOrganizer.sol/EventOrganizer.json";
+import ticketAbi from "./artifacts/contracts/Tickets.sol/Tickets.json";
+
 // Import the contract addresses from the JSON file
 import contractAddresses from "../../contractAddresses.json";
 import { ethers } from "ethers";
 import { ToastContainer } from "react-toastify"; // Import ToastContainer
 import { toast } from "react-toastify"; // Import toastify for displaying notifications
 import "react-toastify/dist/ReactToastify.css"; // Import the default styles
+
 //Import bootstrap css
 import "bootstrap/dist/css/bootstrap.min.css";
+
 //Import other components
 import Home from "./component/Home.jsx";
 import MyTickets from "./component/MyTickets.jsx";
@@ -27,18 +35,32 @@ function App() {
   const [state, setState] = useState({
     provider: null,
     signer: null,
-    contract: null,
+    accessControlContract: null,
+    userContract: null,
+    eventOrganizerContract: null,
+    ticketsContract: null,
   });
   const [account, setAccount] = useState("Not connected");
   //When react app is running this will automatically fetch contract instance
   const template = async (connectWallet) => {
     // localStorage.setItem("connectWallet", connectWallet);
-    const contractAddress = contractAddresses.tickets;
-    const contractABI = abi.abi;
+
     //code to connect to metamask wallet
     //if we want to change the state of blockchain then we need to pay certain amount
 
     try {
+      const accessAddress = contractAddresses.accessControl;
+      const accessContractABI = accessControlAbi.abi;
+
+      const userContractAddress = contractAddresses.user;
+      const userContractABI = userAbi.abi;
+
+      const organizerContractAddress = contractAddresses.eventOrganizer;
+      const organizerContractABI = eventOrganizerAbi.abi;
+
+      const ticketContractAddress = contractAddresses.tickets;
+      const ticketContractABI = ticketAbi.abi;
+
       const { ethereum } = window; //metamask inject ethereum object in window
       if (connectWallet == true) {
         //if connectWallet is true then only user wallet is requested.
@@ -72,13 +94,39 @@ function App() {
       const provider = new ethers.providers.Web3Provider(ethereum);
       const signer = provider.getSigner();
       //instance of the contract
-      const contract = new ethers.Contract(
-        contractAddress,
-        contractABI, //abi is the interface of the contract
+      const accessControlInstance = new ethers.Contract(
+        accessAddress,
+        accessContractABI, //abi is the interface of the contract
         signer
       );
+
+      const userContractInstance = new ethers.Contract(
+        userContractAddress,
+        userContractABI,
+        signer
+      );
+
+      const eventOrganizerContractInstance = new ethers.Contract(
+        organizerContractAddress,
+        organizerContractABI,
+        signer
+      );
+
+      const ticketsContractInstance = new ethers.Contract(
+        ticketContractAddress,
+        ticketContractABI,
+        signer
+      );
+
       // console.log(contract);
-      setState({ provider, signer, contract });
+      setState({
+        provider,
+        signer,
+        accessControlContract: accessControlInstance,
+        userContract: userContractInstance,
+        eventOrganizerContract: eventOrganizerContractInstance,
+        ticketsContract: ticketsContractInstance,
+      });
     } catch (error) {
       console.error("Error connecting to wallet:", error);
       if (!window.ethereum) {
@@ -106,6 +154,7 @@ function App() {
   useEffect(() => {
     template(false);
   }, []);
+
   return (
     <BrowserRouter>
       <AppProvider account={account} template={template}>

@@ -1,8 +1,9 @@
-import { React, useState } from "react";
+import React, { useState } from "react";
 import { ethers } from "ethers";
 import { useAppContext } from "./AppContext";
 import eventcreation from "../assets/images/eventcreation.png";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const CreateEvent = ({ state }) => {
   const [eventName, setEventName] = useState("");
@@ -68,15 +69,15 @@ const CreateEvent = ({ state }) => {
     event.preventDefault();
 
     if (
-      eventName.trim() === "" &&
-      priceInEther.trim() === "" &&
-      parseFloat(priceInEther) <= 0 &&
-      isNaN(parseFloat(priceInEther)) && // Check if priceInEther is a valid number
-      isNaN(new Date(date).getTime()) &&
-      new Date(date) < new Date() &&
-      isNaN(parseInt(totalTickets)) &&
-      parseInt(totalTickets) <= 0 &&
-      location.trim() === "" &&
+      eventName.trim() === "" ||
+      priceInEther.trim() === "" ||
+      parseFloat(priceInEther) <= 0 ||
+      isNaN(parseFloat(priceInEther)) || // Check if priceInEther is a valid number
+      isNaN(new Date(date).getTime()) ||
+      new Date(date) < new Date() ||
+      isNaN(parseInt(totalTickets)) ||
+      parseInt(totalTickets) <= 0 ||
+      location.trim() === "" ||
       time.trim() === ""
     ) {
       // Show an alert or handle the validation error
