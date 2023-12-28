@@ -72,7 +72,9 @@ const Login = () => {
   return (
     <div className="login-container">
       <div className="left-section">
-        {isRegister ? (
+        {!isConnected ? (
+          <div className="login-title">Connect Wallet</div>
+        ) : isRegister ? (
           <div className="login-title">Register</div>
         ) : (
           <div className="login-title">Login</div>
@@ -86,14 +88,16 @@ const Login = () => {
       </div>
       <div className="right-section">
         <form className="login-form">
-          <div className="mb-3">
-            <input
-              type="text"
-              placeholder="Username"
-              className="form-control"
-              id="username"
-            />
-          </div>
+          {isConnected ? (
+            <div className="mb-3">
+              <input
+                type="text"
+                placeholder="Username"
+                className="form-control"
+                id="username"
+              />
+            </div>
+          ) : null}
           {/* <div className="mb-3">
             <input
               type="password"
@@ -114,23 +118,25 @@ const Login = () => {
           ) : null} */}
           <hr className="line" />
           {isConnected ? (
-            <div className="user-address">{`Connected Wallet: ${account}`}</div>
+            <>
+              <div className="user-address">{`Connected Wallet: ${account}`}</div>
+              {isRegister ? (
+                <p>
+                  <b>Already have an account?</b>
+                  <a onClick={handlelink} className="link">
+                    Login
+                  </a>
+                </p>
+              ) : (
+                <p>
+                  <b>Don't have an account?</b>
+                  <a onClick={handlelink} className="link">
+                    Register
+                  </a>
+                </p>
+              )}
+            </>
           ) : null}
-          {isRegister ? (
-            <p>
-              <b>Already have an account?</b>
-              <a onClick={handlelink} className="link">
-                Login
-              </a>
-            </p>
-          ) : (
-            <p>
-              <b>Don't have an account?</b>
-              <a onClick={handlelink} className="link">
-                Register
-              </a>
-            </p>
-          )}
           <button className="login-button" onClick={connectToWallet}>
             {isConnected ? "Submit" : "Connect Wallet"}
           </button>

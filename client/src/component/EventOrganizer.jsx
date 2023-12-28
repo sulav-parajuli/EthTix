@@ -20,7 +20,7 @@ const EventOrganizer = () => {
     // localStorage.setItem("isEventOrganizer", true);
     // sessionStorage.setItem("isEventOrganizer", true);
     document.body.classList.remove("popup-open"); // Allow scrolling
-    navigate("/createevent");
+    navigate("/dashboard");
   };
 
   return (

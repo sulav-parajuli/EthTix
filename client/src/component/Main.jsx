@@ -44,7 +44,7 @@ const Main = () => {
   const handleUser = () => {
     if (isUserConnected && isEventOrganizer) {
       document.body.classList.remove("popup-open"); // Allow scrolling
-      navigate("/createevent");
+      navigate("/dashboard");
     } else {
       handleOpenPopup();
     }

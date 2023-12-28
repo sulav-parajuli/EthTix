@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import "../assets/css/Main.css";
 import ticket from "../assets/images/tickets.png";
+import ethtix from "../assets/images/abstract.png";
 import search from "../assets/images/search symbol.png";
 import EventDetail from "./EventDetail";
 
@@ -131,8 +132,7 @@ const BrowseEvent = ({ state }) => {
                             <div className="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
                               <a className="d-block blur-shadow-image">
                                 <img
-                                  src="https://images.unsplash.com/photo-1540553016722-983e48a2cd10?ixlib=rb-1.2.1&amp;ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&amp;auto=format&amp;fit=crop&amp;w=1950&amp;q=80"
-                                  alt="img-blur-shadow"
+                                  src={ethtix}
                                   className="img-fluid shadow border-radius-lg"
                                 />
                               </a>

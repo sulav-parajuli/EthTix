@@ -22,11 +22,11 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 //Import other components
 import Home from "./component/Home.jsx";
-import CreateEvent from "./component/CreateEvent.jsx";
 import MyTickets from "./component/MyTickets.jsx";
 import Navbar from "./component/Navbar.jsx";
 import Footer from "./component/footer.jsx";
 import Admin from "./component/Admin.jsx";
+import About from "./component/About.jsx";
 import { AppProvider } from "./component/AppContext.jsx"; // Import AppProvider
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -163,13 +163,10 @@ function App() {
           <Routes>
             <>
               <Route path="/" element={<Home />} />
-              <Route path="/admin" element={<Admin />} />
-              <Route
-                path="/createevent"
-                element={<CreateEvent state={state} />}
-              />
+              <Route path="/dashboard" element={<Admin state={state} />} />
               <Route path="events" element={<BrowseEvent state={state} />} />
               <Route path="mytickets" element={<MyTickets state={state} />} />
+              <Route path="about" element={<About />} />
             </>
           </Routes>
           <Footer />

@@ -6,11 +6,11 @@
 .user-icon-image {
   font-size: 30px;
   color: #2b50aa; /* Adjust the color as needed */
-  display: block;
   padding-right: 20px;
 }
 
-.user-dropdown {
+.user-dropdown,
+.userdropdown {
   width: max-content;
   position: absolute;
   top: 100%;
@@ -38,10 +38,7 @@
   .user-icon-container {
     text-align: justify;
     margin-left: 58% !important;
-    z-index: 1000;
-  }
-  .user-icon-image {
-    display: none !important;
+    z-index: 1;
   }
   .user-dropdown {
     position: static;
@@ -53,6 +50,9 @@
   .user-icon-container {
     margin-left: 5%;
   }
+  .user-icon-image {
+    display: none;
+  }
 }
 @media screen and (max-width: 851px) {
   .user-icon-container {
@@ -60,9 +60,6 @@
   }
 }
 @media (max-width: 768px) {
-  .user-icon-image {
-    display: none;
-  }
   .user-icon-container {
     margin-left: 60% !important;
   }
