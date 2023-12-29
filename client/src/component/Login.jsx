@@ -4,8 +4,9 @@ import walletImage from "../assets/images/wallet.png";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; // Import the default styles
 import { useAppContext } from "./AppContext";
-
-const Login = () => {
+import { ethers } from "ethers";
+import { signData, uploadToIPFS } from "../utils/ipfsUtils";
+const Login = ({ state }) => {
   const {
     isConnected,
     setConnected,
@@ -14,7 +15,9 @@ const Login = () => {
     account,
     template,
   } = useAppContext();
+  const { signer, userContract } = state;
   const [isRegister, setRegister] = useState(false);
+  const [username, setUsername] = useState("");
   useEffect(() => {
     async function fetchAccount() {
       try {
@@ -54,6 +57,24 @@ const Login = () => {
         //user validation logic
         // fetch if user is registered or not, eventorganizer or not from contract and set it's state.
         // setEventOrganizer(true);
+        const userAddress = account;
+        if (!username.trim()) {
+          alert("Please enter username");
+          return;
+        }
+        const userData = {
+          userAddress,
+          username,
+        };
+        //hash and sign data
+        const { data, signature } = await signData(
+          signer,
+          JSON.stringify(userData)
+        );
+        //upload to ipfs
+        const { ipfsCid } = await uploadToIPFS(data, signature);
+        console.log(data);
+        console.log(ipfsCid);
         setUserConnected(true); // Set isUserConnected to true when user gets logged in
       }
     } catch (error) {
@@ -95,6 +116,8 @@ const Login = () => {
                 placeholder="Username"
                 className="form-control"
                 id="username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
               />
             </div>
           ) : null}

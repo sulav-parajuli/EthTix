@@ -159,7 +159,7 @@ function App() {
     <BrowserRouter>
       <AppProvider account={account} template={template}>
         <div className="App">
-          <Navbar />
+          <Navbar state={state} />
           <Routes>
             <>
               <Route path="/" element={<Home />} />

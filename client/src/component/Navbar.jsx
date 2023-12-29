@@ -7,21 +7,21 @@ import { useAppContext } from "./AppContext";
 import Login from "./Login";
 import UserIcon from "./UserIcon"; // Import your user icon component
 
-const Popup = ({ isOpen, onClose }) => {
+const Popup = ({ isOpen, onClose, state }) => {
   return isOpen ? (
     <div className="popup">
       <div className="popup-inner">
         <button className="close" onClick={onClose}>
           Close
         </button>
-        <Login />
+        <Login state={state} />
       </div>
     </div>
   ) : null;
 };
 
 //Navbar containaing home , Events, about us and login button
-const Navbar = () => {
+const Navbar = ({ state }) => {
   const [isPopupOpen, setPopupOpen] = useState(false);
   const [isNavbarOpen, setNavbarOpen] = useState(false);
   const { setConnected, account, isUserConnected } = useAppContext();
@@ -121,7 +121,11 @@ const Navbar = () => {
                   Login/Register
                 </button>
               )}
-              <Popup isOpen={isPopupOpen} onClose={handleClosePopup} />
+              <Popup
+                isOpen={isPopupOpen}
+                onClose={handleClosePopup}
+                state={state}
+              />
             </div>
           </div>
         </div>
