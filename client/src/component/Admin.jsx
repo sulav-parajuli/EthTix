@@ -70,6 +70,7 @@ const Admin = ({ state }) => {
     // Additional cleanup if needed
 
     setUserConnected(false); // Set isUserConnected to false when logging out
+    localStorage.setItem("isUserConnected", false);
     setConnected(false); // Set isConnected to false when logging out
   };
 
@@ -396,20 +397,20 @@ const Admin = ({ state }) => {
                           </div>
                           {isDropdownOpen && (
                             <div className={"userdropdown"}>
-                              <li
+                              <div
                                 className="nav-item"
                                 onClick={() => handleSelectItem("mytickets")}
                               >
                                 My Tickets
-                              </li>
-                              <li
+                              </div>
+                              <div
                                 className="nav-item"
                                 onClick={() => {
                                   window.open("/", "_self");
                                 }}
                               >
                                 Open Home Page
-                              </li>
+                              </div>
                               <div
                                 className="nav-item"
                                 onClick={handleDisconnect}

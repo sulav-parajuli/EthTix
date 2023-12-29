@@ -28,6 +28,7 @@ const UserIcon = () => {
     // Additional cleanup if needed
 
     setUserConnected(false); // Set isUserConnected to false when logging out
+    localStorage.setItem("isUserConnected", false);
     setConnected(false); // Set isConnected to false when logging out
   };
 

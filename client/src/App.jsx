@@ -43,8 +43,6 @@ function App() {
   const [account, setAccount] = useState("Not connected");
   //When react app is running this will automatically fetch contract instance
   const template = async (connectWallet) => {
-    // localStorage.setItem("connectWallet", connectWallet);
-
     //code to connect to metamask wallet
     //if we want to change the state of blockchain then we need to pay certain amount
 
@@ -139,19 +137,10 @@ function App() {
           draggable: true,
         });
       }
-      // if (connectWallet == true) {
-      //   toast.error("Error connecting to wallet.", {
-      //     position: "top-right",
-      //     autoClose: 5000,
-      //     hideProgressBar: false,
-      //     closeOnClick: true,
-      //     pauseOnHover: true,
-      //     draggable: true,
-      //   });
-      // }
     }
   };
   useEffect(() => {
+    //Setting parameter to 'false' means to skips wallet connection request but allows fetching the contract instance.
     template(false);
   }, []);
 

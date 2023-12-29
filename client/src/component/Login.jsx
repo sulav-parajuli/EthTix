@@ -57,6 +57,7 @@ const Login = ({ state }) => {
         //user validation logic
         // fetch if user is registered or not, eventorganizer or not from contract and set it's state.
         // setEventOrganizer(true);
+
         const userAddress = account;
         if (!username.trim()) {
           alert("Please enter username");
@@ -75,7 +76,11 @@ const Login = ({ state }) => {
         const { ipfsCid } = await uploadToIPFS(data, signature);
         console.log(data);
         console.log(ipfsCid);
+
+        //localStorage.setItem("isEventOrganizer", true);
+
         setUserConnected(true); // Set isUserConnected to true when user gets logged in
+        localStorage.setItem("isUserConnected", true);
       }
     } catch (error) {
       console.error("Error in wallet connection:", error);
