@@ -15,30 +15,49 @@ const CreateEvent = ({ state }) => {
   const [location, setLocation] = useState("");
   const { isUserConnected } = useAppContext();
   const [confirmationNeeded, setConfirmationNeeded] = useState(false);
+  const [image, setImage] = useState(null);
   const navigate = useNavigate(); //to redirect to another page
 
-  const handleEventNameChange = (event) => {
-    setEventName(event.target.value);
-  };
+  // const handleEventNameChange = (event) => {
+  //   setEventName(event.target.value);
+  // };
 
-  const handlePriceChange = (event) => {
-    setPriceInEther(event.target.value);
-  };
+  // const handlePriceChange = (event) => {
+  //   setPriceInEther(event.target.value);
+  // };
 
-  const handleDateChange = (event) => {
-    setDate(event.target.value);
-  };
+  // const handleDateChange = (event) => {
+  //   setDate(event.target.value);
+  // };
 
-  const handleTotalTicketsChange = (event) => {
-    setTotalTickets(event.target.value);
-  };
+  // const handleTotalTicketsChange = (event) => {
+  //   setTotalTickets(event.target.value);
+  // };
 
-  const handleLocationChange = (event) => {
-    setLocation(event.target.value);
-  };
+  // const handleLocationChange = (event) => {
+  //   setLocation(event.target.value);
+  // };
 
-  const handleTimeChange = (event) => {
-    setTime(event.target.value);
+  // const handleTimeChange = (event) => {
+  //   setTime(event.target.value);
+  // };
+  const handleImageChange = (event) => {
+    const file = event.target.files[0]; // Get the first selected file
+    if (!file) {
+      alert("Please select an image");
+      return;
+    }
+    if (file.type !== "image/png") {
+      alert("Please select a png image");
+      return;
+    }
+    //Check file size (limit to 1MB)
+    const maxSizeInBytes = 1 * 1024 * 1024;
+    if (file.size > maxSizeInBytes) {
+      alert("Please select an image of size less than 1MB");
+      return;
+    }
+    setImage(file);
   };
 
   const calculateFee = async () => {
@@ -117,6 +136,7 @@ const CreateEvent = ({ state }) => {
         time,
 
         location,
+        image,
       };
       //sign data
       const { data, signature } = await signData(
@@ -178,7 +198,7 @@ const CreateEvent = ({ state }) => {
                 className="form-control"
                 id="eventName"
                 value={eventName}
-                onChange={handleEventNameChange}
+                onChange={(e) => setEventName(e.target.value)}
               />
             </div>
             <div className="mb-3">
@@ -191,7 +211,7 @@ const CreateEvent = ({ state }) => {
                 className="form-control"
                 id="price"
                 value={priceInEther}
-                onChange={handlePriceChange}
+                onChange={(e) => setPriceInEther(e.target.value)}
               />
             </div>
 
@@ -204,7 +224,7 @@ const CreateEvent = ({ state }) => {
                 className="form-control"
                 id="date"
                 value={date}
-                onChange={handleDateChange}
+                onChange={(e) => setDate(e.target.value)}
                 onKeyDown={(e) => e.preventDefault()}
               />
             </div>
@@ -218,7 +238,7 @@ const CreateEvent = ({ state }) => {
                 className="form-control"
                 id="location"
                 value={time}
-                onChange={handleTimeChange}
+                onChange={(e) => setTime(e.target.value)}
                 onKeyDown={(e) => e.preventDefault()}
               />
             </div>
@@ -233,7 +253,7 @@ const CreateEvent = ({ state }) => {
                 className="form-control"
                 id="TotalTickets"
                 value={totalTickets}
-                onChange={handleTotalTicketsChange}
+                onChange={(e) => setTotalTickets(e.target.value)}
               />
             </div>
 
@@ -246,7 +266,20 @@ const CreateEvent = ({ state }) => {
                 className="form-control"
                 id="location"
                 value={location}
-                onChange={handleLocationChange}
+                onChange={(e) => setLocation(e.target.value)}
+              />
+            </div>
+
+            <div className="mb-3">
+              <label htmlFor="location" className="form-label">
+                Image
+              </label>
+              <input
+                type="file"
+                className="form-control"
+                id="image"
+                value={image}
+                onChange={handleImageChange}
               />
             </div>
 
