@@ -13,7 +13,7 @@ const EventOrganizer = ({ state }) => {
   const [organizationEmail, setOrganizationEmail] = useState("");
   const { signer, eventOrganizerContract } = state;
   const navigate = useNavigate(); //to redirect to another page
-
+  //console.log(state);
   const buttonPressed = () => {
     setNextpage(true);
   };
