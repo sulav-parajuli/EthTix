@@ -14,7 +14,7 @@ contract EventOrganizer is AccessControl,User{
    event OrganizerRegistered(address indexed organizerAddress,string indexed CID);
 
     //function to register organizer and store their CID
-   function registerEventOrganizer(string memory _CID)public{
+   function registerEventOrganizer(string memory _CID)public onlyUser{
     require(bytes(_CID).length>0,"CID cannot be empty");
     organizerCID[msg.sender]=_CID; 
     organizers[msg.sender]=true;
