@@ -4,18 +4,17 @@ import walletImage from "../assets/images/wallet.png";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; // Import the default styles
 import { useAppContext } from "./AppContext";
-import { ethers } from "ethers";
 import { signData, uploadToIPFS, retrieveFromIPFS } from "../utils/ipfsUtils";
 const Login = ({ state }) => {
   const {
     isConnected,
     setConnected,
     setUserConnected,
-    // setEventOrganizer,
+    setEventOrganizer,
     account,
     template,
   } = useAppContext();
-  const { signer, userContract } = state;
+  const { signer, userContract, eventOrganizerContract } = state;
   const [isRegister, setRegister] = useState(false);
   const [username, setUsername] = useState("");
   useEffect(() => {
@@ -60,7 +59,14 @@ const Login = ({ state }) => {
 
         const userAddress = account;
         if (!username.trim()) {
-          alert("Please enter username");
+          toast.error("Please enter username.", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+          });
           return;
         }
         const userData = {
@@ -86,38 +92,71 @@ const Login = ({ state }) => {
           }
           const transaction = await userContract.registerUser(ipfsCid);
           await transaction.wait();
-          console.log(transaction);
+          // console.log(transaction);
+          toast.success(
+            "User Registered successfully. Login now to get started.",
+            {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+            }
+          );
         } else {
           //check if user is registered or not
           const userCID = await userContract.getUserCID(userAddress);
-          console.log(userCID);
+          // console.log(userCID);
           if (!userCID) {
-            alert("User is not registered. Please register first.");
+            toast.error("User is not registered. Register first to continue.", {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+            });
             return;
           } else {
             const retrievedData = await retrieveFromIPFS(userCID);
             const userAddresss = retrievedData.userAddress;
             const usernamee = retrievedData.username;
-            console.log(userAddresss);
-            console.log(usernamee);
+            // console.log(userAddresss);
+            // console.log(usernamee);
             if (userAddress === userAddresss && username === usernamee) {
               setUserConnected(true); // Set isUserConnected to true when user gets logged in
               localStorage.setItem("isUserConnected", true);
+              //check if event organizer is registered or not
+              const eventorgCID = await eventOrganizerContract.getOrganizerCID(
+                userAddress
+              );
+              // console.log(eventorgCID);
+              if (eventorgCID !== "") {
+                setEventOrganizer(true);
+              } else {
+                setEventOrganizer(false);
+              }
             } else {
-              alert(" you are not a valid user. Please register first.");
+              toast.error(
+                "You are not a valid user. Register first to continue.",
+                {
+                  position: "top-right",
+                  autoClose: 5000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                }
+              );
               return;
             }
           }
         }
-
-        //localStorage.setItem("isEventOrganizer", true);
-
-        setUserConnected(true); // Set isUserConnected to true when user gets logged in
-        localStorage.setItem("isUserConnected", true);
       }
     } catch (error) {
-      console.error("Error in wallet connection:", error);
-      toast.error("Error in wallet connection.", {
+      console.error("Error Occured!:", error);
+      toast.error("Error Occured!.", error, {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,

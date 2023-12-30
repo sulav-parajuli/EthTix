@@ -25,14 +25,14 @@ import { useAppContext } from "./AppContext";
 import CreateEvent from "./CreateEvent";
 import Login from "./Login";
 
-const Popup = ({ isOpen, onClose }) => {
+const Popup = ({ isOpen, onClose, state }) => {
   return isOpen ? (
     <div className="popup">
       <div className="popup-inner">
         <button className="close" onClick={onClose}>
           Close
         </button>
-        <Login />
+        <Login state={state} />
       </div>
     </div>
   ) : null;
@@ -468,7 +468,11 @@ const Admin = ({ state }) => {
             </div>
           </nav>
           <hr className="horizontal dark mt-4" />
-          <Popup isOpen={isPopupOpen} onClose={handleClosePopup} />
+          <Popup
+            isOpen={isPopupOpen}
+            onClose={handleClosePopup}
+            state={state}
+          />
 
           {/*End Navbar*/}
 
