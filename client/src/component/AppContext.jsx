@@ -45,8 +45,10 @@ const AppProvider = ({ children, template, account }) => {
   }, [isConnected]);
 
   useEffect(() => {
-    setUserConnected(false);
-    localStorage.setItem("isUserConnected", isUserConnected);
+    if (isConnected !== true) {
+      setUserConnected(false);
+      localStorage.setItem("isUserConnected", isUserConnected);
+    }
   }, [!isConnected]);
 
   return (

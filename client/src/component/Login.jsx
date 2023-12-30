@@ -72,6 +72,8 @@ const Login = ({ state }) => {
           signer,
           JSON.stringify(userData)
         );
+        //upload to ipfs only if user wants to register.
+        // if (isRegister) {
         //upload to ipfs
         const { ipfsCid } = await uploadToIPFS(data, signature);
         //console.log(data);
