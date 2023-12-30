@@ -3,7 +3,8 @@ import { ethers } from "ethers";
 import { useAppContext } from "./AppContext";
 import eventcreation from "../assets/images/eventcreation.png";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { signData, uploadToIPFS } from "../utils/ipfsUtils";
+//import axios from "axios";
 
 const CreateEvent = ({ state }) => {
   const [eventName, setEventName] = useState("");
@@ -99,16 +100,32 @@ const CreateEvent = ({ state }) => {
   };
 
   const createEvent = async () => {
-    const { contract } = state;
+    const { signer, ticketsContract } = state;
     //event.preventDefault(); //to make sure when submitting form page doesnot get reload
 
     //console.log("Connected to contract:", contract);
 
     try {
-      if (!contract) {
+      if (!ticketsContract) {
         alert("Contract is not deployed");
         return;
       }
+      const eventData = {
+        eventName,
+
+        date,
+        time,
+
+        location,
+      };
+      //sign data
+      const { data, signature } = await signData(
+        signer,
+        JSON.stringify(eventData)
+      );
+      //upload to ipfs
+      const { ipfsCid } = await uploadToIPFS(data, signature);
+
       //convert ether to wei
       const priceInWei = ethers.utils.parseEther(priceInEther);
       //conver calculatefee value to wei
@@ -120,11 +137,10 @@ const CreateEvent = ({ state }) => {
 
       // Send transaction with estimated gas and additional value
       const transaction = await contract.createEvent(
-        eventName,
-        priceInWei,
-        eventTimestamp,
+        ipfsCid,
         totalTickets,
-        location,
+        priceInWei,
+
         {
           value: additionalValue.add(10000),
         }
