@@ -67,7 +67,7 @@ const Login = ({ state }) => {
           userAddress,
           username,
         };
-        //hash and sign data
+        //sign data
         const { data, signature } = await signData(
           signer,
           JSON.stringify(userData)
@@ -79,6 +79,10 @@ const Login = ({ state }) => {
         //console.log(data);
         //console.log(ipfsCid);
         //Sending ipfsCid to smart contract
+        if (!userContract) {
+          alert("Contract is not deployed");
+          return;
+        }
         const transaction = await userContract.registerUser(ipfsCid);
         await transaction.wait();
         console.log(transaction);
