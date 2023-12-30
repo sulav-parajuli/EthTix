@@ -92,7 +92,7 @@ const CreateEvent = ({ state }) => {
     event.preventDefault();
 
     const fee = await calculateFee();
-    const confirmationMessage = `You will be charged ${fee} ETH for creating this event. Are you sure you want to continue?`;
+    const confirmationMessage = `You will be charged ${fee} ETH for creating this event and you can't alter the event details once created. Are you sure you want to continue?`;
     if (window.confirm(confirmationMessage)) {
       createEvent();
       setConfirmationNeeded(false);
@@ -152,8 +152,6 @@ const CreateEvent = ({ state }) => {
       console.log("Event Created");
       // Redirect to a events route when event created successfully
       navigate("/events");
-      document.querySelector(".topnav").style.display = "flex";
-      document.querySelector(".footer-container").style.display = "block";
     } catch (error) {
       console.log(error);
     }
