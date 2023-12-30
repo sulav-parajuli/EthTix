@@ -11,7 +11,11 @@ import {
   faLinkedin,
   faInstagram,
 } from "@fortawesome/free-brands-svg-icons";
-import { faGlobe } from "@fortawesome/free-solid-svg-icons";
+import {
+  faGlobe,
+  faPhone,
+  faEnvelope,
+} from "@fortawesome/free-solid-svg-icons";
 
 const About = () => {
   return (
@@ -20,7 +24,9 @@ const About = () => {
         <div className="row justify-content-center">
           <div className="col-lg-8 col-md-10">
             <div className="text-center">
-              <h2 className="display-6">About EthTix</h2>
+              <h2 className="display-6" id="ethtix">
+                About EthTix
+              </h2>
               <p className="lead">
                 Lorem ipsum dolor sit, amet consectetur adipisicing elit. Et nam
                 quo nihil quis necessitatibus cupiditate quaerat mollitia
@@ -34,8 +40,13 @@ const About = () => {
 
       <div className="container" data-aos="fade-up">
         <div className="text-center">
-          <h2 className="display-6">Meet the Team</h2>
-          <p className="lead">Our talented and dedicated team</p>
+          <h2 className="display-6" id="meettheteam">
+            Meet the Team
+          </h2>
+          <p className="lead">
+            Our talented and dedicated team driving the revolution in
+            decentralized ticketing.
+          </p>
         </div>
 
         <div className="row">
@@ -44,25 +55,50 @@ const About = () => {
               name: "Aakriti Bhusal",
               role: "Full Stack Developer",
               imgSrc: aakriti,
+              phone: "tel:1234567890",
+              email: "mailto:example@example.com",
+              facebook: "",
+              twitter: "",
+              instagram: "",
+              linkedin: "",
+              website: "",
             },
             {
               name: "Karuna Acharya",
               role: "Full Stack Developer",
               imgSrc: karuna,
+              phone: "tel:1234567890",
+              email: "mailto:example@example.com",
+              facebook: "",
+              twitter: "",
+              instagram: "",
+              linkedin: "",
+              website: "",
             },
             {
               name: "Sulav Parajuli",
               role: "Full Stack Developer",
               imgSrc: sulav,
+              phone: "tel:1234567890",
+              email: "mailto:example@example.com",
+              facebook: "",
+              twitter: "",
+              instagram: "",
+              linkedin: "",
+              website: "",
             },
           ].map((member, index) => (
-            <div key={index} className="col-4 mb-4">
+            <div key={index} className="col-md-4 mb-4">
               <div className="container">
-                <div className="row justify-space-between py-2">
-                  <div className="col-6 mx-auto">
-                    <div className="card shadow-lg mt-4">
+                <div className="row justify-content-between py-2">
+                  <div className="col-12">
+                    <div
+                      className="card shadow-lg mt-4 position-relative"
+                      data-aos="fade-up"
+                      data-aos-delay={100 * (index + 1)}
+                    >
                       <div className="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
-                        <a
+                        <div
                           className="d-block blur-shadow-image"
                           data-aos="zoom-in"
                           data-aos-delay={100 * (index + 1)}
@@ -72,25 +108,33 @@ const About = () => {
                             alt={member.name}
                             className="img-fluid shadow border-radius-lg"
                           />
-                        </a>
+                          <div className="sociall">
+                            <a href={member.phone} className="me-2">
+                              <FontAwesomeIcon icon={faPhone} />
+                            </a>
+                            <a href={member.email} className="me-2">
+                              <FontAwesomeIcon icon={faEnvelope} />
+                            </a>
+                          </div>
+                        </div>
                       </div>
                       <div className="card-body">
                         <h4 className="card-title">{member.name}</h4>
                         <p className="card-text">{member.role}</p>
                         <div className="social">
-                          <a href="#" className="me-2">
+                          <a href={member.facebook} className="me-2">
                             <FontAwesomeIcon icon={faFacebook} />
                           </a>
-                          <a href="#" className="me-2">
+                          <a href={member.twitter} className="me-2">
                             <FontAwesomeIcon icon={faXTwitter} />
                           </a>
-                          <a href="#" className="me-2">
+                          <a href={member.instagram} className="me-2">
                             <FontAwesomeIcon icon={faInstagram} />
                           </a>
-                          <a href="#" className="me-2">
+                          <a href={member.linkedin} className="me-2">
                             <FontAwesomeIcon icon={faLinkedin} />
                           </a>
-                          <a href="#" className="me-2">
+                          <a href={member.website} className="me-2">
                             <FontAwesomeIcon icon={faGlobe} />
                           </a>
                         </div>

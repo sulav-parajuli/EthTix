@@ -21,7 +21,7 @@
 .main-event {
   display: flex;
   background-color: white;
-  padding-bottom: 2%;
+  margin-top: 2%;
 }
 
 .events {
@@ -44,7 +44,7 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  padding: 20px;
+  /* padding: 20px; */
   padding-right: 0px;
   padding-left: 5%;
   justify-content: center;
@@ -60,6 +60,7 @@
 }
 .maine.text-block {
   padding-left: 0%;
+  padding-right: 15%;
   text-align: justify;
 }
 .maine p.main-text {
@@ -75,12 +76,8 @@
   animation: fadeInUp 1s ease-in-out;
 }
 
-.maine .sub-text {
-  padding-right: 10%;
-}
-
 .sub-text {
-  font-size: 24px;
+  font-size: 20px;
   font-weight: light;
   color: #5a5a5a;
   animation: fadeInUp 1s ease-in-out;
@@ -204,6 +201,120 @@ img.ticketcounter {
   cursor: pointer;
 }
 
+.aboutcontainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 5%;
+  border-radius: 20px;
+  background-color: whitesmoke;
+}
+
+/* Custom CSS for zoom-in effect */
+/* .card:hover .blur-shadow-image {
+  transform: scale(1.1);
+  transition: transform 0.3s ease-out;
+} */
+
+.card .sociall {
+  display: flex;
+  position: absolute;
+  bottom: 0px;
+  width: 100%;
+  opacity: 0;
+  transition: 0.5s;
+  background: rgba(255, 255, 255, 0.9);
+  z-index: 2;
+  justify-content: space-evenly;
+}
+
+.card .sociall a {
+  transition: color 0.3s;
+  margin: 15px 12px;
+  display: block;
+  line-height: 100%;
+  text-align: center;
+}
+
+.card:hover .sociall {
+  opacity: 1;
+}
+
+.card-header {
+  border-bottom: none !important;
+}
+
+/*--------------------------------------------------------------
+# F.A.Q
+--------------------------------------------------------------*/
+.faq {
+  padding-bottom: 5%;
+}
+
+.faq .accordion-collapse {
+  border: 0;
+}
+
+.faq .accordion-button {
+  padding: 15px 15px 20px 0;
+  font-weight: 600;
+  border: 0;
+  font-size: 18px;
+  color: #5a5a5a;
+  text-align: left;
+}
+
+.faq .accordion-button:focus {
+  box-shadow: none;
+}
+
+.faq .accordion-button:not(.collapsed) {
+  background: none;
+  color: #008eb0;
+  border-bottom: 0;
+}
+
+.faq .accordion-body {
+  padding: 0 0 25px 0;
+  border: 0;
+}
+
+/*--------------------------------------------------------------
+# Features
+--------------------------------------------------------------*/
+.features {
+  padding-bottom: 5%;
+}
+
+.features .feature-box {
+  padding: 24px 20px;
+  box-shadow: 0px 0 30px rgba(1, 41, 112, 0.08);
+  transition: 0.3s;
+  height: 100%;
+}
+
+.features .feature-box h3 {
+  font-size: 18px;
+  color: #008eb0;
+  font-weight: 700;
+  margin: 0;
+}
+
+.features .feature-box i {
+  line-height: 0;
+  background: #ecf3ff;
+  padding: 4px;
+  margin-right: 10px;
+  font-size: 24px;
+  border-radius: 3px;
+  transition: 0.3s;
+}
+
+.features .feature-box:hover i {
+  background: #008eb0;
+  color: #fff;
+}
+
 /* Media Query for Small Screens */
 @media screen and (max-width: 900px) {
   .eventpage {
@@ -221,6 +332,10 @@ img.ticketcounter {
   }
 }
 @media screen and (max-width: 768px) {
+  .mainevent,
+  .aboutcontainer {
+    margin: 5%;
+  }
   .eventpage {
     padding-top: 96px;
   }

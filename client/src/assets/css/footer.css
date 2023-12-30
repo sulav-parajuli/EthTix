@@ -129,6 +129,18 @@
     font-size: 24px;
   }
 
+  .footer-links ul {
+    --bs-gutter-y: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: calc(-0.5 * var(--bs-gutter-x));
+    margin-left: calc(-0.5 * var(--bs-gutter-x));
+  }
+
+  .footer-links ol {
+    padding: 2%;
+  }
+
   .footer-links li {
     margin: 5px;
   }
@@ -155,5 +167,11 @@
 
   .footer-copyright {
     font-size: 12px;
+  }
+}
+
+@media screen and (max-width: 300px) {
+  .footer-logo img {
+    height: 70px;
   }
 }

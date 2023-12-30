@@ -50,4 +50,28 @@ async function uploadToIPFS(Data, signature) {
     throw error;
   }
 }
-export { signData, uploadToIPFS };
+
+async function retrieveFromIPFS(ipfsCid) {
+  try {
+    // Use the Pinata IPFS gateway URL
+    const ipfsGatewayUrl = `https://gateway.pinata.cloud/ipfs/${ipfsCid}`;
+
+    // Make a GET request to the IPFS gateway to retrieve the data
+    const response = await axios.get(ipfsGatewayUrl);
+
+    // Check if the request was successful
+    if (response.status === 200) {
+      // The retrieved data is in the response.data
+      const retrievedData = response.data;
+      return retrievedData;
+    } else {
+      console.error("Failed to retrieve data. Status code:", response.status);
+      return null;
+    }
+  } catch (error) {
+    console.error("Error retrieving data from IPFS:", error);
+    throw error;
+  }
+}
+
+export { signData, uploadToIPFS, retrieveFromIPFS };

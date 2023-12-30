@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 //Import css
 import "../assets/css/Admin.css";
 import "../assets/css/UserIcon.css";
@@ -17,6 +18,7 @@ import {
   faUsers,
   faCalendarCheck,
   faChartLine,
+  faGear,
 } from "@fortawesome/free-solid-svg-icons";
 //Import Other Components
 import { useAppContext } from "./AppContext";
@@ -49,10 +51,41 @@ const Admin = ({ state }) => {
     // isEventOrganizer,
     setUserConnected,
   } = useAppContext();
+  const navigate = useNavigate();
   useEffect(() => {
+    //hide top navbar and footer while dashboard component is opened.
     document.querySelector(".topnav").style.display = "none";
     document.querySelector(".footer-container").style.display = "none";
   }, []);
+
+  useEffect(() => {
+    const handleBackButton = () => {
+      //show top navbar and footer while dashboard component is not opened.
+      //this function gets invoked when user press back button on their browser from dashboard component.
+      document.querySelector(".topnav").style.display = "flex";
+      document.querySelector(".footer-container").style.display = "block";
+    };
+
+    const handlePopState = (event) => {
+      if (event.state && event.state.backButtonPressed) {
+        handleBackButton();
+      }
+    };
+
+    // Add the event listener when the component mounts
+    window.addEventListener("popstate", handlePopState);
+
+    // Push a state object onto the history stack
+    navigate({ state: { backButtonPressed: false } });
+
+    // Modify the state object when the user presses the back button
+    navigate({ state: { backButtonPressed: true } });
+
+    // Remove the event listener when the component unmounts
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, [navigate]);
 
   const handleToggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
@@ -371,7 +404,7 @@ const Admin = ({ state }) => {
                       className="nav-link text-body p-0"
                       onClick={handleOpenSetting}
                     >
-                      <i className="fa fa-cog fixed-plugin-button-nav cursor-pointer"></i>
+                      <FontAwesomeIcon icon={faGear} />
                     </a>
                   </li>
                   <li className="nav-item dropdown pe-2 d-flex align-items-center">
@@ -381,7 +414,7 @@ const Admin = ({ state }) => {
                       data-bs-toggle="dropdown"
                       aria-expanded="false"
                     >
-                      <i className="fa fa-bell cursor-pointer"></i>
+                      <FontAwesomeIcon icon={faBell} />
                     </a>
                   </li>
                   <li className="nav-item dropdown pe-2 d-flex align-items-center">

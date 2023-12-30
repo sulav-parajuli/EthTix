@@ -61,17 +61,19 @@ const Main = () => {
       <div className="text-container">
         <div className="text-block">
           <p className="main main-text">
-            {showMoreInfo
-              ? "Planning to host your own event?"
-              : "Transforming your event adventure!"}
+            {showMoreInfo ? (
+              "Planning to host your own event?"
+            ) : (
+              <>{"Welcome to EthTix!"}</>
+            )}
           </p>
           <p className="sub-text">
             {showMoreInfo
               ? "Effortlessly organize, execute, and analyze events with our user-friendly UI. Elevate your event hosting experience from start to finish. Get started now!"
-              : "Unlocking the potential of your tickets"}
+              : "Elevating your event adventure and unlocking the full potential of your tickets"}
           </p>
         </div>
-        <div className="buttons">
+        <div className="buttons" id="hostevent">
           <button
             style={{ display: showMoreInfo ? "block" : "none" }}
             className="main-button"

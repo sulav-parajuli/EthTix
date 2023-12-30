@@ -36,10 +36,10 @@ const AppProvider = ({ children, template, account }) => {
   useEffect(() => {
     const eventorg = localStorage.getItem("isEventOrganizer");
     const user = localStorage.getItem("isUserConnected");
-    if (eventorg) {
+    if (eventorg === "true") {
       setEventOrganizer(true);
     }
-    if (user) {
+    if (user === "true") {
       setUserConnected(true);
     }
   }, [isConnected]);

@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; // Import the default styles
 import { useAppContext } from "./AppContext";
 import { ethers } from "ethers";
-import { signData, uploadToIPFS } from "../utils/ipfsUtils";
+import { signData, uploadToIPFS, retrieveFromIPFS } from "../utils/ipfsUtils";
 const Login = ({ state }) => {
   const {
     isConnected,
@@ -67,25 +67,48 @@ const Login = ({ state }) => {
           userAddress,
           username,
         };
-        //sign data
-        const { data, signature } = await signData(
-          signer,
-          JSON.stringify(userData)
-        );
         //upload to ipfs only if user wants to register.
-        // if (isRegister) {
-        //upload to ipfs
-        const { ipfsCid } = await uploadToIPFS(data, signature);
-        //console.log(data);
-        //console.log(ipfsCid);
-        //Sending ipfsCid to smart contract
-        if (!userContract) {
-          alert("Contract is not deployed");
-          return;
+        if (isRegister) {
+          //sign data
+          const { data, signature } = await signData(
+            signer,
+            JSON.stringify(userData)
+          );
+
+          //upload to ipfs
+          const { ipfsCid } = await uploadToIPFS(data, signature);
+          //console.log(data);
+          //console.log(ipfsCid);
+          //Sending ipfsCid to smart contract
+          if (!userContract) {
+            alert("Contract is not deployed");
+            return;
+          }
+          const transaction = await userContract.registerUser(ipfsCid);
+          await transaction.wait();
+          console.log(transaction);
+        } else {
+          //check if user is registered or not
+          const userCID = await userContract.getUserCID(userAddress);
+          console.log(userCID);
+          if (!userCID) {
+            alert("User is not registered. Please register first.");
+            return;
+          } else {
+            const retrievedData = await retrieveFromIPFS(userCID);
+            const userAddresss = retrievedData.userAddress;
+            const usernamee = retrievedData.username;
+            console.log(userAddresss);
+            console.log(usernamee);
+            if (userAddress === userAddresss && username === usernamee) {
+              setUserConnected(true); // Set isUserConnected to true when user gets logged in
+              localStorage.setItem("isUserConnected", true);
+            } else {
+              alert(" you are not a valid user. Please register first.");
+              return;
+            }
+          }
         }
-        const transaction = await userContract.registerUser(ipfsCid);
-        await transaction.wait();
-        console.log(transaction);
 
         //localStorage.setItem("isEventOrganizer", true);
 

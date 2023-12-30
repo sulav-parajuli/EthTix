@@ -10,7 +10,7 @@ import "../assets/css/footer.css";
 
 const Footer = () => {
   return (
-    <footer className="footer-container">
+    <footer className="footer-container footer">
       <div className="footer-content">
         <div className="footer-row">
           <div className="footer-logo">
@@ -19,43 +19,43 @@ const Footer = () => {
           </div>
         </div>
         <hr className="footer-separator" />
-        <div className="footer-row row ">
+        <div className="footer-row">
           <div className="footer-links">
             <ul>
               <ol>
                 Useful Links
                 <li>
-                  <a href="#">Home</a>
+                  <a href="/#home">Home</a>
                 </li>
                 <li>
-                  <a href="#">About</a>
+                  <a href="/about">About</a>
                 </li>
                 <li>
-                  <a href="#">Events</a>
+                  <a href="/events">Events</a>
                 </li>
               </ol>
               <ol>
                 Services
                 <li>
-                  <a href="#">Host Event</a>
+                  <a href="/#hostevent">Host Event</a>
                 </li>
                 <li>
-                  <a href="#">Open Dashboard</a>
+                  <a href="/dashboard">Open Dashboard</a>
                 </li>
                 <li>
-                  <a href="#">Tools</a>
+                  <a href="/dashboard">Tools</a>
                 </li>
               </ol>
               <ol>
                 Learn
                 <li>
-                  <a href="#">FAQs</a>
+                  <a href="/#faq">FAQs</a>
                 </li>
                 <li>
                   <a href="#">Why EthTix</a>
                 </li>
                 <li>
-                  <a href="#">Marketing</a>
+                  <a href="#">Help & Support</a>
                 </li>
               </ol>
               <ol>
