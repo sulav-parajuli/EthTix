@@ -6,10 +6,14 @@ import Feature from "./Feature";
 import FAQs from "./FAQs";
 import "../assets/css/Main.css";
 
-const Home = () => {
+const Home = ({ state }) => {
+  useEffect(() => {
+    document.querySelector(".topnav").style.display = "flex";
+    document.querySelector(".footer-container").style.display = "block";
+  }, []);
   return (
-    <div className="mcontainer" id="home">
-      <Main />
+    <div className="mcontainer">
+      <Main state={state} />
       <MainEvent />
       <MainAbout />
       <Feature />
