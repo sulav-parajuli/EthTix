@@ -72,11 +72,13 @@ const Login = ({ state }) => {
           signer,
           JSON.stringify(userData)
         );
+        //upload to ipfs only if user wants to register.
+        // if (isRegister) {
         //upload to ipfs
         const { ipfsCid } = await uploadToIPFS(data, signature);
         console.log(data);
         console.log(ipfsCid);
-
+        // }
         //localStorage.setItem("isEventOrganizer", true);
 
         setUserConnected(true); // Set isUserConnected to true when user gets logged in

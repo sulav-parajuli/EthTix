@@ -21,7 +21,6 @@ const AppProvider = ({ children, template, account }) => {
     async function fetchAccount() {
       try {
         if ((await account) !== "Not connected") {
-          console.log(account);
           setConnected(true);
         } else {
           setConnected(false);
@@ -45,8 +44,10 @@ const AppProvider = ({ children, template, account }) => {
   }, [isConnected]);
 
   useEffect(() => {
-    setUserConnected(false);
-    localStorage.setItem("isUserConnected", isUserConnected);
+    if (isConnected !== true) {
+      setUserConnected(false);
+      localStorage.setItem("isUserConnected", isUserConnected);
+    }
   }, [!isConnected]);
 
   return (
