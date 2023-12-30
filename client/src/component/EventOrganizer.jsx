@@ -1,20 +1,62 @@
 import { React, useState } from "react";
 import { useAppContext } from "./AppContext";
 import { useNavigate } from "react-router-dom";
+import { signData, uploadToIPFS } from "../utils/ipfsUtils";
 
-const EventOrganizer = () => {
+const EventOrganizer = ({ state }) => {
   const [nextpage, setNextpage] = useState(false);
   const { setEventOrganizer, isEventOrganizer } = useAppContext();
+  const [name, setName] = useState("");
+  const [organizationName, setOrganizationName] = useState("");
+  const [organizationType, setOrganizationType] = useState("");
+  const [organizationLocation, setOrganizationLocation] = useState("");
+  const [organizationEmail, setOrganizationEmail] = useState("");
+  const { signer, eventOrganizerContract } = state;
   const navigate = useNavigate(); //to redirect to another page
 
   const buttonPressed = () => {
     setNextpage(true);
   };
 
-  const handleEventOrganizer = () => {
-    //When user clicks on submit button, save eventorganizer details in contract.
-    // Write other logic here
-    // fetch if user is eventorganizer or not from contract and set it's state.
+  const handleEventOrganizer = async () => {
+    //Validation of data
+    if (
+      !name ||
+      !organizationName ||
+      !organizationType ||
+      !organizationLocation ||
+      !organizationEmail
+    ) {
+      alert("Please fill all the fields");
+      return;
+    }
+    const eventOrganizerData = {
+      name,
+      organizationName,
+      organizationType,
+      organizationLocation,
+      organizationEmail,
+    };
+    console.log(eventOrganizerData);
+    //signdata
+    const { data, signature } = await signData(
+      signer,
+      JSON.stringify(eventOrganizerData)
+    );
+    //upload to ipfs
+    const { ipfsCid } = await uploadToIPFS(data, signature);
+    if (!eventOrganizerContract) {
+      console.log("Contract not deployed");
+      return;
+    }
+    console.log(ipfsCid);
+    console.log(eventOrganizerContract);
+    const transaction = await eventOrganizerContract.registerEventOrganizer(
+      ipfsCid
+    );
+    await transaction.wait();
+    console.log(transaction);
+
     setEventOrganizer(true);
     //You might require local storage or session storage. It helps to set cookies.
     localStorage.setItem("isEventOrganizer", isEventOrganizer);
@@ -39,6 +81,8 @@ const EventOrganizer = () => {
                     placeholder="Enter your Name"
                     className="form-control"
                     id="name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
                   />
                 </div>
                 <div className="mb-3">
@@ -47,6 +91,8 @@ const EventOrganizer = () => {
                     placeholder="Enter your organization name"
                     className="form-control"
                     id="organizationname"
+                    value={organizationName}
+                    onChange={(e) => setOrganizationName(e.target.value)}
                   />
                 </div>
                 <div className="mb-3">
@@ -55,6 +101,8 @@ const EventOrganizer = () => {
                     placeholder="Type of organization"
                     className="form-control"
                     id="organizationname"
+                    value={organizationType}
+                    onChange={(e) => setOrganizationType(e.target.value)}
                   />
                 </div>
                 <div className="mb-3">
@@ -63,6 +111,8 @@ const EventOrganizer = () => {
                     placeholder="Organization location"
                     className="form-control"
                     id="organization location"
+                    value={organizationLocation}
+                    onChange={(e) => setOrganizationLocation(e.target.value)}
                   />
                 </div>
                 <div className="mb-3">
@@ -71,6 +121,8 @@ const EventOrganizer = () => {
                     placeholder="Organization email"
                     className="form-control"
                     id="organization email"
+                    value={organizationEmail}
+                    onChange={(e) => setOrganizationEmail(e.target.value)}
                   />
                 </div>
                 <button

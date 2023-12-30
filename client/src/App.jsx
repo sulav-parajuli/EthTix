@@ -151,7 +151,7 @@ function App() {
           <Navbar state={state} />
           <Routes>
             <>
-              <Route path="/" element={<Home />} />
+              <Route path="/" element={<Home state={state} />} />
               <Route path="/dashboard" element={<Admin state={state} />} />
               <Route path="events" element={<BrowseEvent state={state} />} />
               <Route path="mytickets" element={<MyTickets state={state} />} />

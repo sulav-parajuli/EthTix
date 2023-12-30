@@ -133,10 +133,10 @@ const CreateEvent = ({ state }) => {
       const additionalValue = ethers.utils.parseEther(await calculateFee());
 
       //convet date and time to timestamp
-      const eventTimestamp = new Date(`${date} ${time}`).getTime();
+      //const eventTimestamp = new Date(`${date} ${time}`).getTime();
 
       // Send transaction with estimated gas and additional value
-      const transaction = await contract.createEvent(
+      const transaction = await ticketsContract.createEvent(
         ipfsCid,
         totalTickets,
         priceInWei,

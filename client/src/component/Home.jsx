@@ -3,14 +3,14 @@ import Main from "./Main";
 import MainEvent from "./MainEvent";
 import "../assets/css/Main.css";
 
-const Home = () => {
+const Home = ({ state }) => {
   useEffect(() => {
     document.querySelector(".topnav").style.display = "flex";
     document.querySelector(".footer-container").style.display = "block";
   }, []);
   return (
     <div className="mcontainer">
-      <Main />
+      <Main state={state} />
       <MainEvent />
     </div>
   );

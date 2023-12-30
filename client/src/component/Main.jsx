@@ -6,7 +6,7 @@ import EventOrganizer from "./EventOrganizer";
 
 import { useAppContext } from "./AppContext";
 
-const Popup = ({ isOpen, onClose }) => {
+const Popup = ({ isOpen, onClose, state }) => {
   const { isUserConnected, isEventOrganizer } = useAppContext();
   return isOpen ? (
     <div className="popup">
@@ -15,7 +15,7 @@ const Popup = ({ isOpen, onClose }) => {
           Close
         </button>
         {isUserConnected && !isEventOrganizer ? (
-          <EventOrganizer />
+          <EventOrganizer state={state} />
         ) : (
           <div className="container mt-5">
             <p>Sign in to create event</p>
@@ -26,7 +26,7 @@ const Popup = ({ isOpen, onClose }) => {
   ) : null;
 };
 
-const Main = () => {
+const Main = ({ state }) => {
   const [showMoreInfo, setShowMoreInfo] = useState(false);
   const [isPopupOpen, setPopupOpen] = useState(false);
   const navigate = useNavigate(); //to redirect to another page
@@ -97,7 +97,7 @@ const Main = () => {
           </button>
         </div>
       </div>
-      <Popup isOpen={isPopupOpen} onClose={handleClosePopup} />
+      <Popup isOpen={isPopupOpen} onClose={handleClosePopup} state={state} />
       <div className="image-container">
         <img src={mainimage} className="main-image" alt="Coming Soon" />
       </div>
