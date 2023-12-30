@@ -18,51 +18,58 @@ const EventOrganizer = ({ state }) => {
     setNextpage(true);
   };
 
-  const handleEventOrganizer = async () => {
-    //Validation of data
-    if (
-      !name ||
-      !organizationName ||
-      !organizationType ||
-      !organizationLocation ||
-      !organizationEmail
-    ) {
-      alert("Please fill all the fields");
-      return;
+  const handleEventOrganizer = async (event) => {
+    event.preventDefault();
+    if (!isEventOrganizer) {
+      //Validation of data
+      if (
+        !name ||
+        !organizationName ||
+        !organizationType ||
+        !organizationLocation ||
+        !organizationEmail
+      ) {
+        alert("Please fill all the fields");
+        return;
+      }
+      const eventOrganizerData = {
+        name,
+        organizationName,
+        organizationType,
+        organizationLocation,
+        organizationEmail,
+      };
+      console.log(eventOrganizerData);
+      try {
+        //signdata
+        const { data, signature } = await signData(
+          signer,
+          JSON.stringify(eventOrganizerData)
+        );
+        //upload to ipfs
+        const { ipfsCid } = await uploadToIPFS(data, signature);
+        if (!eventOrganizerContract) {
+          console.log("Contract not deployed");
+          return;
+        }
+        console.log(ipfsCid);
+        console.log(eventOrganizerContract);
+        const transaction = await eventOrganizerContract.registerEventOrganizer(
+          ipfsCid
+        );
+        await transaction.wait();
+        alert(transaction);
+        // setEventOrganizer(true);
+        //You might require local storage or session storage. It helps to set cookies.
+        // localStorage.setItem("isEventOrganizer", isEventOrganizer);
+        // sessionStorage.setItem("isEventOrganizer", true);
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      document.body.classList.remove("popup-open"); // Allow scrolling
+      navigate("/dashboard");
     }
-    const eventOrganizerData = {
-      name,
-      organizationName,
-      organizationType,
-      organizationLocation,
-      organizationEmail,
-    };
-    console.log(eventOrganizerData);
-    //signdata
-    const { data, signature } = await signData(
-      signer,
-      JSON.stringify(eventOrganizerData)
-    );
-    //upload to ipfs
-    const { ipfsCid } = await uploadToIPFS(data, signature);
-    if (!eventOrganizerContract) {
-      console.log("Contract not deployed");
-      return;
-    }
-    console.log(ipfsCid);
-    console.log(eventOrganizerContract);
-    const transaction = await eventOrganizerContract.registerEventOrganizer(
-      ipfsCid
-    );
-    await transaction.wait();
-    console.log(transaction);
-
-    setEventOrganizer(true);
-    //You might require local storage or session storage. It helps to set cookies.
-    localStorage.setItem("isEventOrganizer", isEventOrganizer);
-    // sessionStorage.setItem("isEventOrganizer", true);
-    document.body.classList.remove("popup-open"); // Allow scrolling
-    navigate("/dashboard");
   };
 
   return (
