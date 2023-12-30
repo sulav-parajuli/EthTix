@@ -12,7 +12,7 @@ async function uploadToIPFS(Data, signature) {
   //COnvert the data to a blob
   const blob = new Blob([Data], { type: "application/octet-stream" });
 
-  //Append the blobl as file
+  //Append the blob as file
   formData.append("file", blob);
 
   //Append the signature as a custom field

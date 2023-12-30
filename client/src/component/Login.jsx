@@ -74,8 +74,12 @@ const Login = ({ state }) => {
         );
         //upload to ipfs
         const { ipfsCid } = await uploadToIPFS(data, signature);
-        console.log(data);
-        console.log(ipfsCid);
+        //console.log(data);
+        //console.log(ipfsCid);
+        //Sending ipfsCid to smart contract
+        const transaction = await userContract.registerUser(ipfsCid);
+        await transaction.wait();
+        console.log(transaction);
 
         //localStorage.setItem("isEventOrganizer", true);
 

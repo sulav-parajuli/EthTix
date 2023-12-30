@@ -21,7 +21,7 @@ const AppProvider = ({ children, template, account }) => {
     async function fetchAccount() {
       try {
         if ((await account) !== "Not connected") {
-          console.log(account);
+          //console.log(account);
           setConnected(true);
         } else {
           setConnected(false);
