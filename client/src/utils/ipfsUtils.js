@@ -6,11 +6,13 @@ async function signData(signer, data) {
   return { data, signature };
 }
 
-async function uploadToIPFS(Data, signature) {
+async function uploadToIPFS(data, signature, isImage = false) {
   const formData = new FormData();
 
   //COnvert the data to a blob
-  const blob = new Blob([Data], { type: "application/octet-stream" });
+  const blob = isImage
+    ? await fetch(data).then((r) => r.blob())
+    : new Blob([data], { type: "application/octet-stream" });
 
   //Append the blob as file
   formData.append("file", blob);

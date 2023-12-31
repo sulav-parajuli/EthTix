@@ -131,13 +131,14 @@ const CreateEvent = ({ state }) => {
       }
       const eventData = {
         eventName,
-
         date,
         time,
-
         location,
+      };
+      const imageData = {
         image,
       };
+
       //sign data
       const { data, signature } = await signData(
         signer,
@@ -145,6 +146,11 @@ const CreateEvent = ({ state }) => {
       );
       //upload to ipfs
       const { ipfsCid } = await uploadToIPFS(data, signature);
+      //sign image
+      const { data1, signature1 } = await signData(
+        signer,
+        JSON.stringify(imageData)
+      );
 
       //convert ether to wei
       const priceInWei = ethers.utils.parseEther(priceInEther);

@@ -10,6 +10,7 @@ contract Tickets is AccessControl,User,EventOrganizer{
         uint256 remTickets;
         uint256 price;
         address payable creator;
+        string eventImageCID;
     }
     struct TicketHolder{
         address userAddress;
@@ -25,7 +26,7 @@ contract Tickets is AccessControl,User,EventOrganizer{
     uint256 eventId;
    
     event EventCreated(uint256 indexed eventId);
-    event TicketPurchased(uint256 indexed eventId,uint256 indexed ticketsBought,address indexed buyer);
+    event TicketPurchased(uint256 indexed eventId,address indexed buyer);
 
    //function to retrieve the IPFS CID of the event
    function getIpfsCID(uint256 _eventId)public onlyUser view returns(string memory){
@@ -39,10 +40,12 @@ contract Tickets is AccessControl,User,EventOrganizer{
     string memory _eventCid,
    
     uint256 _totalTickets,
-    uint256 _price
+    uint256 _price,
+    string memory _eventImageCid
    
 ) public onlyOrganizer payable  {
     require(bytes(_eventCid).length > 0, "Event CID should not be empty");
+    require(bytes(_eventImageCid).length > 0, "Event Image CID should not be empty");
     require(_totalTickets > 0, "Total tickets should be greater than 0");
    
 
@@ -65,7 +68,8 @@ contract Tickets is AccessControl,User,EventOrganizer{
        totalTickets: _totalTickets,
        remTickets: _totalTickets,
        price: _price,
-       creator:payable(msg.sender)}
+       creator:payable(msg.sender),
+       eventImageCID:_eventImageCid}
     );
     
 }
@@ -104,25 +108,25 @@ contract Tickets is AccessControl,User,EventOrganizer{
     }
 
     //funtion to  buy Tickets
-    function buyTicket(uint256 _eventId,uint256 _totalTicketsToBuy) public onlyUser payable{
+    function buyTicket(uint256 _eventId,uint256 _totalAmount, uint256 _totalTickets) public onlyUser payable{
         require(_eventId<=eventId,"Event does not exist");
-        require(_totalTicketsToBuy>0,"Total tickets should be greater than 0");
-        require(events[_eventId].remTickets>=_totalTicketsToBuy,"Not enough tickets available");
-       // require(events[_eventId].timestamp>block.timestamp,"Event has already expired");
-        uint256 totalPrice =(events[_eventId].price*_totalTicketsToBuy);
-        require(msg.value>=totalPrice,"Not enough ether sent");
-        uint256 excessAmount = msg.value - totalPrice;
-        if (excessAmount > 0) {
-        payable(msg.sender).transfer(excessAmount);
-        }
-        events[_eventId].remTickets-= _totalTicketsToBuy;
+        
+        require(_totalAmount>0,"Total tickets should be greater than 0");
+        require(events[_eventId].remTickets>=_totalTickets,"Not enough tickets left");
+       
+        //transfer funds to the event creator
+       events[_eventId].creator.transfer(_totalAmount);
+       //Update the remaining tickets
+       events[_eventId].remTickets-= _totalAmount;
+        
 
-        events[_eventId].creator.transfer(totalPrice);
+       //update the ticket holders mapping
+
         
         
         TicketHolder[] storage userTickets = ticketHolders[msg.sender];
-        userTickets.push(TicketHolder(msg.sender,events[_eventId].eventCID,_eventId,_totalTicketsToBuy));
-        emit TicketPurchased(_eventId,_totalTicketsToBuy,msg.sender);
+        userTickets.push(TicketHolder(msg.sender,events[_eventId].eventCID,_eventId,_totalTickets));
+        emit TicketPurchased(_eventId,msg.sender);
 
     }
    

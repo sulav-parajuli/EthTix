@@ -82,7 +82,7 @@ const Login = ({ state }) => {
           );
 
           //upload to ipfs
-          const { ipfsCid } = await uploadToIPFS(data, signature);
+          const { ipfsCid } = await uploadToIPFS(data, signature, false);
           //console.log(data);
           //console.log(ipfsCid);
           //Sending ipfsCid to smart contract
