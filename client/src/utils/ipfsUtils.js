@@ -52,6 +52,7 @@ async function uploadToIPFS(data, signature, isImage = false) {
     throw error;
   }
 }
+// Retrieve data from IPFS
 
 async function retrieveFromIPFS(ipfsCid) {
   try {
