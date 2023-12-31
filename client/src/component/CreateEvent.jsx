@@ -42,7 +42,13 @@ const CreateEvent = ({ state }) => {
   //   setTime(event.target.value);
   // };
   const handleImageChange = (event) => {
-    const file = event.target.files[0]; // Get the first selected file
+    const file = event.target.files[0];
+    const reader = new FileReader();
+    reader.readAsArrayBuffer(file);
+    reader.onloadend = () => {
+      setImage(event.target.files[0]);
+    };
+    // Get the first selected file
     if (!file) {
       alert("Please select an image");
       return;
@@ -151,6 +157,12 @@ const CreateEvent = ({ state }) => {
         signer,
         JSON.stringify(imageData)
       );
+      //upload image to ipfs
+      const { ipfsCid: imageIpfsCid } = await uploadToIPFS(
+        data1,
+        signature1,
+        true
+      );
 
       //convert ether to wei
       const priceInWei = ethers.utils.parseEther(priceInEther);
@@ -166,6 +178,7 @@ const CreateEvent = ({ state }) => {
         ipfsCid,
         totalTickets,
         priceInWei,
+        imageIpfsCid,
 
         {
           value: additionalValue.add(10000),
