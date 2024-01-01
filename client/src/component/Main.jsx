@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import mainimage from "../assets/images/work anniversary2.png";
+import mainimage from "../assets/images/work space1.png";
 import { Link } from "react-scroll";
 import { useNavigate } from "react-router-dom";
 import EventOrganizer from "./EventOrganizer";

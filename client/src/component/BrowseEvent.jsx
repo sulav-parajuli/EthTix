@@ -5,6 +5,7 @@ import ticket from "../assets/images/tickets.png";
 import ethtix from "../assets/images/abstract.png";
 import search from "../assets/images/search symbol.png";
 import EventDetail from "./EventDetail";
+import { signData, retrieveFromIPFS } from "../utils/ipfsUtils";
 
 const Popup = ({ isOpen, onClose, ke, event }) => {
   return isOpen ? (
@@ -23,6 +24,7 @@ const BrowseEvent = ({ state }) => {
   const [events, setEvents] = useState([]);
   const [selectedEventIndex, setSelectedEventIndex] = useState(null);
   const [isContractReady, setIsContractReady] = useState(false);
+  const { signer, ticketsContract } = state;
   //const [uinqueEventId, setUniqueEventId] = useState([]);
 
   const [isPopupOpen, setPopupOpen] = useState(false);
@@ -32,23 +34,22 @@ const BrowseEvent = ({ state }) => {
     document.body.classList.add("popup-open"); // Prevent scrolling
   };
 
-  const { contract } = state;
   //console.log(contract);
 
   useEffect(() => {
     const initializeContract = async () => {
-      if (!contract) {
+      if (!ticketsContract) {
         return; //Exist if contract is not available yet
       }
       try {
         //Fetch all events when the component mounts
-        const allEvents = await contract.getAllEvents();
+        const allEvents = await ticketsContract.getAllEvents();
 
         setEvents(allEvents);
         //console.log(allEvents);
 
         // Subscribe to the EventCreated event
-        contract.on("EventCreated", handleEventCreated);
+        ticketsContract.on("EventCreated", handleEventCreated);
         setIsContractReady(true);
       } catch (error) {
         console.error("Error subscribing to EventCreated event:", error);
@@ -57,7 +58,7 @@ const BrowseEvent = ({ state }) => {
     const handleEventCreated = async (eventId) => {
       try {
         if (
-          !contract
+          !ticketsContract
           //events.some((singleEvent) => singleEvent.eventId.eq(eventId))
         ) {
           alert("Contract not found");
@@ -66,7 +67,7 @@ const BrowseEvent = ({ state }) => {
         // const testid = 1;
         // const testEvent = await contract.getEvent(testid);
         // console.log(testEvent);
-        const newEvent = await contract.getEvent(eventId);
+        const newEvent = await ticketsContract.getEvent(eventId);
         //Append newly created events to the list of events
         setEvents((prevEvents) => [...prevEvents, newEvent]);
       } catch (error) {
@@ -76,16 +77,16 @@ const BrowseEvent = ({ state }) => {
     initializeContract();
 
     return () => {
-      if (isContractReady && contract) {
+      if (isContractReady && ticketsContract) {
         try {
           // Unsubscribe from the EventCreated event when component unmounts
-          contract.removeAllListeners("EventCreated");
+          ticketsContract.removeAllListeners("EventCreated");
         } catch (error) {
           console.error("Error unsubscribing from EventCreated event:", error);
         }
       }
     };
-  }, [contract, setEvents, isContractReady]); //uinqueEventId]);
+  }, [ticketsContract, setEvents, isContractReady]); //uinqueEventId]);
 
   return (
     <>

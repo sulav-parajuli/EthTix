@@ -10,6 +10,7 @@ const Login = ({ state }) => {
     isConnected,
     setConnected,
     setUserConnected,
+    isEventOrganizer,
     setEventOrganizer,
     account,
     template,
@@ -127,15 +128,16 @@ const Login = ({ state }) => {
             if (userAddress === userAddresss && username === usernamee) {
               setUserConnected(true); // Set isUserConnected to true when user gets logged in
               localStorage.setItem("isUserConnected", true);
-              //check if event organizer is registered or not
-              const eventorgCID = await eventOrganizerContract.getOrganizerCID(
-                userAddress
-              );
-              // console.log(eventorgCID);
-              if (eventorgCID !== "") {
-                setEventOrganizer(true);
-              } else {
-                setEventOrganizer(false);
+              if (isEventOrganizer) {
+                //check if user is event organizer or not.
+                const eventorgCID =
+                  await eventOrganizerContract.getOrganizerCID(userAddress);
+                // console.log(eventorgCID);
+                if (eventorgCID !== "") {
+                  setEventOrganizer(true);
+                } else {
+                  setEventOrganizer(false);
+                }
               }
             } else {
               toast.error(

@@ -21,17 +21,13 @@ contract User is AccessControl{
    }
 
      modifier onlyUser(){
-       require(isUsers[msg.sender]==true,"Only registered users can call this function");
+       require(isUsers[msg.sender],"Only registered users can call this function");
        _;
    }
    //Function to get userId by particular address
-   function getUserCID(address _userAddress) public view returns(string memory){
+   function getUserCID(address _userAddress) public onlyUser view returns(string memory){
       require(_userAddress!=address(0),"Invalid address");
       require(msg.sender==owner || msg.sender==_userAddress ,"Only owner or user can call this function");
       return userCID[_userAddress];
-   }
-   
- 
-     
-
+   }  
 }
