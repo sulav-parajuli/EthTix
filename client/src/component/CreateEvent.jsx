@@ -66,7 +66,10 @@ const CreateEvent = ({ state }) => {
         "Please select image of size less than 1MB";
       setAllvalueverified(false);
     }
-    setImage(file);
+    if (image) {
+      setImage(file);
+      setAllvalueverified(true);
+    }
   };
 
   const calculateFee = async () => {
@@ -170,13 +173,26 @@ const CreateEvent = ({ state }) => {
     }
 
     //handling image validation
-    // if(!image){
-    //   document.querySelector(".errorinimage").innerHTML = "image cannot be empty";
-    //   setAllvalueverified(false);
-    // }else{
-    //   document.querySelector(".errorinimage").innerHTML = "";
-    //   setAllvalueverified(true);
-    // }
+    //Check file size (limit to 1MB)
+    const maxSizeInBytes = 1 * 1024 * 1024;
+    if (!image) {
+      document.querySelector(".errorinimage").innerHTML =
+        "image cannot be empty";
+      setAllvalueverified(false);
+    } else {
+      if (image.type !== "image/png") {
+        document.querySelector(".errorinimage").innerHTML =
+          "image must be in png";
+        setAllvalueverified(false);
+      } else if (image.size > maxSizeInBytes) {
+        document.querySelector(".errorinimage").innerHTML =
+          "Please select image of size less than 1MB";
+        setAllvalueverified(false);
+      } else {
+        setImage(file);
+        setAllvalueverified(true);
+      }
+    }
 
     if (allvalueverified) {
       setConfirmationNeeded(true);
@@ -374,7 +390,14 @@ const CreateEvent = ({ state }) => {
                 className="form-control"
                 id="image"
                 value={image || ""}
-                onChange={handleImageChange}
+                onChange={(event) => {
+                  const file = event.target.files[0];
+                  const reader = new FileReader();
+                  reader.readAsArrayBuffer(file);
+                  reader.onloadend = () => {
+                    setImage(event.target.files[0]);
+                  };
+                }}
               />
               <div className="errorinimage"></div>
             </div>
