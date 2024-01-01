@@ -45,6 +45,7 @@ const EventOrganizer = ({ state }) => {
         signer,
         JSON.stringify(eventOrganizerData)
       );
+      const userAddress = await signer.getAddress();
       //upload to ipfs
       const { ipfsCid } = await uploadToIPFS(data, signature);
       if (!eventOrganizerContract || !userContract) {
