@@ -28,4 +28,7 @@ contract User is AccessControl{
       require(msg.sender==owner || msg.sender==_userAddress ,"Only owner or user can call this function");
       return userCID[_userAddress];
    }  
+     function isRegisteredUser(address _UserAddress)public view returns(bool){
+return isUsers[_UserAddress];
+    }
 }

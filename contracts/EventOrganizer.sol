@@ -31,7 +31,9 @@ contract EventOrganizer is AccessControl,User{
          require(msg.sender==owner || msg.sender==_organizerAddress ,"Only owner or organizer can call this function");
          return organizerCID[_organizerAddress];
     }
-    
+    function isOrganizers(address _organizerAddress)public view returns(bool){
+return organizers[_organizerAddress];
+    }
     
        
 
