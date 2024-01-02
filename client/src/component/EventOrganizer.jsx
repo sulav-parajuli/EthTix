@@ -53,7 +53,7 @@ const EventOrganizer = ({ state }) => {
         console.log("Contract not deployed");
         return;
       }
-      const userregistered = await userContract.isUsers(userAddress);
+      const userregistered = await userContract.isRegisteredUser(userAddress);
       // console.log(userregistered);
       // console.log(ipfsCid);
       // console.log(eventOrganizerContract);
