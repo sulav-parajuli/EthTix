@@ -45,6 +45,7 @@ const EventOrganizer = ({ state }) => {
         signer,
         JSON.stringify(eventOrganizerData)
       );
+
       const userAddress = await signer.getAddress();
       //upload to ipfs
       const { ipfsCid } = await uploadToIPFS(data, signature);
@@ -78,6 +79,7 @@ const EventOrganizer = ({ state }) => {
           }
         );
       }
+
       // console.log(transaction);
       setEventOrganizer(true);
       //You might require local storage or session storage. It helps to set cookies.
