@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ReactDOM from "react-dom/client";
-import BrowseEvent from "./component/BrowseEvent.jsx";
-import "./App.css";
+import "./App.css"; //Import App css
 
 // Import the contract ABI
 import accessControlAbi from "./artifacts/contracts/AccessControl.sol/AccessControl.json";
@@ -13,6 +12,7 @@ import ticketAbi from "./artifacts/contracts/Tickets.sol/Tickets.json";
 // Import the contract addresses from the JSON file
 import contractAddresses from "../../contractAddresses.json";
 import { ethers } from "ethers";
+//Import toast
 import { ToastContainer } from "react-toastify"; // Import ToastContainer
 import { toast } from "react-toastify"; // Import toastify for displaying notifications
 import "react-toastify/dist/ReactToastify.css"; // Import the default styles
@@ -26,10 +26,9 @@ import MyTickets from "./component/MyTickets.jsx";
 import Navbar from "./component/Navbar.jsx";
 import Footer from "./component/footer.jsx";
 import Admin from "./component/Admin.jsx";
+import BrowseEvent from "./component/BrowseEvent.jsx";
 import About from "./component/About.jsx";
 import { AppProvider } from "./component/AppContext.jsx"; // Import AppProvider
-
-const root = ReactDOM.createRoot(document.getElementById("root"));
 
 function App() {
   const [state, setState] = useState({
@@ -166,7 +165,7 @@ function App() {
   );
 }
 
-root.render(
+ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <App />
   </React.StrictMode>

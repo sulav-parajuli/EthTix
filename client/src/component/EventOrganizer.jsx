@@ -11,7 +11,7 @@ const EventOrganizer = ({ state }) => {
   const [organizationType, setOrganizationType] = useState("");
   const [organizationLocation, setOrganizationLocation] = useState("");
   const [organizationEmail, setOrganizationEmail] = useState("");
-  const { signer, eventOrganizerContract } = state;
+  const { signer, userContract, eventOrganizerContract } = state;
   const navigate = useNavigate(); //to redirect to another page
   //console.log(state);
   const buttonPressed = () => {
@@ -45,6 +45,7 @@ const EventOrganizer = ({ state }) => {
         signer,
         JSON.stringify(eventOrganizerData)
       );
+<<<<<<< HEAD
       //upload to ipfs
       const { ipfsCid } = await uploadToIPFS(data, signature);
       if (!eventOrganizerContract) {
@@ -57,6 +58,41 @@ const EventOrganizer = ({ state }) => {
         ipfsCid
       );
       await transaction.wait();
+=======
+      const userAddress = await signer.getAddress();
+      //upload to ipfs
+      const { ipfsCid } = await uploadToIPFS(data, signature);
+      if (!eventOrganizerContract || !userContract) {
+        console.log("Contract not deployed");
+        return;
+      }
+      const userregistered = await userContract.isUsers(userAddress);
+      // console.log(userregistered);
+      // console.log(ipfsCid);
+      // console.log(eventOrganizerContract);
+      //verify if user is registered or not
+      if (userregistered) {
+        const transaction = await eventOrganizerContract.registerEventOrganizer(
+          ipfsCid
+        );
+        await transaction.wait();
+      } else {
+        console.error(
+          "Only registered users can call this function. Register as a user first."
+        );
+        toast.error(
+          "Only registered users can call this function. Register as a user first.",
+          {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+          }
+        );
+      }
+>>>>>>> 14edc8434fd7ca62947d5389cadd94283a331452
       // console.log(transaction);
       setEventOrganizer(true);
       //You might require local storage or session storage. It helps to set cookies.

@@ -13,6 +13,7 @@ const CreateEvent = ({ state }) => {
   const [time, setTime] = useState("");
   const [totalTickets, setTotalTickets] = useState("");
   const [location, setLocation] = useState("");
+  const [allvalueverified, setAllvalueverified] = useState(false);
   const { isUserConnected } = useAppContext();
   const [confirmationNeeded, setConfirmationNeeded] = useState(false);
   const [image, setImage] = useState(null);
@@ -42,22 +43,33 @@ const CreateEvent = ({ state }) => {
   //   setTime(event.target.value);
   // };
   const handleImageChange = (event) => {
-    const file = event.target.files[0]; // Get the first selected file
+    const file = event.target.files[0];
+    const reader = new FileReader();
+    reader.readAsArrayBuffer(file);
+    reader.onloadend = () => {
+      setImage(event.target.files[0]);
+    };
+    // Get the first selected file
     if (!file) {
-      alert("Please select an image");
-      return;
+      document.querySelector(".errorinimage").innerHTML =
+        "image cannot be empty";
+      setAllvalueverified(false);
     }
     if (file.type !== "image/png") {
-      alert("Please select a png image");
-      return;
+      document.querySelector(".errorinimage").innerHTML = "image must be png";
+      setAllvalueverified(false);
     }
     //Check file size (limit to 1MB)
     const maxSizeInBytes = 1 * 1024 * 1024;
     if (file.size > maxSizeInBytes) {
-      alert("Please select an image of size less than 1MB");
-      return;
+      document.querySelector(".errorinimage").innerHTML =
+        "Please select image of size less than 1MB";
+      setAllvalueverified(false);
     }
-    setImage(file);
+    if (image) {
+      setImage(file);
+      setAllvalueverified(true);
+    }
   };
 
   const calculateFee = async () => {
@@ -88,23 +100,103 @@ const CreateEvent = ({ state }) => {
   const handleFormSubmit = (event) => {
     event.preventDefault();
 
+    //handling eventName validation
+    if (eventName.trim() === "") {
+      document.querySelector(".errorineventname").innerHTML =
+        "event name cannot be empty";
+      setAllvalueverified(false);
+    } else {
+      document.querySelector(".errorineventname").innerHTML = "";
+      setAllvalueverified(true);
+    }
+
+    //handling price validation
     if (
-      eventName.trim() === "" ||
       priceInEther.trim() === "" ||
       parseFloat(priceInEther) <= 0 ||
-      isNaN(parseFloat(priceInEther)) || // Check if priceInEther is a valid number
-      isNaN(new Date(date).getTime()) ||
-      new Date(date) < new Date() ||
+      isNaN(parseFloat(priceInEther))
+    ) {
+      document.querySelector(".errorinprice").innerHTML =
+        "price cannot be empty or less than 0 or not a number";
+      setAllvalueverified(false);
+    } else {
+      document.querySelector(".errorinprice").innerHTML = "";
+      setAllvalueverified(true);
+    }
+
+    //handling date validation
+    if (isNaN(new Date(date).getTime()) || new Date(date) < new Date()) {
+      document.querySelector(".errorindate").innerHTML =
+        "date cannot be empty or less than current date";
+      setAllvalueverified(false);
+    } else {
+      document.querySelector(".errorindate").innerHTML = "";
+      setAllvalueverified(true);
+    }
+
+    //handling time validation
+    if (
+      time.trim() === "" ||
+      isNaN(new Date(`${date} ${time}`).getTime()) ||
+      new Date(`${date} ${time}`) < new Date()
+    ) {
+      document.querySelector(".errorintime").innerHTML =
+        "time cannot be empty or selected time is less than current time";
+      setAllvalueverified(false);
+    } else {
+      document.querySelector(".errorintime").innerHTML = "";
+      setAllvalueverified(true);
+    }
+
+    //handling location validation
+    if (location.trim() === "") {
+      document.querySelector(".errorinlocation").innerHTML =
+        "location cannot be empty";
+      setAllvalueverified(false);
+    } else {
+      document.querySelector(".errorinlocation").innerHTML = "";
+      setAllvalueverified(true);
+    }
+
+    //handling totalTickets validation
+    if (
       isNaN(parseInt(totalTickets)) ||
       parseInt(totalTickets) <= 0 ||
-      location.trim() === "" ||
-      time.trim() === ""
+      totalTickets.trim() === ""
     ) {
-      // Show an alert or handle the validation error
-      alert("Please fill in all fields with valid data.");
-      return;
+      document.querySelector(".errorintotalticket").innerHTML =
+        "total tickets cannot be empty or less than 0 or not a number";
+      setAllvalueverified(false);
+    } else {
+      document.querySelector(".errorintotalticket").innerHTML = "";
+      setAllvalueverified(true);
     }
-    setConfirmationNeeded(true);
+
+    //handling image validation
+    //Check file size (limit to 1MB)
+    const maxSizeInBytes = 1 * 1024 * 1024;
+    if (!image) {
+      document.querySelector(".errorinimage").innerHTML =
+        "image cannot be empty";
+      setAllvalueverified(false);
+    } else {
+      if (image.type !== "image/png") {
+        document.querySelector(".errorinimage").innerHTML =
+          "image must be in png";
+        setAllvalueverified(false);
+      } else if (image.size > maxSizeInBytes) {
+        document.querySelector(".errorinimage").innerHTML =
+          "Please select image of size less than 1MB";
+        setAllvalueverified(false);
+      } else {
+        setImage(file);
+        setAllvalueverified(true);
+      }
+    }
+
+    if (allvalueverified) {
+      setConfirmationNeeded(true);
+    }
   };
 
   const handleConfirmation = async (event) => {
@@ -131,13 +223,14 @@ const CreateEvent = ({ state }) => {
       }
       const eventData = {
         eventName,
-
         date,
         time,
-
         location,
+      };
+      const imageData = {
         image,
       };
+
       //sign data
       const { data, signature } = await signData(
         signer,
@@ -145,6 +238,17 @@ const CreateEvent = ({ state }) => {
       );
       //upload to ipfs
       const { ipfsCid } = await uploadToIPFS(data, signature);
+      //sign image
+      const { data1, signature1 } = await signData(
+        signer,
+        JSON.stringify(imageData)
+      );
+      //upload image to ipfs
+      const { ipfsCid: imageIpfsCid } = await uploadToIPFS(
+        data1,
+        signature1,
+        true
+      );
 
       //convert ether to wei
       const priceInWei = ethers.utils.parseEther(priceInEther);
@@ -160,6 +264,7 @@ const CreateEvent = ({ state }) => {
         ipfsCid,
         totalTickets,
         priceInWei,
+        imageIpfsCid,
 
         {
           value: additionalValue.add(10000),
@@ -197,9 +302,10 @@ const CreateEvent = ({ state }) => {
                 type="text"
                 className="form-control"
                 id="eventName"
-                value={eventName}
+                value={eventName || ""}
                 onChange={(e) => setEventName(e.target.value)}
               />
+              <div className="errorineventname"></div>
             </div>
             <div className="mb-3">
               <label htmlFor="price" className="form-label">
@@ -210,9 +316,10 @@ const CreateEvent = ({ state }) => {
                 step="0.01"
                 className="form-control"
                 id="price"
-                value={priceInEther}
+                value={priceInEther || ""}
                 onChange={(e) => setPriceInEther(e.target.value)}
               />
+              <div className="errorinprice"></div>
             </div>
 
             <div className="mb-3">
@@ -223,24 +330,26 @@ const CreateEvent = ({ state }) => {
                 type="date"
                 className="form-control"
                 id="date"
-                value={date}
+                value={date || ""}
                 onChange={(e) => setDate(e.target.value)}
                 onKeyDown={(e) => e.preventDefault()}
               />
+              <div className="errorindate"></div>
             </div>
 
             <div className="mb-3">
-              <label htmlFor="location" className="form-label">
+              <label htmlFor="time" className="form-label">
                 Time
               </label>
               <input
                 type="time"
                 className="form-control"
-                id="location"
-                value={time}
+                id="time"
+                value={time || ""}
                 onChange={(e) => setTime(e.target.value)}
                 onKeyDown={(e) => e.preventDefault()}
               />
+              <div className="errorintime"></div>
             </div>
 
             <div className="mb-3">
@@ -252,9 +361,10 @@ const CreateEvent = ({ state }) => {
                 step="1"
                 className="form-control"
                 id="TotalTickets"
-                value={totalTickets}
+                value={totalTickets || ""}
                 onChange={(e) => setTotalTickets(e.target.value)}
               />
+              <div className="errorintotalticket"></div>
             </div>
 
             <div className="mb-3">
@@ -265,22 +375,31 @@ const CreateEvent = ({ state }) => {
                 type="text"
                 className="form-control"
                 id="location"
-                value={location}
+                value={location || ""}
                 onChange={(e) => setLocation(e.target.value)}
               />
+              <div className="errorinlocation"></div>
             </div>
 
             <div className="mb-3">
-              <label htmlFor="location" className="form-label">
+              <label htmlFor="image" className="form-label">
                 Image
               </label>
               <input
                 type="file"
                 className="form-control"
                 id="image"
-                value={image}
-                onChange={handleImageChange}
+                value={image || ""}
+                onChange={(event) => {
+                  const file = event.target.files[0];
+                  const reader = new FileReader();
+                  reader.readAsArrayBuffer(file);
+                  reader.onloadend = () => {
+                    setImage(event.target.files[0]);
+                  };
+                }}
               />
+              <div className="errorinimage"></div>
             </div>
 
             <button type="submit" className="btn btn-danger">

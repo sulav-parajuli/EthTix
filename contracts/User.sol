@@ -9,7 +9,6 @@ contract User is AccessControl{
 
    //bool mapping to check if user is registered
    mapping(address=>bool) public isUsers;
-
    //event to be emitted when user is registered
    event UserRegistered(address indexed userAddress,string indexed CID);
    //Function to registera user and store their CID
@@ -19,9 +18,8 @@ contract User is AccessControl{
        isUsers[msg.sender]=true;
        emit UserRegistered(msg.sender,_CID);
    }
-
      modifier onlyUser(){
-       require(isUsers[msg.sender]==true,"Only registered users can call this function");
+       require(isUsers[msg.sender],"Only registered users can call this function");
        _;
    }
    //Function to get userId by particular address
@@ -29,9 +27,5 @@ contract User is AccessControl{
       require(_userAddress!=address(0),"Invalid address");
       require(msg.sender==owner || msg.sender==_userAddress ,"Only owner or user can call this function");
       return userCID[_userAddress];
-   }
-   
- 
-     
-
+   }  
 }
