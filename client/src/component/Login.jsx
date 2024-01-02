@@ -10,13 +10,20 @@ const Login = ({ state }) => {
     isConnected,
     setConnected,
     setUserConnected,
+<<<<<<< HEAD
+=======
     isEventOrganizer,
+>>>>>>> 14edc8434fd7ca62947d5389cadd94283a331452
     setEventOrganizer,
     account,
     template,
   } = useAppContext();
   const { signer, userContract, eventOrganizerContract } = state;
+<<<<<<< HEAD
   const [isRegister, setRegister] = useState(false);
+=======
+  const [isLogin, setLogin] = useState(false);
+>>>>>>> 14edc8434fd7ca62947d5389cadd94283a331452
   const [username, setUsername] = useState("");
   useEffect(() => {
     async function fetchAccount() {
@@ -34,7 +41,7 @@ const Login = ({ state }) => {
   }, []);
 
   const handlelink = () => {
-    setRegister((prev) => !prev);
+    setLogin((prev) => !prev);
   };
 
   const connectToWallet = async (event) => {
@@ -74,38 +81,8 @@ const Login = ({ state }) => {
           userAddress,
           username,
         };
-        //upload to ipfs only if user wants to register.
-        if (isRegister) {
-          //sign data
-          const { data, signature } = await signData(
-            signer,
-            JSON.stringify(userData)
-          );
 
-          //upload to ipfs
-          const { ipfsCid } = await uploadToIPFS(data, signature, false);
-          //console.log(data);
-          //console.log(ipfsCid);
-          //Sending ipfsCid to smart contract
-          if (!userContract) {
-            alert("Contract is not deployed");
-            return;
-          }
-          const transaction = await userContract.registerUser(ipfsCid);
-          await transaction.wait();
-          // console.log(transaction);
-          toast.success(
-            "User Registered successfully. Login now to get started.",
-            {
-              position: "top-right",
-              autoClose: 5000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-            }
-          );
-        } else {
+        if (isLogin) {
           //check if user is registered or not
           const userCID = await userContract.getUserCID(userAddress);
           // console.log(userCID);
@@ -154,6 +131,87 @@ const Login = ({ state }) => {
               return;
             }
           }
+        } else {
+          //sign data
+          const { data, signature } = await signData(
+            signer,
+            JSON.stringify(userData)
+          );
+
+          //upload to ipfs only if user wants to register.
+          const { ipfsCid } = await uploadToIPFS(data, signature, false);
+          //console.log(data);
+          //console.log(ipfsCid);
+          //Sending ipfsCid to smart contract
+          if (!userContract) {
+            alert("Contract is not deployed");
+            return;
+          }
+          const transaction = await userContract.registerUser(ipfsCid);
+          await transaction.wait();
+          // console.log(transaction);
+          toast.success(
+            "User Registered successfully. Login now to get started.",
+            {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+<<<<<<< HEAD
+            }
+          );
+        } else {
+          //check if user is registered or not
+          const userCID = await userContract.getUserCID(userAddress);
+          // console.log(userCID);
+          if (!userCID) {
+            toast.error("User is not registered. Register first to continue.", {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+            });
+            return;
+          } else {
+            const retrievedData = await retrieveFromIPFS(userCID);
+            const userAddresss = retrievedData.userAddress;
+            const usernamee = retrievedData.username;
+            // console.log(userAddresss);
+            // console.log(usernamee);
+            if (userAddress === userAddresss && username === usernamee) {
+              setUserConnected(true); // Set isUserConnected to true when user gets logged in
+              localStorage.setItem("isUserConnected", true);
+              //check if event organizer is registered or not
+              const eventorgCID = await eventOrganizerContract.getOrganizerCID(
+                userAddress
+              );
+              // console.log(eventorgCID);
+              if (eventorgCID !== "") {
+                setEventOrganizer(true);
+              } else {
+                setEventOrganizer(false);
+              }
+            } else {
+              toast.error(
+                "You are not a valid user. Register first to continue.",
+                {
+                  position: "top-right",
+                  autoClose: 5000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                }
+              );
+              return;
+=======
+>>>>>>> 14edc8434fd7ca62947d5389cadd94283a331452
+            }
+          );
         }
       }
     } catch (error) {
@@ -172,12 +230,14 @@ const Login = ({ state }) => {
   return (
     <div className="login-container">
       <div className="left-section">
-        {!isConnected ? (
-          <div className="login-title">Connect Wallet</div>
-        ) : isRegister ? (
-          <div className="login-title">Register</div>
+        {isConnected ? (
+          isLogin ? (
+            <div className="login-title">Login</div>
+          ) : (
+            <div className="login-title">Register</div>
+          )
         ) : (
-          <div className="login-title">Login</div>
+          <div className="login-title">Connect Wallet</div>
         )}
         <div className="sub-title">
           {isConnected
@@ -208,7 +268,7 @@ const Login = ({ state }) => {
               id="password"
             />
           </div>
-          {isRegister ? (
+          {isLogin ? null : (
             <div className="mb-3">
               <input
                 type="password"
@@ -217,30 +277,30 @@ const Login = ({ state }) => {
                 id="password"
               />
             </div>
-          ) : null} */}
+          )} */}
           <hr className="line" />
           {isConnected ? (
             <>
               <div className="user-address">{`Connected Wallet: ${account}`}</div>
-              {isRegister ? (
-                <p>
-                  <b>Already have an account?</b>
-                  <a onClick={handlelink} className="link">
-                    Login
-                  </a>
-                </p>
-              ) : (
+              {isLogin ? (
                 <p>
                   <b>Don't have an account?</b>
                   <a onClick={handlelink} className="link">
                     Register
                   </a>
                 </p>
+              ) : (
+                <p>
+                  <b>Already have an account?</b>
+                  <a onClick={handlelink} className="link">
+                    Login
+                  </a>
+                </p>
               )}
             </>
           ) : null}
           <button className="login-button" onClick={connectToWallet}>
-            {isConnected ? "Submit" : "Connect Wallet"}
+            {isConnected ? (isLogin ? "Login" : "Register") : "Connect Wallet"}
           </button>
         </form>
       </div>
