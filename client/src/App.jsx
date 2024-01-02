@@ -145,7 +145,7 @@ function App() {
 
   return (
     <BrowserRouter>
-      <AppProvider account={account} template={template}>
+      <AppProvider account={account} template={template} state={state}>
         <div className="App">
           <Navbar state={state} />
           <Routes>
