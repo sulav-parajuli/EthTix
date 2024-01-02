@@ -45,20 +45,7 @@ const EventOrganizer = ({ state }) => {
         signer,
         JSON.stringify(eventOrganizerData)
       );
-<<<<<<< HEAD
-      //upload to ipfs
-      const { ipfsCid } = await uploadToIPFS(data, signature);
-      if (!eventOrganizerContract) {
-        console.log("Contract not deployed");
-        return;
-      }
-      // console.log(ipfsCid);
-      // console.log(eventOrganizerContract);
-      const transaction = await eventOrganizerContract.registerEventOrganizer(
-        ipfsCid
-      );
-      await transaction.wait();
-=======
+
       const userAddress = await signer.getAddress();
       //upload to ipfs
       const { ipfsCid } = await uploadToIPFS(data, signature);
@@ -92,7 +79,7 @@ const EventOrganizer = ({ state }) => {
           }
         );
       }
->>>>>>> 14edc8434fd7ca62947d5389cadd94283a331452
+
       // console.log(transaction);
       setEventOrganizer(true);
       //You might require local storage or session storage. It helps to set cookies.
