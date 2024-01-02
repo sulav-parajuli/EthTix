@@ -11,7 +11,7 @@ async function uploadToIPFS(data, signature, isImage = false) {
 
   //COnvert the data to a blob
   const blob = isImage
-    ? await fetch(data).then((r) => r.blob())
+    ? new Blob([data.buffer || data], { type: data.type })
     : new Blob([data], { type: "application/octet-stream" });
 
   //Append the blob as file
