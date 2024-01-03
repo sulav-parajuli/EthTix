@@ -12,6 +12,7 @@ const EventOrganizer = ({ state }) => {
   const [organizationLocation, setOrganizationLocation] = useState("");
   const [organizationEmail, setOrganizationEmail] = useState("");
   const { signer, userContract, eventOrganizerContract } = state;
+  const [agreetermsconditions, setagreetermsconditions] = useState(false);
   const navigate = useNavigate(); //to redirect to another page
   //console.log(state);
   const buttonPressed = () => {
@@ -53,7 +54,7 @@ const EventOrganizer = ({ state }) => {
         console.log("Contract not deployed");
         return;
       }
-      const userregistered = await userContract.isUsers(userAddress);
+      const userregistered = await userContract.isRegisteredUser(userAddress);
       // console.log(userregistered);
       // console.log(ipfsCid);
       // console.log(eventOrganizerContract);
@@ -151,10 +152,26 @@ const EventOrganizer = ({ state }) => {
                     onChange={(e) => setOrganizationEmail(e.target.value)}
                   />
                 </div>
+                <div className="form-check">
+                  <input
+                    className="form-check-input"
+                    type="checkbox"
+                    value={agreetermsconditions}
+                    id="flexCheckDefault"
+                    onChange={(e) => setagreetermsconditions(e.target.checked)}
+                  />
+                  <label
+                    className="form-check-label"
+                    htmlFor="flexCheckDefault"
+                  >
+                    I agree to the terms and conditions
+                  </label>
+                </div>
                 <button
                   type="submit"
                   className="btn btn-danger"
                   onClick={handleEventOrganizer}
+                  disabled={!agreetermsconditions}
                 >
                   Submit
                 </button>

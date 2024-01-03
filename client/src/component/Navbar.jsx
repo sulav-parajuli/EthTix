@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 //Import etherTix logo
 import etherTixLogo from "../assets/images/logo/etherTixlogooff.png";
@@ -25,6 +25,13 @@ const Navbar = ({ state }) => {
   const [isPopupOpen, setPopupOpen] = useState(false);
   const [isNavbarOpen, setNavbarOpen] = useState(false);
   const { setConnected, account, isUserConnected } = useAppContext();
+
+  useEffect(() => {
+    if (isUserConnected) {
+      setPopupOpen(false);
+      document.body.classList.remove("popup-open"); // Allow scrolling
+    }
+  }, [isUserConnected]);
 
   const handleOpenPopup = () => {
     setPopupOpen(true);

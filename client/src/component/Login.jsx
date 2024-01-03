@@ -10,7 +10,6 @@ const Login = ({ state }) => {
     isConnected,
     setConnected,
     setUserConnected,
-    isEventOrganizer,
     setEventOrganizer,
     account,
     template,
@@ -26,6 +25,13 @@ const Login = ({ state }) => {
       try {
         if ((await account) !== "Not connected") {
           setConnected(true);
+          //check if user is registered or not and show the login or register page accordingly.
+          const userregistered = await userContract.isRegisteredUser(account);
+          if (userregistered) {
+            setLogin(true);
+          } else {
+            setLogin(false);
+          }
         } else {
           setConnected(false);
         }
@@ -63,7 +69,6 @@ const Login = ({ state }) => {
         //Write your logic here when user clicks on login or register button
         //user validation logic
         // fetch if user is registered or not, eventorganizer or not from contract and set it's state.
-        // setEventOrganizer(true);
 
         const userAddress = account;
         if (!username.trim()) {
@@ -111,16 +116,15 @@ const Login = ({ state }) => {
               }
               setUserConnected(true); // Set isUserConnected to true when user gets logged in
               localStorage.setItem("isUserConnected", true);
-              if (isEventOrganizer) {
-                //check if user is event organizer or not.
-                const eventorgCID =
-                  await eventOrganizerContract.getOrganizerCID(userAddress);
-                // console.log(eventorgCID);
-                if (eventorgCID !== "") {
-                  setEventOrganizer(true);
-                } else {
-                  setEventOrganizer(false);
-                }
+              //check if user is event organizer or not.
+              const eventorgCID = await eventOrganizerContract.getOrganizerCID(
+                userAddress
+              );
+              // console.log(eventorgCID);
+              if (eventorgCID !== "") {
+                setEventOrganizer(true);
+              } else {
+                setEventOrganizer(false);
               }
             } else {
               toast.error(

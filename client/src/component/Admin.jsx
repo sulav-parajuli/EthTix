@@ -87,6 +87,13 @@ const Admin = ({ state }) => {
     };
   }, [navigate]);
 
+  useEffect(() => {
+    if (isUserConnected) {
+      setPopupOpen(false);
+      document.body.classList.remove("popup-open"); // Allow scrolling
+    }
+  }, [isUserConnected]);
+
   const handleToggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
   };
