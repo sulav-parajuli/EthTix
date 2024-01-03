@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { ethers } from "ethers";
 import { useAppContext } from "./AppContext";
 import eventcreation from "../assets/images/eventcreation.png";
@@ -19,59 +19,39 @@ const CreateEvent = ({ state }) => {
   const [image, setImage] = useState(null);
   const navigate = useNavigate(); //to redirect to another page
 
-  // const handleEventNameChange = (event) => {
-  //   setEventName(event.target.value);
-  // };
+  const isMounted = useRef(true);
 
-  // const handlePriceChange = (event) => {
-  //   setPriceInEther(event.target.value);
-  // };
+  useEffect(() => {
+    // Set the ref to true when the component mounts
+    isMounted.current = true;
 
-  // const handleDateChange = (event) => {
-  //   setDate(event.target.value);
-  // };
-
-  // const handleTotalTicketsChange = (event) => {
-  //   setTotalTickets(event.target.value);
-  // };
-
-  // const handleLocationChange = (event) => {
-  //   setLocation(event.target.value);
-  // };
-
-  // const handleTimeChange = (event) => {
-  //   setTime(event.target.value);
-  // };
+    // Cleanup function to set the ref to false when the component unmounts
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
   const handleImageChange = (event) => {
     const file = event.target.files[0];
-    const reader = new FileReader();
-    reader.readAsArrayBuffer(file);
-    reader.onloadend = () => {
-      setImage(event.target.files[0]);
-    };
-    // Get the first selected file
-    if (!file) {
-      document.querySelector(".errorinimage").innerHTML =
-        "image cannot be empty";
-      setAllvalueverified(false);
-    }
-    if (file.type !== "image/png") {
-      document.querySelector(".errorinimage").innerHTML = "image must be png";
-      setAllvalueverified(false);
-    }
-    //Check file size (limit to 1MB)
-    const maxSizeInBytes = 1 * 1024 * 1024;
-    if (file.size > maxSizeInBytes) {
-      document.querySelector(".errorinimage").innerHTML =
-        "Please select image of size less than 1MB";
-      setAllvalueverified(false);
-    }
-    if (image) {
-      setImage(file);
-      setAllvalueverified(true);
+
+    // Ensure that a file is selected
+    if (file) {
+      const reader = new FileReader();
+      reader.readAsArrayBuffer(file);
+      reader.onloadend = () => {
+        if (isMounted.current) {
+          const imageData = {
+            buffer: new Uint8Array(reader.result), // Convert to Uint8Array for IPFS
+            type: file.type,
+            name: file.name,
+          };
+          setImage(imageData);
+        }
+      };
+    } else {
+      // If no file is selected, clear the state
+      setImage(null);
     }
   };
-
   const calculateFee = async () => {
     try {
       const { provider } = state;
@@ -181,6 +161,7 @@ const CreateEvent = ({ state }) => {
       setAllvalueverified(false);
     } else {
       if (image.type !== "image/png") {
+        console.log(image.type);
         document.querySelector(".errorinimage").innerHTML =
           "image must be in png";
         setAllvalueverified(false);
@@ -189,7 +170,7 @@ const CreateEvent = ({ state }) => {
           "Please select image of size less than 1MB";
         setAllvalueverified(false);
       } else {
-        setImage(file);
+        setImage(image);
         setAllvalueverified(true);
       }
     }
@@ -227,22 +208,21 @@ const CreateEvent = ({ state }) => {
         time,
         location,
       };
-      const imageData = {
-        image,
-      };
+      const imageData = image;
 
       //sign data
       const { data, signature } = await signData(
         signer,
         JSON.stringify(eventData)
       );
-      //upload to ipfs
-      const { ipfsCid } = await uploadToIPFS(data, signature);
+
       //sign image
       const { data1, signature1 } = await signData(
         signer,
         JSON.stringify(imageData)
       );
+      //upload to ipfs
+      const { ipfsCid } = await uploadToIPFS(data, signature);
       //upload image to ipfs
       const { ipfsCid: imageIpfsCid } = await uploadToIPFS(
         data1,
@@ -389,15 +369,8 @@ const CreateEvent = ({ state }) => {
                 type="file"
                 className="form-control"
                 id="image"
-                value={image || ""}
-                onChange={(event) => {
-                  const file = event.target.files[0];
-                  const reader = new FileReader();
-                  reader.readAsArrayBuffer(file);
-                  reader.onloadend = () => {
-                    setImage(event.target.files[0]);
-                  };
-                }}
+                //value={image || ""}
+                onChange={handleImageChange}
               />
               <div className="errorinimage"></div>
             </div>
@@ -416,4 +389,5 @@ const CreateEvent = ({ state }) => {
     </>
   );
 };
+
 export default CreateEvent;
