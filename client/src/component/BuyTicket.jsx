@@ -1,18 +1,25 @@
 import React, { useState, useEffect } from "react";
-import { ethers } from "ethers";
+
 import { useAppContext } from "./AppContext";
 const BuyTicket = ({ state }) => {
   const { account } = useAppContext();
   const [ticketAmount, setTicketAmount] = useState(0);
+
   const [selectedEvent, setSelectedEvent] = useState(0);
   const [totalTickets, setTotalTickets] = useState(0);
   const handleTicketPurchase = async (event) => {
     event.preventDefault();
-    const { signer, ticketContract } = state;
-    const userAddress = account;
+    const { ticketContract } = state;
+    if (!ticketContract) {
+      console.log("Contract not deployed");
+      return;
+    }
     try {
+      //BrowseEvent must sent selectedEvent to BuyTicket
       const eventId = parseInt(selectedEvent);
       //call the buyTicket function
+      //user must themselves enter the value of ticketAmount in metamask
+
       const transaction = await ticketContract.buyTicket(
         eventId,
         ticketAmount,
@@ -34,12 +41,7 @@ const BuyTicket = ({ state }) => {
       <form onSubmit={handleTicketPurchase}>
         <label>
           Select Event:
-          <select onChange={(e) => setSelectedEvent(e.target.value)}>
-            {/* Populate the dropdown options based on fetched events */}
-            <option value="1">Event 1</option>
-            <option value="2">Event 2</option>
-            {/* Add more options dynamically based on events */}
-          </select>
+          <select onChange={(e) => setSelectedEvent(e.target.value)}></select>
         </label>
         <br />
         <label>
