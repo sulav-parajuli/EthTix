@@ -30,7 +30,7 @@
 }
 
 /* Define the fadeInUp animation */
-@keyframes fadeInUp {
+@keyframes fadeinup {
   from {
     opacity: 0;
     transform: translateY(20px);
@@ -39,6 +39,17 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(50%);
+  }
+  /* to {
+    opacity: 1;
+    transform: translateY(0);
+  } */
 }
 
 .text-container {
@@ -74,14 +85,19 @@
   line-height: normal;
   color: #5a5a5a;
   margin-bottom: 0px;
-  animation: fadeInUp 1s ease-in-out;
 }
 
 .sub-text {
   font-size: 20px;
   font-weight: light;
   color: #5a5a5a;
-  animation: fadeInUp 1s ease-in-out;
+}
+
+.main-container .main-text,
+.main-container .sub-text,
+.main-event .main-text,
+.main-event .sub-text {
+  animation: fadeinup 1s ease-in-out;
 }
 
 .buttons {
