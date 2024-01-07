@@ -1,5 +1,5 @@
 import axios from "axios"; //js library for making http requests from node.js
-import { ethers } from "ethers";
+
 //import signData from "./signerMetamask.js";
 async function signData(signer, data) {
   const signature = await signer.signMessage(data);
@@ -7,19 +7,22 @@ async function signData(signer, data) {
 }
 
 async function uploadToIPFS(data, signature, isImage = false) {
-  const formData = new FormData();
-
-  //COnvert the data to a blob
-  const blob = isImage
-    ? new Blob([data.buffer || data], { type: data.type })
-    : new Blob([data], { type: "application/octet-stream" });
-
-  //Append the blob as file
-  formData.append("file", blob);
-
-  //Append the signature as a custom field
-  formData.append("signature", signature);
   try {
+    const formData = new FormData();
+
+    //COnvert the data.buffer to a blob
+    const blob = isImage
+      ? new Blob([new Uint8Array(data.buffer)], { type: data.type })
+      : new Blob([new Uint8Array(data.buffer)], {
+          type: "application/octet-stream",
+        });
+
+    //Append the blob as file
+    formData.append("file", blob);
+
+    //Append the signature as a custom field
+    formData.append("signature", signature);
+
     const pinataMetadata = JSON.stringify({
       name: "ipfsUpload",
     });

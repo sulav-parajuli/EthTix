@@ -208,27 +208,33 @@ const CreateEvent = ({ state }) => {
         time,
         location,
       };
-      const imageData = image;
 
       //sign data
       const { data, signature } = await signData(
         signer,
         JSON.stringify(eventData)
       );
+      let ipfsCid, imageIpfsCid;
+      // Check if an image is selected
+      if (image) {
+        // Sign image data
+        const { data: imageData, signature: imageSignature } = await signData(
+          signer,
+          JSON.stringify(image.buffer)
+        );
 
-      //sign image
-      const { data1, signature1 } = await signData(
-        signer,
-        JSON.stringify(imageData)
-      );
-      //upload to ipfs
-      const { ipfsCid } = await uploadToIPFS(data, signature);
-      //upload image to ipfs
-      const { ipfsCid: imageIpfsCid } = await uploadToIPFS(
-        data1,
-        signature1,
-        true
-      );
+        // Upload image to IPFS
+        const imageUploadResult = await uploadToIPFS(
+          imageData,
+          imageSignature,
+          true
+        );
+        imageIpfsCid = imageUploadResult.ipfsCid;
+      }
+
+      // Upload event data to IPFS
+      const eventUploadResult = await uploadToIPFS(data, signature);
+      ipfsCid = eventUploadResult.ipfsCid;
 
       //convert ether to wei
       const priceInWei = ethers.utils.parseEther(priceInEther);
