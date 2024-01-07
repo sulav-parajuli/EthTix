@@ -5,7 +5,10 @@ import { faCheck } from "@fortawesome/free-solid-svg-icons";
 
 const Feature = () => {
   return (
-    <section id="features" className="features">
+    <section
+      id="features"
+      className="wow animate__animated animate__fadeInUp animate__duration-1s features"
+    >
       <div className="container" data-aos="fade-up">
         <header className="section-header">
           <h2 className="main-text">Features</h2>

@@ -2,7 +2,10 @@ import React from "react";
 
 const FAQs = () => {
   return (
-    <section id="faq" className="faq">
+    <section
+      id="faq"
+      className="wow animate__animated animate__fadeInUp animate__duration-1s faq"
+    >
       <div className="container" data-aos="fade-up">
         <header className="section-header">
           <h2 className="main-text">F.A.Qs</h2>

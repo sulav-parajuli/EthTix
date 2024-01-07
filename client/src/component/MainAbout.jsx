@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const MainAbout = () => {
   return (
-    <div className="aboutcontainer">
+    <div className="wow animate__animated animate__fadeInUp animate__duration-1s aboutcontainer">
       <div
         className="text-container"
         style={{

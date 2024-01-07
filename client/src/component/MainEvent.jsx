@@ -4,7 +4,7 @@ import ticketcounter from "../assets/images/tickets.gif";
 
 const MainEvent = () => {
   return (
-    <div className="main-event">
+    <div className="wow animate__animated animate__fadeInUp animate__duration-1s main-event">
       <div className="maine image-container">
         <img src={ticketcounter} className="ticketcounter" />
       </div>
