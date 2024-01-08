@@ -5,7 +5,7 @@ import ticket from "../assets/images/tickets.png";
 import ethtix from "../assets/images/abstract.png";
 import search from "../assets/images/search symbol.png";
 import EventDetail from "./EventDetail";
-import { signData, retrieveFromIPFS } from "../utils/ipfsUtils";
+import { retrieveFromIPFS } from "../utils/ipfsUtils";
 
 const Popup = ({ isOpen, onClose, ke, event }) => {
   return isOpen ? (
@@ -34,60 +34,75 @@ const BrowseEvent = ({ state }) => {
     document.body.classList.add("popup-open"); // Prevent scrolling
   };
 
-  //console.log(contract);
+  const fetchEventIpfsContent = async (event) => {
+    const eventCid = event.eventCid;
+    const eventContent = await retrieveFromIPFS(eventCid);
+    return eventContent;
+  };
+  const getAllEventsWithIPFSContent = async () => {
+    try {
+      const allEvents = await ticketsContract.getAllEvents();
+      const eventsWithIpfsContent = await Promise.all(
+        allEvents.map(async (event) => {
+          const eventContent = await fetchEventIpfsContent(event);
+          return { ...event, ...eventContent };
+        })
+      );
+      setEvents(eventsWithIpfsContent);
+      setIsContractReady(true);
+    } catch (error) {
+      console.error("Error fetching events:", error);
+    }
+  };
+
+  const handleEventCreated = async (eventId) => {
+    try {
+      if (!ticketsContract) {
+        alert("Contract not found");
+        return;
+      }
+
+      const eventCid = await ticketsContract.getEventCid(eventId);
+
+      const newEvent = await retrieveFromIPFS(eventCid);
+
+      setEvents((prevEvents) => [...prevEvents, newEvent]);
+
+      setSelectedEventIndex(prevEvents.length);
+
+      setPopupOpen(true);
+      document.body.classList.add("popup-open");
+    } catch (error) {
+      console.error("Error fetching and updating new event:", error);
+    }
+  };
 
   useEffect(() => {
     const initializeContract = async () => {
       if (!ticketsContract) {
-        return; //Exist if contract is not available yet
+        return;
       }
       try {
-        //Fetch all events when the component mounts
-        const allEvents = await ticketsContract.getAllEvents();
+        await getAllEventsWithIPFSContent();
 
-        setEvents(allEvents);
-        console.log(allEvents);
-
-        // Subscribe to the EventCreated event
         ticketsContract.on("EventCreated", handleEventCreated);
-        setIsContractReady(true);
       } catch (error) {
         console.error("Error subscribing to EventCreated event:", error);
       }
     };
-    const handleEventCreated = async (eventId) => {
-      try {
-        if (
-          !ticketsContract
-          //events.some((singleEvent) => singleEvent.eventId.eq(eventId))
-        ) {
-          alert("Contract not found");
-          return;
-        }
 
-        const eventCid = await ticketsContract.getEventCid(eventId);
-
-        const newEvent = await retrieveFromIPFS(eventCid);
-
-        //Append newly created events to the list of events
-        setEvents((prevEvents) => [...prevEvents, newEvent]);
-      } catch (error) {
-        console.error("Error fetching and updating new event:", error);
-      }
-    };
     initializeContract();
 
     return () => {
       if (isContractReady && ticketsContract) {
         try {
-          // Unsubscribe from the EventCreated event when component unmounts
           ticketsContract.removeAllListeners("EventCreated");
         } catch (error) {
           console.error("Error unsubscribing from EventCreated event:", error);
         }
       }
     };
-  }, [ticketsContract, setEvents, isContractReady]); //uinqueEventId]);
+  }, [ticketsContract, setEvents, setIsContractReady]);
 
   return (
     <>
