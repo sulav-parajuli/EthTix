@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState } from "react";
 import { ethers } from "ethers";
 import { useAppContext } from "./AppContext";
 import eventcreation from "../assets/images/eventcreation.png";
@@ -13,45 +13,34 @@ const CreateEvent = ({ state }) => {
   const [time, setTime] = useState("");
   const [totalTickets, setTotalTickets] = useState("");
   const [location, setLocation] = useState("");
-  const [allvalueverified, setAllvalueverified] = useState(false);
   const { isUserConnected } = useAppContext();
   const [confirmationNeeded, setConfirmationNeeded] = useState(false);
-  const [image, setImage] = useState(null);
   const navigate = useNavigate(); //to redirect to another page
 
-  const isMounted = useRef(true);
-
-  useEffect(() => {
-    // Set the ref to true when the component mounts
-    isMounted.current = true;
-
-    // Cleanup function to set the ref to false when the component unmounts
-    return () => {
-      isMounted.current = false;
-    };
-  }, []);
-  const handleImageChange = (event) => {
-    const file = event.target.files[0];
-
-    // Ensure that a file is selected
-    if (file) {
-      const reader = new FileReader();
-      reader.readAsArrayBuffer(file);
-      reader.onloadend = () => {
-        if (isMounted.current) {
-          const imageData = {
-            buffer: new Uint8Array(reader.result), // Convert to Uint8Array for IPFS
-            type: file.type,
-            name: file.name,
-          };
-          setImage(imageData);
-        }
-      };
-    } else {
-      // If no file is selected, clear the state
-      setImage(null);
-    }
+  const handleEventNameChange = (event) => {
+    setEventName(event.target.value);
   };
+
+  const handlePriceChange = (event) => {
+    setPriceInEther(event.target.value);
+  };
+
+  const handleDateChange = (event) => {
+    setDate(event.target.value);
+  };
+
+  const handleTotalTicketsChange = (event) => {
+    setTotalTickets(event.target.value);
+  };
+
+  const handleLocationChange = (event) => {
+    setLocation(event.target.value);
+  };
+
+  const handleTimeChange = (event) => {
+    setTime(event.target.value);
+  };
+
   const calculateFee = async () => {
     try {
       const { provider } = state;
@@ -80,111 +69,30 @@ const CreateEvent = ({ state }) => {
   const handleFormSubmit = (event) => {
     event.preventDefault();
 
-    //handling eventName validation
-    if (eventName.trim() === "") {
-      document.querySelector(".errorineventname").innerHTML =
-        "event name cannot be empty";
-      setAllvalueverified(false);
-    } else {
-      document.querySelector(".errorineventname").innerHTML = "";
-      setAllvalueverified(true);
-    }
-
-    //handling price validation
     if (
+      eventName.trim() === "" ||
       priceInEther.trim() === "" ||
       parseFloat(priceInEther) <= 0 ||
-      isNaN(parseFloat(priceInEther))
-    ) {
-      document.querySelector(".errorinprice").innerHTML =
-        "price cannot be empty or less than 0 or not a number";
-      setAllvalueverified(false);
-    } else {
-      document.querySelector(".errorinprice").innerHTML = "";
-      setAllvalueverified(true);
-    }
-
-    //handling date validation
-    if (isNaN(new Date(date).getTime()) || new Date(date) < new Date()) {
-      document.querySelector(".errorindate").innerHTML =
-        "date cannot be empty or less than current date";
-      setAllvalueverified(false);
-    } else {
-      document.querySelector(".errorindate").innerHTML = "";
-      setAllvalueverified(true);
-    }
-
-    //handling time validation
-    if (
-      time.trim() === "" ||
-      isNaN(new Date(`${date} ${time}`).getTime()) ||
-      new Date(`${date} ${time}`) < new Date()
-    ) {
-      document.querySelector(".errorintime").innerHTML =
-        "time cannot be empty or selected time is less than current time";
-      setAllvalueverified(false);
-    } else {
-      document.querySelector(".errorintime").innerHTML = "";
-      setAllvalueverified(true);
-    }
-
-    //handling location validation
-    if (location.trim() === "") {
-      document.querySelector(".errorinlocation").innerHTML =
-        "location cannot be empty";
-      setAllvalueverified(false);
-    } else {
-      document.querySelector(".errorinlocation").innerHTML = "";
-      setAllvalueverified(true);
-    }
-
-    //handling totalTickets validation
-    if (
+      isNaN(parseFloat(priceInEther)) || // Check if priceInEther is a valid number
+      isNaN(new Date(date).getTime()) ||
+      new Date(date) < new Date() ||
       isNaN(parseInt(totalTickets)) ||
       parseInt(totalTickets) <= 0 ||
-      totalTickets.trim() === ""
+      location.trim() === "" ||
+      time.trim() === ""
     ) {
-      document.querySelector(".errorintotalticket").innerHTML =
-        "total tickets cannot be empty or less than 0 or not a number";
-      setAllvalueverified(false);
-    } else {
-      document.querySelector(".errorintotalticket").innerHTML = "";
-      setAllvalueverified(true);
+      // Show an alert or handle the validation error
+      alert("Please fill in all fields with valid data.");
+      return;
     }
-
-    //handling image validation
-    //Check file size (limit to 1MB)
-    const maxSizeInBytes = 1 * 1024 * 1024;
-    if (!image) {
-      document.querySelector(".errorinimage").innerHTML =
-        "image cannot be empty";
-      setAllvalueverified(false);
-    } else {
-      if (image.type !== "image/png") {
-        console.log(image.type);
-        document.querySelector(".errorinimage").innerHTML =
-          "image must be in png";
-        setAllvalueverified(false);
-      } else if (image.size > maxSizeInBytes) {
-        document.querySelector(".errorinimage").innerHTML =
-          "Please select image of size less than 1MB";
-        setAllvalueverified(false);
-      } else {
-        setImage(image);
-        setAllvalueverified(true);
-      }
-    }
-
-    if (allvalueverified) {
-      setConfirmationNeeded(true);
-    }
+    setConfirmationNeeded(true);
   };
 
   const handleConfirmation = async (event) => {
     event.preventDefault();
 
     const fee = await calculateFee();
-    const confirmationMessage = `You will be charged ${fee} ETH for creating this event and you can't alter the event details once created. Are you sure you want to continue?`;
+    const confirmationMessage = `You will be charged ${fee} ETH for creating this event. Are you sure you want to continue?`;
     if (window.confirm(confirmationMessage)) {
       createEvent();
       setConfirmationNeeded(false);
@@ -204,37 +112,19 @@ const CreateEvent = ({ state }) => {
       }
       const eventData = {
         eventName,
+
         date,
         time,
+
         location,
       };
-
       //sign data
       const { data, signature } = await signData(
         signer,
         JSON.stringify(eventData)
       );
-      let ipfsCid, imageIpfsCid;
-      // Check if an image is selected
-      if (image) {
-        // Sign image data
-        const { data: imageData, signature: imageSignature } = await signData(
-          signer,
-          JSON.stringify(image.buffer)
-        );
-
-        // Upload image to IPFS
-        const imageUploadResult = await uploadToIPFS(
-          imageData,
-          imageSignature,
-          true
-        );
-        imageIpfsCid = imageUploadResult.ipfsCid;
-      }
-
-      // Upload event data to IPFS
-      const eventUploadResult = await uploadToIPFS(data, signature);
-      ipfsCid = eventUploadResult.ipfsCid;
+      //upload to ipfs
+      const { ipfsCid } = await uploadToIPFS(data, signature);
 
       //convert ether to wei
       const priceInWei = ethers.utils.parseEther(priceInEther);
@@ -243,14 +133,13 @@ const CreateEvent = ({ state }) => {
       const additionalValue = ethers.utils.parseEther(await calculateFee());
 
       //convet date and time to timestamp
-      //const eventTimestamp = new Date(`${date} ${time}`).getTime();
+      const eventTimestamp = new Date(`${date} ${time}`).getTime();
 
       // Send transaction with estimated gas and additional value
       const transaction = await ticketsContract.createEvent(
         ipfsCid,
         totalTickets,
         priceInWei,
-        imageIpfsCid,
 
         {
           value: additionalValue.add(10000),
@@ -261,11 +150,10 @@ const CreateEvent = ({ state }) => {
       await transaction.wait();
 
       console.log("Event Created");
-      console.log(data);
-      console.log(ipfsCid);
-      console.log(transaction);
       // Redirect to a events route when event created successfully
       navigate("/events");
+      document.querySelector(".topnav").style.display = "flex";
+      document.querySelector(".footer-container").style.display = "block";
     } catch (error) {
       console.log(error);
     }
@@ -288,10 +176,9 @@ const CreateEvent = ({ state }) => {
                 type="text"
                 className="form-control"
                 id="eventName"
-                value={eventName || ""}
-                onChange={(e) => setEventName(e.target.value)}
+                value={eventName}
+                onChange={handleEventNameChange}
               />
-              <div className="errorineventname"></div>
             </div>
             <div className="mb-3">
               <label htmlFor="price" className="form-label">
@@ -302,10 +189,9 @@ const CreateEvent = ({ state }) => {
                 step="0.01"
                 className="form-control"
                 id="price"
-                value={priceInEther || ""}
-                onChange={(e) => setPriceInEther(e.target.value)}
+                value={priceInEther}
+                onChange={handlePriceChange}
               />
-              <div className="errorinprice"></div>
             </div>
 
             <div className="mb-3">
@@ -316,26 +202,24 @@ const CreateEvent = ({ state }) => {
                 type="date"
                 className="form-control"
                 id="date"
-                value={date || ""}
-                onChange={(e) => setDate(e.target.value)}
+                value={date}
+                onChange={handleDateChange}
                 onKeyDown={(e) => e.preventDefault()}
               />
-              <div className="errorindate"></div>
             </div>
 
             <div className="mb-3">
-              <label htmlFor="time" className="form-label">
+              <label htmlFor="location" className="form-label">
                 Time
               </label>
               <input
                 type="time"
                 className="form-control"
-                id="time"
-                value={time || ""}
-                onChange={(e) => setTime(e.target.value)}
+                id="location"
+                value={time}
+                onChange={handleTimeChange}
                 onKeyDown={(e) => e.preventDefault()}
               />
-              <div className="errorintime"></div>
             </div>
 
             <div className="mb-3">
@@ -347,10 +231,9 @@ const CreateEvent = ({ state }) => {
                 step="1"
                 className="form-control"
                 id="TotalTickets"
-                value={totalTickets || ""}
-                onChange={(e) => setTotalTickets(e.target.value)}
+                value={totalTickets}
+                onChange={handleTotalTicketsChange}
               />
-              <div className="errorintotalticket"></div>
             </div>
 
             <div className="mb-3">
@@ -361,24 +244,9 @@ const CreateEvent = ({ state }) => {
                 type="text"
                 className="form-control"
                 id="location"
-                value={location || ""}
-                onChange={(e) => setLocation(e.target.value)}
+                value={location}
+                onChange={handleLocationChange}
               />
-              <div className="errorinlocation"></div>
-            </div>
-
-            <div className="mb-3">
-              <label htmlFor="image" className="form-label">
-                Image
-              </label>
-              <input
-                type="file"
-                className="form-control"
-                id="image"
-                //value={image || ""}
-                onChange={handleImageChange}
-              />
-              <div className="errorinimage"></div>
             </div>
 
             <button type="submit" className="btn btn-danger">
@@ -395,5 +263,4 @@ const CreateEvent = ({ state }) => {
     </>
   );
 };
-
 export default CreateEvent;

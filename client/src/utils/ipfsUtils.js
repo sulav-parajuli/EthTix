@@ -6,25 +6,20 @@ async function signData(signer, data) {
   return { data, signature };
 }
 
-async function uploadToIPFS(data, signature, isImage = false) {
+async function uploadToIPFS(Data, signature) {
+  const formData = new FormData();
+
+  //COnvert the data to a blob
+  const blob = new Blob([Data], { type: "application/octet-stream" });
+
+  //Append the blobl as file
+  formData.append("file", blob);
+
+  //Append the signature as a custom field
+  formData.append("signature", signature);
   try {
-    const formData = new FormData();
-
-    //COnvert the data.buffer to a blob
-    const blob = isImage
-      ? new Blob([new Uint8Array(data.buffer)], { type: data.type })
-      : new Blob([new Uint8Array(data.buffer)], {
-          type: "application/octet-stream",
-        });
-
-    //Append the blob as file
-    formData.append("file", blob);
-
-    //Append the signature as a custom field
-    formData.append("signature", signature);
-
     const pinataMetadata = JSON.stringify({
-      name: "ipfsUpload",
+      name: "UserDetails",
     });
     formData.append("pinataMetadata", pinataMetadata);
     const pinataOptions = JSON.stringify({
