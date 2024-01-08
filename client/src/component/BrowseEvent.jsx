@@ -24,7 +24,7 @@ const BrowseEvent = ({ state }) => {
   const [events, setEvents] = useState([]);
   const [selectedEventIndex, setSelectedEventIndex] = useState(null);
   const [isContractReady, setIsContractReady] = useState(false);
-  const { signer, ticketsContract } = state;
+  const { ticketsContract } = state;
   //const [uinqueEventId, setUniqueEventId] = useState([]);
 
   const [isPopupOpen, setPopupOpen] = useState(false);
@@ -46,7 +46,7 @@ const BrowseEvent = ({ state }) => {
         const allEvents = await ticketsContract.getAllEvents();
 
         setEvents(allEvents);
-        //console.log(allEvents);
+        console.log(allEvents);
 
         // Subscribe to the EventCreated event
         ticketsContract.on("EventCreated", handleEventCreated);
@@ -64,10 +64,11 @@ const BrowseEvent = ({ state }) => {
           alert("Contract not found");
           return;
         }
-        // const testid = 1;
-        // const testEvent = await contract.getEvent(testid);
-        // console.log(testEvent);
-        const newEvent = await ticketsContract.getEvent(eventId);
+
+        const eventCid = await ticketsContract.getEventCid(eventId);
+
+        const newEvent = await retrieveFromIPFS(eventCid);
+
         //Append newly created events to the list of events
         setEvents((prevEvents) => [...prevEvents, newEvent]);
       } catch (error) {

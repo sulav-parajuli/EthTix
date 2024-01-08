@@ -5,7 +5,7 @@ import "./App.css"; //Import App css
 
 // Import the contract ABI
 import accessControlAbi from "./artifacts/contracts/AccessControl.sol/AccessControl.json";
-import userAbi from "./artifacts/contracts/User.sol/User.json";
+//import userAbi from "./artifacts/contracts/User.sol/User.json";
 import eventOrganizerAbi from "./artifacts/contracts/EventOrganizer.sol/EventOrganizer.json";
 import ticketAbi from "./artifacts/contracts/Tickets.sol/Tickets.json";
 
@@ -35,7 +35,7 @@ function App() {
     provider: null,
     signer: null,
     accessControlContract: null,
-    userContract: null,
+    //userContract: null,
     eventOrganizerContract: null,
     ticketsContract: null,
   });
@@ -49,8 +49,8 @@ function App() {
       const accessAddress = contractAddresses.accessControl;
       const accessContractABI = accessControlAbi.abi;
 
-      const userContractAddress = contractAddresses.user;
-      const userContractABI = userAbi.abi;
+      // const userContractAddress = contractAddresses.user;
+      // const userContractABI = userAbi.abi;
 
       const organizerContractAddress = contractAddresses.eventOrganizer;
       const organizerContractABI = eventOrganizerAbi.abi;
@@ -97,11 +97,11 @@ function App() {
         signer
       );
 
-      const userContractInstance = new ethers.Contract(
-        userContractAddress,
-        userContractABI,
-        signer
-      );
+      // const userContractInstance = new ethers.Contract(
+      //   userContractAddress,
+      //   userContractABI,
+      //   signer
+      // );
 
       const eventOrganizerContractInstance = new ethers.Contract(
         organizerContractAddress,
@@ -120,7 +120,7 @@ function App() {
         provider,
         signer,
         accessControlContract: accessControlInstance,
-        userContract: userContractInstance,
+        //userContract: userContractInstance,
         eventOrganizerContract: eventOrganizerContractInstance,
         ticketsContract: ticketsContractInstance,
       });
