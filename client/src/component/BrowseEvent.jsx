@@ -35,8 +35,8 @@ const BrowseEvent = ({ state }) => {
   };
 
   const fetchEventIpfsContent = async (event) => {
-    const eventCid = event.eventCid;
-    const eventContent = await retrieveFromIPFS(eventCid);
+    const eventCID = event.eventCID;
+    const eventContent = await retrieveFromIPFS(eventCID);
     return eventContent;
   };
   const getAllEventsWithIPFSContent = async () => {
@@ -45,7 +45,7 @@ const BrowseEvent = ({ state }) => {
       const eventsWithIpfsContent = await Promise.all(
         allEvents.map(async (event) => {
           const eventContent = await fetchEventIpfsContent(event);
-          return { ...event, ...eventContent };
+          return { ...event, ...eventContent }; //spread operator
         })
       );
       setEvents(eventsWithIpfsContent);
@@ -62,9 +62,9 @@ const BrowseEvent = ({ state }) => {
         return;
       }
 
-      const eventCid = await ticketsContract.getEventCid(eventId);
+      const eventCID = await ticketsContract.geteventCID(eventId);
 
-      const newEvent = await retrieveFromIPFS(eventCid);
+      const newEvent = await retrieveFromIPFS(eventCID);
 
       setEvents((prevEvents) => [...prevEvents, newEvent]);
 
