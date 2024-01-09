@@ -34,6 +34,7 @@ function isOrganizers(address _organizerAddress)public view returns(bool){
 return organizers[_organizerAddress];
     }
     
+    
        
 
     

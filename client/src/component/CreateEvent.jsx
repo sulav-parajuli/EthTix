@@ -15,6 +15,7 @@ const CreateEvent = ({ state }) => {
   const [location, setLocation] = useState("");
   const { isUserConnected } = useAppContext();
   const [confirmationNeeded, setConfirmationNeeded] = useState(false);
+
   const navigate = useNavigate(); //to redirect to another page
 
   const handleEventNameChange = (event) => {
@@ -110,6 +111,7 @@ const CreateEvent = ({ state }) => {
         alert("Contract is not deployed");
         return;
       }
+
       const eventData = {
         eventName,
 
@@ -133,7 +135,7 @@ const CreateEvent = ({ state }) => {
       const additionalValue = ethers.utils.parseEther(await calculateFee());
 
       //convet date and time to timestamp
-      const eventTimestamp = new Date(`${date} ${time}`).getTime();
+      // const eventTimestamp = new Date(`${date} ${time}`).getTime();
 
       // Send transaction with estimated gas and additional value
       const transaction = await ticketsContract.createEvent(
@@ -142,7 +144,7 @@ const CreateEvent = ({ state }) => {
         priceInWei,
 
         {
-          value: additionalValue.add(10000),
+          value: additionalValue,
         }
       );
 
