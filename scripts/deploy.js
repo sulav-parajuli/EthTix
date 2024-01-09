@@ -8,17 +8,17 @@ const hre = require("hardhat");
 const fs = require("fs");
 
 async function main() {
-  const AccessControl = await ethers.getContractFactory("AccessControl");
-  const accessControl = await AccessControl.deploy();
-  await accessControl.deployed();
+  // const AccessControl = await ethers.getContractFactory("AccessControl");
+  // const accessControl = await AccessControl.deploy();
+  // await accessControl.deployed();
 
   // const User = await ethers.getContractFactory("User");
   // const user = await User.deploy();
   // await user.deployed();
 
-  const EventOrganizer = await hre.ethers.getContractFactory("EventOrganizer");
-  const eventOrganizer = await EventOrganizer.deploy();
-  await eventOrganizer.deployed();
+  // const EventOrganizer = await hre.ethers.getContractFactory("EventOrganizer");
+  // const eventOrganizer = await EventOrganizer.deploy();
+  // await eventOrganizer.deployed();
 
   const Tickets = await hre.ethers.getContractFactory("Tickets");
   const tickets = await Tickets.deploy();
@@ -29,9 +29,9 @@ async function main() {
   // Write contract addresses to a JSON file
   const addresses = {
     // user: user.target,
-    accessControl: accessControl.address,
+    //accessControl: accessControl.address,
     //user: user.address,
-    eventOrganizer: eventOrganizer.address,
+    //eventOrganizer: eventOrganizer.address,
     tickets: tickets.address,
   };
 

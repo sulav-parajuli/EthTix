@@ -4,7 +4,6 @@ import { useAppContext } from "./AppContext";
 import eventcreation from "../assets/images/eventcreation.png";
 import { useNavigate } from "react-router-dom";
 import { signData, uploadToIPFS } from "../utils/ipfsUtils";
-//import axios from "axios";
 
 const CreateEvent = ({ state }) => {
   const [eventName, setEventName] = useState("");
@@ -15,7 +14,6 @@ const CreateEvent = ({ state }) => {
   const [location, setLocation] = useState("");
   const { isUserConnected } = useAppContext();
   const [confirmationNeeded, setConfirmationNeeded] = useState(false);
-
   const navigate = useNavigate(); //to redirect to another page
 
   const handleEventNameChange = (event) => {
@@ -55,7 +53,7 @@ const CreateEvent = ({ state }) => {
       const FeeData = await provider.getFeeData();
       const gasPrice = ethers.utils.formatUnits(FeeData.gasPrice, "wei");
       //const gasPriceInEth = ethers.utils.formatEther(gasPrice);
-
+      console.log(gasPrice);
       // Calculate total fee in ether
       const totalFeeInWei = feeWei.add(gasPrice);
       const totalFeeInEth = ethers.utils.formatEther(totalFeeInWei);
@@ -104,38 +102,34 @@ const CreateEvent = ({ state }) => {
     const { signer, ticketsContract } = state;
     //event.preventDefault(); //to make sure when submitting form page doesnot get reload
 
-    //console.log("Connected to contract:", contract);
+    //console.log("Connected to ticketsContract:", ticketsContract);
 
     try {
       if (!ticketsContract) {
-        alert("Contract is not deployed");
+        alert("ticketsContract is not deployed");
         return;
       }
-
       const eventData = {
         eventName,
-
         date,
         time,
-
         location,
       };
-      //sign data
+      //sign Data
       const { data, signature } = await signData(
         signer,
         JSON.stringify(eventData)
       );
       //upload to ipfs
       const { ipfsCid } = await uploadToIPFS(data, signature);
-
       //convert ether to wei
       const priceInWei = ethers.utils.parseEther(priceInEther);
       //conver calculatefee value to wei
 
       const additionalValue = ethers.utils.parseEther(await calculateFee());
 
-      //convet date and time to timestamp
-      // const eventTimestamp = new Date(`${date} ${time}`).getTime();
+      //convert date and time to timestamp
+      // const eventTimestamp = new Date(${date} ${time}).getTime();
 
       // Send transaction with estimated gas and additional value
       const transaction = await ticketsContract.createEvent(
@@ -144,7 +138,7 @@ const CreateEvent = ({ state }) => {
         priceInWei,
 
         {
-          value: additionalValue.add(10000),
+          value: additionalValue,
         }
       );
 
