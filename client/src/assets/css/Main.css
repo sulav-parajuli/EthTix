@@ -1,21 +1,20 @@
 .main-container {
   display: flex;
   /*gradient background*/
-  /* background: rgb(255, 255, 255);
-    background: linear-gradient(
-      0deg,
-      rgba(255, 255, 255, 1) 0%,
-      rgba(203, 204, 205, 1) 40%,
-      rgba(212, 212, 212, 1) 100%
-    ); */
-  background-color: #fff;
-  /* background: rgb(255, 255, 255);
+  background: rgb(255, 255, 255);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 1) 55%,
+    rgba(0, 142, 176, 1) 100%
+  );
+  /* background-color: #fff;
+  background: rgb(255, 255, 255);
   background: linear-gradient(
     0deg,
     rgba(255, 255, 255, 1) 0%,
     rgba(0, 142, 176, 1) 100%
   ); */
-  /* padding-top: 10%; */
+  padding-top: 86px;
   padding-bottom: 2%;
 }
 

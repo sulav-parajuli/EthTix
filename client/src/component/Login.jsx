@@ -317,7 +317,7 @@ const Login = ({ state }) => {
         )}
         <div className="sub-title">
           {isConnected
-            ? "You're connected"
+            ? "Wallet connected!"
             : "Connect your wallet first to get started"}
         </div>
         <img src={walletImage} alt="Wallet" className="wallet-image" />

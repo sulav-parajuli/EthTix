@@ -8,7 +8,7 @@ import "../assets/css/Main.css";
 
 const Home = ({ state }) => {
   return (
-    <div className="mcontainer">
+    <div>
       <Main state={state} />
       <MainEvent />
       <MainAbout />

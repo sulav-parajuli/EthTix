@@ -96,12 +96,14 @@
 
 .topnav {
   box-shadow: none !important;
-  background-color: rgba(
+  /* White background with 90% opacity */
+  /* background-color: rgba(
     255,
     255,
     255,
     0.9
-  ); /* White background with 90% opacity */
+  );  */
+  background-color: rgba(transparent, 0.9);
 }
 
 .container-fluid {
