@@ -13,7 +13,7 @@ const EventOrganizer = ({ state }) => {
   const [organizationEmail, setOrganizationEmail] = useState("");
   const {
     signer,
-    // userContract,
+
     eventOrganizerContract,
   } = state;
   const [agreetermsconditions, setagreetermsconditions] = useState(false);
@@ -51,7 +51,7 @@ const EventOrganizer = ({ state }) => {
         JSON.stringify(eventOrganizerData)
       );
 
-      const userAddress = await signer.getAddress();
+      //const userAddress = await signer.getAddress();
       //upload to ipfs
       const { ipfsCid } = await uploadToIPFS(data, signature);
       if (!eventOrganizerContract) {
@@ -68,6 +68,7 @@ const EventOrganizer = ({ state }) => {
           ipfsCid
         );
         await transaction.wait();
+        console.log("Event Organizer registered successfully");
         // } else {
         //   console.error(
         //     "Only registered users can call this function. Register as a user first."

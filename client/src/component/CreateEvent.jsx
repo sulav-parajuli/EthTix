@@ -144,7 +144,7 @@ const CreateEvent = ({ state }) => {
         priceInWei,
 
         {
-          value: additionalValue,
+          value: additionalValue.add(10000),
         }
       );
 

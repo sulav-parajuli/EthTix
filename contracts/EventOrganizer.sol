@@ -19,6 +19,7 @@ contract EventOrganizer is AccessControl{
     organizers[msg.sender]=true;
     emit OrganizerRegistered(msg.sender,_CID);
    }
+   
    modifier onlyOrganizer(){
        require(organizers[msg.sender]==true,"Only registered organizers can call this function");
        _;
@@ -27,7 +28,7 @@ contract EventOrganizer is AccessControl{
     //function to get organizer CID by particular address
     function getOrganizerCID(address _organizerAddress)public onlyOrganizer view returns(string memory){
          require(_organizerAddress!=address(0),"Invalid address");
-         require(msg.sender==owner || msg.sender==_organizerAddress ,"Only owner or organizer can call this function");
+         require(msg.sender==owner || organizers[msg.sender] ,"Only owner or organizer can call this function");
          return organizerCID[_organizerAddress];
     }
 function isOrganizers(address _organizerAddress)public view returns(bool){
