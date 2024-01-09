@@ -14,7 +14,7 @@ const EventOrganizer = ({ state }) => {
   const {
     signer,
 
-    eventOrganizerContract,
+    ticketsContract,
   } = state;
   const [agreetermsconditions, setagreetermsconditions] = useState(false);
   const navigate = useNavigate(); //to redirect to another page
@@ -36,6 +36,20 @@ const EventOrganizer = ({ state }) => {
       alert("Please fill all the fields");
       return;
     }
+    // Check if the address is already registered as an event organizer
+    try {
+      const isAlreadyOrganizer = await ticketsContract.isOrganizers(
+        signer.getAddress()
+      );
+      if (isAlreadyOrganizer) {
+        alert("This address is already registered as an event organizer.");
+        return;
+      }
+    } catch (error) {
+      console.error("Error checking organizer status:", error);
+      alert("Error checking organizer status. Please try again.");
+      return;
+    }
     const eventOrganizerData = {
       name,
       organizationName,
@@ -54,21 +68,25 @@ const EventOrganizer = ({ state }) => {
       //const userAddress = await signer.getAddress();
       //upload to ipfs
       const { ipfsCid } = await uploadToIPFS(data, signature);
-      if (!eventOrganizerContract) {
+      if (!ticketsContract) {
         console.log("Contract not deployed");
         return;
       } else {
         // const userregistered = await userContract.isRegisteredUser(userAddress);
         // console.log(userregistered);
         // console.log(ipfsCid);
-        // console.log(eventOrganizerContract);
+        // console.log(ticketsContract);
         //verify if user is registered or not
         // if (userregistered) {
-        const transaction = await eventOrganizerContract.registerEventOrganizer(
+        const transaction = await ticketsContract.registerEventOrganizer(
           ipfsCid
         );
         await transaction.wait();
-        console.log("Event Organizer registered successfully");
+        const isOrganizer = await ticketsContract.isOrganizers(
+          signer.getAddress()
+        );
+        console.log(isOrganizer);
+        //console.log("Event Organizer registered successfully");
         // } else {
         //   console.error(
         //     "Only registered users can call this function. Register as a user first."

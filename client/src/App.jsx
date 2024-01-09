@@ -4,9 +4,9 @@ import ReactDOM from "react-dom/client";
 import "./App.css"; //Import App css
 
 // Import the contract ABI
-import accessControlAbi from "./artifacts/contracts/AccessControl.sol/AccessControl.json";
+//import accessControlAbi from "./artifacts/contracts/AccessControl.sol/AccessControl.json";
 //import userAbi from "./artifacts/contracts/User.sol/User.json";
-import eventOrganizerAbi from "./artifacts/contracts/EventOrganizer.sol/EventOrganizer.json";
+//import eventOrganizerAbi from "./artifacts/contracts/EventOrganizer.sol/EventOrganizer.json";
 import ticketAbi from "./artifacts/contracts/Tickets.sol/Tickets.json";
 
 // Import the contract addresses from the JSON file
@@ -34,9 +34,9 @@ function App() {
   const [state, setState] = useState({
     provider: null,
     signer: null,
-    accessControlContract: null,
+    // accessControlContract: null,
     //userContract: null,
-    eventOrganizerContract: null,
+    //ticketsContract: null,
     ticketsContract: null,
   });
   const [account, setAccount] = useState("Not connected");
@@ -46,14 +46,14 @@ function App() {
     //if we want to change the state of blockchain then we need to pay certain amount
 
     try {
-      const accessAddress = contractAddresses.accessControl;
-      const accessContractABI = accessControlAbi.abi;
+      // const accessAddress = contractAddresses.accessControl;
+      // const accessContractABI = accessControlAbi.abi;
 
       // const userContractAddress = contractAddresses.user;
       // const userContractABI = userAbi.abi;
 
-      const organizerContractAddress = contractAddresses.eventOrganizer;
-      const organizerContractABI = eventOrganizerAbi.abi;
+      // const organizerContractAddress = contractAddresses.eventOrganizer;
+      // const organizerContractABI = eventOrganizerAbi.abi;
 
       const ticketContractAddress = contractAddresses.tickets;
       const ticketContractABI = ticketAbi.abi;
@@ -91,11 +91,11 @@ function App() {
       const provider = new ethers.providers.Web3Provider(ethereum);
       const signer = provider.getSigner();
       //instance of the contract
-      const accessControlInstance = new ethers.Contract(
-        accessAddress,
-        accessContractABI, //abi is the interface of the contract
-        signer
-      );
+      // const accessControlInstance = new ethers.Contract(
+      //   accessAddress,
+      //   accessContractABI, //abi is the interface of the contract
+      //   signer
+      // );
 
       // const userContractInstance = new ethers.Contract(
       //   userContractAddress,
@@ -103,11 +103,11 @@ function App() {
       //   signer
       // );
 
-      const eventOrganizerContractInstance = new ethers.Contract(
-        organizerContractAddress,
-        organizerContractABI,
-        signer
-      );
+      // const ticketsContractInstance = new ethers.Contract(
+      //   organizerContractAddress,
+      //   organizerContractABI,
+      //   signer
+      // );
 
       const ticketsContractInstance = new ethers.Contract(
         ticketContractAddress,
@@ -119,9 +119,9 @@ function App() {
       setState({
         provider,
         signer,
-        accessControlContract: accessControlInstance,
+        // accessControlContract: accessControlInstance,
         //userContract: userContractInstance,
-        eventOrganizerContract: eventOrganizerContractInstance,
+        // ticketsContract: ticketsContractInstance,
         ticketsContract: ticketsContractInstance,
       });
     } catch (error) {

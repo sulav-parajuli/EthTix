@@ -3,8 +3,7 @@ import { ethers } from "ethers";
 import { useAppContext } from "./AppContext";
 import eventcreation from "../assets/images/eventcreation.png";
 import { useNavigate } from "react-router-dom";
-import { signData, uploadToIPFS } from "../utils/ipfsUtils";
-//import axios from "axios";
+import axios from "axios";
 
 const CreateEvent = ({ state }) => {
   const [eventName, setEventName] = useState("");
@@ -15,7 +14,6 @@ const CreateEvent = ({ state }) => {
   const [location, setLocation] = useState("");
   const { isUserConnected } = useAppContext();
   const [confirmationNeeded, setConfirmationNeeded] = useState(false);
-
   const navigate = useNavigate(); //to redirect to another page
 
   const handleEventNameChange = (event) => {
@@ -101,33 +99,16 @@ const CreateEvent = ({ state }) => {
   };
 
   const createEvent = async () => {
-    const { signer, ticketsContract } = state;
+    const { contract } = state;
     //event.preventDefault(); //to make sure when submitting form page doesnot get reload
 
     //console.log("Connected to contract:", contract);
 
     try {
-      if (!ticketsContract) {
+      if (!contract) {
         alert("Contract is not deployed");
         return;
       }
-
-      const eventData = {
-        eventName,
-
-        date,
-        time,
-
-        location,
-      };
-      //sign data
-      const { data, signature } = await signData(
-        signer,
-        JSON.stringify(eventData)
-      );
-      //upload to ipfs
-      const { ipfsCid } = await uploadToIPFS(data, signature);
-
       //convert ether to wei
       const priceInWei = ethers.utils.parseEther(priceInEther);
       //conver calculatefee value to wei
@@ -135,14 +116,15 @@ const CreateEvent = ({ state }) => {
       const additionalValue = ethers.utils.parseEther(await calculateFee());
 
       //convet date and time to timestamp
-      // const eventTimestamp = new Date(`${date} ${time}`).getTime();
+      // const eventTimestamp = new Date(${date} ${time}).getTime();
 
       // Send transaction with estimated gas and additional value
-      const transaction = await ticketsContract.createEvent(
-        ipfsCid,
-        totalTickets,
+      const transaction = await contract.createEvent(
+        eventName,
         priceInWei,
-
+        eventTimestamp,
+        totalTickets,
+        location,
         {
           value: additionalValue.add(10000),
         }

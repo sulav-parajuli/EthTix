@@ -1,9 +1,9 @@
 //SPDX-License-Identifier:MIT
 pragma solidity ^0.8.19;
-import "./AccessControl.sol";
 
-import "./EventOrganizer.sol";
-contract Tickets is AccessControl,EventOrganizer{
+
+//import "./EventOrganizer.sol";
+contract Tickets{
     struct Event{
         string eventCID;
         uint256 totalTickets;
@@ -24,17 +24,41 @@ contract Tickets is AccessControl,EventOrganizer{
     mapping(address => TicketHolder[]) public ticketHolders;
     //Mapping to store events created by organizer
     mapping(address => uint256[]) public eventsCreated;
-  
+     //mapping to store organizer CID
+    mapping(address=>string) public organizerCID;
+
+    //bool mapping to check if user is organizer
+    mapping(address=>bool) public organizers;
+    //State variables
+    address payable public owner;
     uint256 eventId;
-   
+    constructor(){
+    owner = payable(msg.sender);
+
+    }
+    
+    event OrganizerRegistered(address indexed organizerAddress,string indexed CID);
     event EventCreated(uint256 indexed eventId,address indexed organizer);
     event TicketPurchased(uint256 indexed eventId,uint256 indexed ticketsBought,address indexed buyer);
-
-   //function to retrieve the IPFS CID of the event
-   function getIpfsCID(uint256 _eventId)public view returns(string memory){
-      require(_eventId>0 &&_eventId <= eventId, "Event does not exist");
-        return events[_eventId].eventCID;
+   
+   //function to register organizer and store their CID
+    function registerEventOrganizer(string memory _CID)public {
+    require(bytes(_CID).length>0,"CID cannot be empty");
+    organizerCID[msg.sender]=_CID; 
+    organizers[msg.sender]=true;
+    emit OrganizerRegistered(msg.sender,_CID);
    }
+
+    //function to get organizer CID by particular address
+    function getOrganizerCID(address _organizerAddress)public view returns(string memory){
+         require(_organizerAddress!=address(0),"Invalid address");
+         require(msg.sender==owner || organizers[msg.sender] ,"Only owner or organizer can call this function");
+         return organizerCID[_organizerAddress];
+    }
+    //function to check if user is organizer
+    function isOrganizers(address _organizerAddress)public view returns(bool){
+    return organizers[_organizerAddress];
+    }
    
 
     //function to create event
@@ -44,8 +68,9 @@ contract Tickets is AccessControl,EventOrganizer{
     uint256 _price
     //string memory _eventImageCid
    
-) public onlyOrganizer payable  {
+) public  payable  {
     require(bytes(_eventCid).length > 0, "Event CID should not be empty");
+    require(isOrganizers(msg.sender),"Only organizer can create event");
    // require(bytes(_eventImageCid).length > 0, "Event Image CID should not be empty");
     require(_totalTickets > 0, "Total tickets should be greater than 0");
    
@@ -87,6 +112,7 @@ contract Tickets is AccessControl,EventOrganizer{
 
         return allEvents;
     }
+
 
    //funtion to buy Tickets
 function buyTicket(uint256 _eventId, uint256 _totalTicketsToBuy) public payable {
