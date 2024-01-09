@@ -12,9 +12,9 @@ async function main() {
   const accessControl = await AccessControl.deploy();
   await accessControl.deployed();
 
-  const User = await ethers.getContractFactory("User");
-  const user = await User.deploy();
-  await user.deployed();
+  // const User = await ethers.getContractFactory("User");
+  // const user = await User.deploy();
+  // await user.deployed();
 
   const EventOrganizer = await hre.ethers.getContractFactory("EventOrganizer");
   const eventOrganizer = await EventOrganizer.deploy();
@@ -30,7 +30,7 @@ async function main() {
   const addresses = {
     // user: user.target,
     accessControl: accessControl.address,
-    user: user.address,
+    //user: user.address,
     eventOrganizer: eventOrganizer.address,
     tickets: tickets.address,
   };

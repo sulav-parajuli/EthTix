@@ -2,19 +2,18 @@
 pragma solidity ^0.8.19;
 
 import "./AccessControl.sol";
-import "./User.sol";
-contract EventOrganizer is AccessControl,User{
+
+contract EventOrganizer is AccessControl{
 
    //mapping to store organizer CID
    mapping(address=>string) public organizerCID;
-    //event to be emitted when organizer is registered
 
     //bool mapping to check if user is organizer
    mapping(address=>bool) public organizers;
    event OrganizerRegistered(address indexed organizerAddress,string indexed CID);
 
     //function to register organizer and store their CID
-   function registerEventOrganizer(string memory _CID)public {
+    function registerEventOrganizer(string memory _CID)public {
     require(bytes(_CID).length>0,"CID cannot be empty");
     organizerCID[msg.sender]=_CID; 
     organizers[msg.sender]=true;
@@ -31,7 +30,7 @@ contract EventOrganizer is AccessControl,User{
          require(msg.sender==owner || msg.sender==_organizerAddress ,"Only owner or organizer can call this function");
          return organizerCID[_organizerAddress];
     }
-    function isOrganizers(address _organizerAddress)public view returns(bool){
+function isOrganizers(address _organizerAddress)public view returns(bool){
 return organizers[_organizerAddress];
     }
     
