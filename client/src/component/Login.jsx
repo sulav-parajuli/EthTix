@@ -5,8 +5,8 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; // Import the default styles
 import { useAppContext } from "./AppContext";
 import { signData, uploadToIPFS, retrieveFromIPFS } from "../utils/ipfsUtils";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye } from "@fortawesome/free-solid-svg-icons";
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import { faEye } from "@fortawesome/free-solid-svg-icons";
 const Login = ({ state }) => {
   const {
     isConnected,
@@ -26,8 +26,8 @@ const Login = ({ state }) => {
   } = state;
   const [isLogin, setLogin] = useState(false);
   const [name, setName] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmpassword, setConfirmPassword] = useState("");
+  // const [password, setPassword] = useState("");
+  // const [confirmpassword, setConfirmPassword] = useState("");
   const [email, setmail] = useState("");
   const [agreetermsconditions, setagreetermsconditions] = useState(false);
   useEffect(() => {
@@ -93,53 +93,53 @@ const Login = ({ state }) => {
           });
           return;
         }
-        if (!password.trim()) {
-          toast.error("Please enter Password.", {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-          });
-          return;
-        }
-        // Function to check if a password is strong
-        const isStrongPassword = (password) => {
-          // Define your password strength criteria
-          const minLength = 8;
-          const hasUpperCase = /[A-Z]/.test(password);
-          const hasLowerCase = /[a-z]/.test(password);
-          const hasNumber = /\d/.test(password);
-          const hasSpecialChar = /[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/.test(
-            password
-          );
+        // if (!password.trim()) {
+        //   toast.error("Please enter Password.", {
+        //     position: "top-right",
+        //     autoClose: 5000,
+        //     hideProgressBar: false,
+        //     closeOnClick: true,
+        //     pauseOnHover: true,
+        //     draggable: true,
+        //   });
+        //   return;
+        // }
+        // // Function to check if a password is strong
+        // const isStrongPassword = (password) => {
+        //   // Define your password strength criteria
+        //   const minLength = 8;
+        //   const hasUpperCase = /[A-Z]/.test(password);
+        //   const hasLowerCase = /[a-z]/.test(password);
+        //   const hasNumber = /\d/.test(password);
+        //   const hasSpecialChar = /[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/.test(
+        //     password
+        //   );
 
-          // Check if the password meets the criteria
-          return (
-            password.length >= minLength &&
-            hasUpperCase &&
-            hasLowerCase &&
-            hasNumber &&
-            hasSpecialChar
-          );
-        };
+        //   // Check if the password meets the criteria
+        //   return (
+        //     password.length >= minLength &&
+        //     hasUpperCase &&
+        //     hasLowerCase &&
+        //     hasNumber &&
+        //     hasSpecialChar
+        //   );
+        // };
 
-        // Inside your handleLogin function
-        if (!isStrongPassword(password)) {
-          toast.error(
-            "Password should contains 8+ characters, 1 uppercase, 1 lowercase, 1 number, and 1 special character.",
-            {
-              position: "top-right",
-              autoClose: 5000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-            }
-          );
-          return;
-        }
+        // // Inside your handleLogin function
+        // if (!isStrongPassword(password)) {
+        //   toast.error(
+        //     "Password should contains 8+ characters, 1 uppercase, 1 lowercase, 1 number, and 1 special character.",
+        //     {
+        //       position: "top-right",
+        //       autoClose: 5000,
+        //       hideProgressBar: false,
+        //       closeOnClick: true,
+        //       pauseOnHover: true,
+        //       draggable: true,
+        //     }
+        //   );
+        //   return;
+        // }
 
         if (isLogin) {
           //check if user is registered or not
@@ -208,28 +208,28 @@ const Login = ({ state }) => {
             });
             return;
           }
-          if (!confirmpassword.trim()) {
-            toast.error("Please enter confirm password.", {
-              position: "top-right",
-              autoClose: 5000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-            });
-            return;
-          }
-          if (password !== confirmpassword) {
-            toast.error("Password and Confirm Password should match.", {
-              position: "top-right",
-              autoClose: 5000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-            });
-            return;
-          }
+          // if (!confirmpassword.trim()) {
+          //   toast.error("Please enter confirm password.", {
+          //     position: "top-right",
+          //     autoClose: 5000,
+          //     hideProgressBar: false,
+          //     closeOnClick: true,
+          //     pauseOnHover: true,
+          //     draggable: true,
+          //   });
+          //   return;
+          // }
+          // if (password !== confirmpassword) {
+          //   toast.error("Password and Confirm Password should match.", {
+          //     position: "top-right",
+          //     autoClose: 5000,
+          //     hideProgressBar: false,
+          //     closeOnClick: true,
+          //     pauseOnHover: true,
+          //     draggable: true,
+          //   });
+          //   return;
+          // }
           const isValidEmail = (email) => {
             // Regular expression for a simple email pattern
             const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -253,7 +253,7 @@ const Login = ({ state }) => {
             userAddress,
             name,
             email,
-            password,
+            // password,
           };
           //sign data
           const { data, signature } = await signData(
@@ -349,7 +349,7 @@ const Login = ({ state }) => {
                   />
                 </div>
               )}
-              <div className="mb-3">
+              {/* <div className="mb-3">
                 <input
                   type="password"
                   placeholder="Password"
@@ -358,8 +358,8 @@ const Login = ({ state }) => {
                   id="password"
                   onChange={(e) => setPassword(e.target.value)}
                 />
-                {/* <FontAwesomeIcon icon={faEye} /> */}
-              </div>
+                <FontAwesomeIcon icon={faEye} />
+              </div> */}
               {isLogin ? (
                 <div className="form-check">
                   <input
@@ -378,7 +378,7 @@ const Login = ({ state }) => {
                 </div>
               ) : (
                 <>
-                  <div className="mb-3">
+                  {/* <div className="mb-3">
                     <input
                       type="password"
                       placeholder="Confirm Password"
@@ -387,8 +387,8 @@ const Login = ({ state }) => {
                       id="password"
                       onChange={(e) => setConfirmPassword(e.target.value)}
                     />
-                    {/* <FontAwesomeIcon icon={faEye} className="showhide" /> */}
-                  </div>
+                    <FontAwesomeIcon icon={faEye} className="showhide" />
+                  </div> */}
                   <div className="form-check">
                     <input
                       className="form-check-input"
