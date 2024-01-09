@@ -5,7 +5,8 @@ import ticket from "../assets/images/tickets.png";
 import ethtix from "../assets/images/abstract.png";
 import search from "../assets/images/search symbol.png";
 import EventDetail from "./EventDetail";
-import { signData, retrieveFromIPFS } from "../utils/ipfsUtils";
+import { useAppContext } from "./AppContext";
+import { retrieveFromIPFS } from "../utils/ipfsUtils";
 
 const Popup = ({ isOpen, onClose, ke, event }) => {
   return isOpen ? (
@@ -24,7 +25,8 @@ const BrowseEvent = ({ state }) => {
   const [events, setEvents] = useState([]);
   const [selectedEventIndex, setSelectedEventIndex] = useState(null);
   const [isContractReady, setIsContractReady] = useState(false);
-  const { signer, ticketsContract } = state;
+  const { ticketsContract } = state;
+  const { account } = useAppContext();
   //const [uinqueEventId, setUniqueEventId] = useState([]);
 
   const [isPopupOpen, setPopupOpen] = useState(false);
@@ -43,10 +45,10 @@ const BrowseEvent = ({ state }) => {
       }
       try {
         //Fetch all events when the component mounts
-        const allEvents = await ticketsContract.getAllEvents();
+        const allEvents = await ticketsContract.getAllEvents(account);
 
         setEvents(allEvents);
-        //console.log(allEvents);
+        console.log(allEvents);
 
         // Subscribe to the EventCreated event
         ticketsContract.on("EventCreated", handleEventCreated);
