@@ -37,11 +37,14 @@ const Main = ({ state }) => {
     setPopupOpen(true);
     document.body.classList.add("popup-open"); // Prevent scrolling
     document.querySelector(".App").background = "rgba(0,0,0,0.9)";
+    document.querySelector(".topnav").style.backgroundColor =
+      "rgba(255,255,255,0.9)";
   };
 
   const handleClosePopup = async () => {
     setPopupOpen(false);
     document.body.classList.remove("popup-open"); // Allow scrolling
+    document.querySelector(".topnav").style.backgroundColor = "transparent";
   };
 
   const handleUser = () => {

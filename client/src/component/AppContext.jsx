@@ -23,6 +23,7 @@ const AppProvider = ({ children, template, account, state }) => {
     rememberme,
     setRememberme,
     loading,
+    formatTime,
     setLoading,
     account,
     template,
@@ -152,6 +153,16 @@ const AppProvider = ({ children, template, account, state }) => {
     } catch (error) {
       console.log(error);
     }
+  }
+
+  // Function to format time to AM/PM format
+  function formatTime(time) {
+    const formattedTime = new Date(`1970-01-01T${time}`);
+    return formattedTime.toLocaleString("en-US", {
+      hour: "numeric",
+      minute: "numeric",
+      hour12: true,
+    });
   }
 
   useEffect(() => {
