@@ -12,6 +12,7 @@ const CreateEvent = ({ state }) => {
   const [time, setTime] = useState("");
   const [totalTickets, setTotalTickets] = useState("");
   const [location, setLocation] = useState("");
+  const [allvalueverified, setAllvalueverified] = useState(false);
   const { isUserConnected } = useAppContext();
   const [confirmationNeeded, setConfirmationNeeded] = useState(false);
   const navigate = useNavigate(); //to redirect to another page
@@ -68,23 +69,81 @@ const CreateEvent = ({ state }) => {
   const handleFormSubmit = (event) => {
     event.preventDefault();
 
+    //handling eventName validation
+    if (eventName.trim() === "") {
+      document.querySelector(".errorineventname").innerHTML =
+        "event name cannot be empty";
+      setAllvalueverified(false);
+    } else {
+      document.querySelector(".errorineventname").innerHTML = "";
+      setAllvalueverified(true);
+    }
+
+    //handling price validation
     if (
-      eventName.trim() === "" ||
       priceInEther.trim() === "" ||
       parseFloat(priceInEther) <= 0 ||
-      isNaN(parseFloat(priceInEther)) || // Check if priceInEther is a valid number
-      isNaN(new Date(date).getTime()) ||
-      new Date(date) < new Date() ||
+      isNaN(parseFloat(priceInEther))
+    ) {
+      document.querySelector(".errorinprice").innerHTML =
+        "price cannot be empty or less than 0 or not a number";
+      setAllvalueverified(false);
+    } else {
+      document.querySelector(".errorinprice").innerHTML = "";
+      setAllvalueverified(true);
+    }
+
+    //handling date validation
+    if (isNaN(new Date(date).getTime()) || new Date(date) < new Date()) {
+      document.querySelector(".errorindate").innerHTML =
+        "date cannot be empty or less than current date";
+      setAllvalueverified(false);
+    } else {
+      document.querySelector(".errorindate").innerHTML = "";
+      setAllvalueverified(true);
+    }
+
+    //handling time validation
+    if (
+      time.trim() === "" ||
+      isNaN(new Date(`${date} ${time}`).getTime()) ||
+      new Date(`${date} ${time}`) < new Date()
+    ) {
+      document.querySelector(".errorintime").innerHTML =
+        "time cannot be empty or selected time is less than current time";
+      setAllvalueverified(false);
+    } else {
+      document.querySelector(".errorintime").innerHTML = "";
+      setAllvalueverified(true);
+    }
+
+    //handling location validation
+    if (location.trim() === "") {
+      document.querySelector(".errorinlocation").innerHTML =
+        "location cannot be empty";
+      setAllvalueverified(false);
+    } else {
+      document.querySelector(".errorinlocation").innerHTML = "";
+      setAllvalueverified(true);
+    }
+
+    //handling totalTickets validation
+    if (
       isNaN(parseInt(totalTickets)) ||
       parseInt(totalTickets) <= 0 ||
-      location.trim() === "" ||
-      time.trim() === ""
+      totalTickets.trim() === ""
     ) {
-      // Show an alert or handle the validation error
-      alert("Please fill in all fields with valid data.");
-      return;
+      document.querySelector(".errorintotalticket").innerHTML =
+        "total tickets cannot be empty or less than 0 or not a number";
+      setAllvalueverified(false);
+    } else {
+      document.querySelector(".errorintotalticket").innerHTML = "";
+      setAllvalueverified(true);
     }
-    setConfirmationNeeded(true);
+
+    if (allvalueverified) {
+      setConfirmationNeeded(true);
+    }
   };
 
   const handleConfirmation = async (event) => {
@@ -175,6 +234,7 @@ const CreateEvent = ({ state }) => {
                 value={eventName}
                 onChange={handleEventNameChange}
               />
+              <div className="errorineventname"></div>
             </div>
             <div className="mb-3">
               <label htmlFor="price" className="form-label">
@@ -188,6 +248,7 @@ const CreateEvent = ({ state }) => {
                 value={priceInEther}
                 onChange={handlePriceChange}
               />
+              <div className="errorinprice"></div>
             </div>
 
             <div className="mb-3">
@@ -202,6 +263,7 @@ const CreateEvent = ({ state }) => {
                 onChange={handleDateChange}
                 onKeyDown={(e) => e.preventDefault()}
               />
+              <div className="errorindate"></div>
             </div>
 
             <div className="mb-3">
@@ -216,6 +278,7 @@ const CreateEvent = ({ state }) => {
                 onChange={handleTimeChange}
                 onKeyDown={(e) => e.preventDefault()}
               />
+              <div className="errorintime"></div>
             </div>
 
             <div className="mb-3">
@@ -230,6 +293,7 @@ const CreateEvent = ({ state }) => {
                 value={totalTickets}
                 onChange={handleTotalTicketsChange}
               />
+              <div className="errorintotalticket"></div>
             </div>
 
             <div className="mb-3">
@@ -243,6 +307,7 @@ const CreateEvent = ({ state }) => {
                 value={location}
                 onChange={handleLocationChange}
               />
+              <div className="errorinlocation"></div>
             </div>
 
             <button type="submit" className="btn btn-danger">

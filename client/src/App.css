@@ -199,6 +199,17 @@ body.popup-open {
   display: flex;
 }
 
+.errorineventname,
+.errorinprice,
+.errorinlocation,
+.errorinimage,
+.errorindate,
+.errorintime,
+.errorintotalticket {
+  text-align: justify;
+  color: #c1292e;
+}
+
 /*mytickets component styles*/
 .myprofile {
   text-align: center;

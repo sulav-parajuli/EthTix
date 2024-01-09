@@ -58,7 +58,14 @@ const BrowseEvent = ({ state }) => {
   const handleEventCreated = async (eventId) => {
     try {
       if (!ticketsContract) {
-        alert("Contract not found");
+        toast.error("Contract not found", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
         return;
       }
 
@@ -170,10 +177,7 @@ const BrowseEvent = ({ state }) => {
                               <p>Location: {event.location.toString()}</p>
                               {/* <p>Creator: {event.creator}</p> */}
                               <p>
-                                Date and Time :
-                                {new Date(
-                                  event.timestamp.toNumber()
-                                ).toLocaleString()}
+                                Date and Time: {event.date + ", " + event.time}
                               </p>
                               <div className="buttons">
                                 <button

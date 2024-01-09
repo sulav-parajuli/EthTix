@@ -47,7 +47,14 @@ const EventOrganizer = ({ state }) => {
       }
     } catch (error) {
       console.error("Error checking organizer status:", error);
-      alert("Error checking organizer status. Please try again.");
+      toast.error("Error checking organizer status. Please try again.", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
       return;
     }
     const eventOrganizerData = {
@@ -85,7 +92,7 @@ const EventOrganizer = ({ state }) => {
         const isOrganizer = await ticketsContract.isOrganizers(
           signer.getAddress()
         );
-        console.log(isOrganizer);
+        // console.log(isOrganizer);
         //console.log("Event Organizer registered successfully");
         // } else {
         //   console.error(
@@ -105,7 +112,9 @@ const EventOrganizer = ({ state }) => {
         // }
 
         // console.log(transaction);
-        setEventOrganizer(true);
+        if (isOrganizer) {
+          setEventOrganizer(true);
+        }
         //You might require local storage or session storage. It helps to set cookies.
         localStorage.setItem("isEventOrganizer", isEventOrganizer);
         document.body.classList.remove("popup-open"); // Allow scrolling

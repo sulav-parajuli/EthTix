@@ -8,7 +8,7 @@ const EventDetail = ({ event }) => {
       <p>Price: {ethers.utils.formatEther(event.price).toString()} ETH</p>
       <p>Total Tickets: {event.totalTickets.toNumber()}</p>
       <p>Location: {event.location.toString()}</p>
-      <p>Timestamp: {new Date(event.timestamp.toNumber()).toLocaleString()}</p>
+      <p>Date: {event.date + ", " + event.time}</p>
       <button
         onClick={() => {
           /* Implement Buy Ticket logic */
