@@ -11,7 +11,11 @@ const EventOrganizer = ({ state }) => {
   const [organizationType, setOrganizationType] = useState("");
   const [organizationLocation, setOrganizationLocation] = useState("");
   const [organizationEmail, setOrganizationEmail] = useState("");
-  const { signer, userContract, eventOrganizerContract } = state;
+  const {
+    signer,
+    // userContract,
+    eventOrganizerContract,
+  } = state;
   const [agreetermsconditions, setagreetermsconditions] = useState(false);
   const navigate = useNavigate(); //to redirect to another page
   //console.log(state);
@@ -50,45 +54,54 @@ const EventOrganizer = ({ state }) => {
       const userAddress = await signer.getAddress();
       //upload to ipfs
       const { ipfsCid } = await uploadToIPFS(data, signature);
-      if (!eventOrganizerContract || !userContract) {
+      if (!eventOrganizerContract) {
         console.log("Contract not deployed");
         return;
-      }
-      const userregistered = await userContract.isRegisteredUser(userAddress);
-      // console.log(userregistered);
-      // console.log(ipfsCid);
-      // console.log(eventOrganizerContract);
-      //verify if user is registered or not
-      if (userregistered) {
+      } else {
+        // const userregistered = await userContract.isRegisteredUser(userAddress);
+        // console.log(userregistered);
+        // console.log(ipfsCid);
+        // console.log(eventOrganizerContract);
+        //verify if user is registered or not
+        // if (userregistered) {
         const transaction = await eventOrganizerContract.registerEventOrganizer(
           ipfsCid
         );
         await transaction.wait();
-      } else {
-        console.error(
-          "Only registered users can call this function. Register as a user first."
-        );
-        toast.error(
-          "Only registered users can call this function. Register as a user first.",
-          {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-          }
-        );
-      }
+        // } else {
+        //   console.error(
+        //     "Only registered users can call this function. Register as a user first."
+        //   );
+        //   toast.error(
+        //     "Only registered users can call this function. Register as a user first.",
+        //     {
+        //       position: "top-right",
+        //       autoClose: 5000,
+        //       hideProgressBar: false,
+        //       closeOnClick: true,
+        //       pauseOnHover: true,
+        //       draggable: true,
+        //     }
+        //   );
+        // }
 
-      // console.log(transaction);
-      setEventOrganizer(true);
-      //You might require local storage or session storage. It helps to set cookies.
-      localStorage.setItem("isEventOrganizer", isEventOrganizer);
-      document.body.classList.remove("popup-open"); // Allow scrolling
-      navigate("/dashboard");
+        // console.log(transaction);
+        setEventOrganizer(true);
+        //You might require local storage or session storage. It helps to set cookies.
+        localStorage.setItem("isEventOrganizer", isEventOrganizer);
+        document.body.classList.remove("popup-open"); // Allow scrolling
+        navigate("/dashboard");
+      }
     } catch (error) {
       console.log(error);
+      toast.error("Contract not deployed. Please deploy the contract first.", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
     }
   };
 
