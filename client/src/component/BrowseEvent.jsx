@@ -77,9 +77,9 @@ const BrowseEvent = ({ state }) => {
         return;
       }
 
-      // const eventCID = await ticketsContract.geteventCID(eventId);
+      const eventCID = await ticketsContract.geteventCID(eventId);
 
-      // const newEvent = await retrieveFromIPFS(eventCID);
+      const newEvent = await retrieveFromIPFS(eventCID);
 
       setEvents((prevEvents) => [...prevEvents, newEvent]);
 
