@@ -37,9 +37,12 @@ const Navbar = ({ state }) => {
     setPopupOpen(true);
     document.body.classList.add("popup-open"); // Prevent scrolling
     document.querySelector(".App").background = "rgba(0,0,0,0.9)";
+    document.querySelector(".topnav").style.background =
+      "rgba(255,255,255,0.9)";
     // If you want to close the popup after successful connection
     if (isUserConnected) {
       setPopupOpen(false);
+      document.querySelector(".topnav").style.background = "transparent";
     }
   };
 
@@ -50,6 +53,7 @@ const Navbar = ({ state }) => {
       setConnected(false);
     }
     setPopupOpen(false);
+    document.querySelector(".topnav").style.background = "transparent";
     document.body.classList.remove("popup-open"); // Allow scrolling
   };
 
@@ -125,7 +129,7 @@ const Navbar = ({ state }) => {
                   className="btn btn-outline-success login-button"
                   onClick={handleOpenPopup}
                 >
-                  Login/Register
+                  Connect
                 </button>
               )}
               <Popup

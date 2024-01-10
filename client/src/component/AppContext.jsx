@@ -10,7 +10,6 @@ const AppProvider = ({ children, template, account, state }) => {
   const [isUserConnected, setUserConnected] = useState(false);
   const [isEventOrganizer, setEventOrganizer] = useState(false);
   const [rememberme, setRememberme] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [isOnline, setIsOnline] = useState(window.navigator.onLine); // Check if the user is online or not.
   const { userContract, eventOrganizerContract } = state;
   const contextValue = {
@@ -22,9 +21,7 @@ const AppProvider = ({ children, template, account, state }) => {
     setEventOrganizer,
     rememberme,
     setRememberme,
-    loading,
     formatTime,
-    setLoading,
     account,
     template,
   };
