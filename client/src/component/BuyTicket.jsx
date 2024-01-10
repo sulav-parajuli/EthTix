@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 import { useAppContext } from "./AppContext";
+
 const BuyTicket = ({ state }) => {
   const { account } = useAppContext();
   const [ticketAmount, setTicketAmount] = useState(0);

@@ -5,7 +5,7 @@ import "bootstrap/dist/css/bootstrap.min.css"; // Import Bootstrap CSS
 import BuyTicket from "./BuyTicket";
 import { useAppContext } from "./AppContext";
 
-const EventDetail = ({ event }) => {
+const EventDetail = ({ event, state }) => {
   const { formatTime } = useAppContext();
   const [buyticketpage, setbuyticketpage] = useState(false);
   const handlebuyticket = () => {
@@ -14,7 +14,7 @@ const EventDetail = ({ event }) => {
   return (
     <div className="container">
       {buyticketpage ? (
-        <BuyTicket event={event} />
+        <BuyTicket event={event} state={state} />
       ) : (
         <div className="row py-2">
           {/* Image Slider */}

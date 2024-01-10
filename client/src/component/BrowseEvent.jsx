@@ -7,14 +7,14 @@ import EventDetail from "./EventDetail";
 import { retrieveFromIPFS } from "../utils/ipfsUtils";
 import { useAppContext } from "./AppContext";
 
-const Popup = ({ isOpen, onClose, ke, event }) => {
+const Popup = ({ isOpen, onClose, ke, event, state }) => {
   return isOpen ? (
     <div className="popup">
       <div className="popup-inner">
         <button className="close" onClick={onClose}>
           Close
         </button>
-        <EventDetail index={ke} event={event} />
+        <EventDetail index={ke} event={event} state={state} />
       </div>
     </div>
   ) : null;
@@ -208,6 +208,7 @@ const BrowseEvent = ({ state }) => {
                       </div>
                     </div>
                     <Popup
+                      state={state}
                       isOpen={isPopupOpen}
                       onClose={() => {
                         setPopupOpen(false);

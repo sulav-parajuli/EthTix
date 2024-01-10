@@ -43,7 +43,7 @@ const EventOrganizer = ({ state }) => {
       );
       if (isAlreadyOrganizer) {
         alert("This address is already registered as an event organizer.");
-        return;
+        setNextpage(true);
       }
     } catch (error) {
       console.error("Error checking organizer status:", error);
