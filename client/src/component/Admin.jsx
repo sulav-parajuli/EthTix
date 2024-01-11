@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Triangle } from "react-loader-spinner";
 //Import css
 import "../assets/css/Admin.css";
 import "../assets/css/UserIcon.css";
@@ -22,6 +23,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 //Import Other Components
 import { useAppContext } from "./AppContext";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css"; // Import the default styles
 import CreateEvent from "./CreateEvent";
 import Login from "./Login";
 
@@ -44,13 +47,8 @@ const Admin = ({ state }) => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [isSidenavOpen, setSidenavOpen] = useState(false);
   const [isSelected, setIsSelected] = useState("dashboard"); // Initial selection, you can change it as needed
-  const {
-    setConnected,
-    account,
-    isUserConnected,
-    // isEventOrganizer,
-    setUserConnected,
-  } = useAppContext();
+  const { account, isUserConnected, isEventOrganizer, setUserConnected } =
+    useAppContext();
   const navigate = useNavigate();
   useEffect(() => {
     //hide top navbar and footer while dashboard component is opened.
@@ -108,10 +106,24 @@ const Admin = ({ state }) => {
     }
 
     // Additional cleanup if needed
-
     setUserConnected(false); // Set isUserConnected to false when logging out
-    localStorage.setItem("isUserConnected", false);
-    setConnected(false); // Set isConnected to false when logging out
+    toast.success("logging out...", {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      draggable: true,
+    });
+    setTimeout(() => {
+      toast.error("You are not event organizer.", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        draggable: true,
+      });
+      window.open("/", "_self"); // Redirect to home page
+    }, 1000);
   };
 
   const handleOpenPopup = () => {
@@ -126,9 +138,9 @@ const Admin = ({ state }) => {
 
   const handleClosePopup = async () => {
     if ((await account) !== "Not connected") {
-      setConnected(true);
+      setUserConnected(true);
     } else {
-      setConnected(false);
+      setUserConnected(false);
     }
     setPopupOpen(false);
     document.body.classList.remove("popup-open"); // Allow scrolling
@@ -150,461 +162,480 @@ const Admin = ({ state }) => {
   return (
     <>
       {/* <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc --> */}
-      <script src="./assets/js/material-dashboard.min.js?v=3.1.0"></script>
-      <div
-        className={`g-sidenav-show ${isSidenavOpen ? "g-sidenav-pinned" : ""}`}
-      >
-        <aside
-          className="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3"
-          id="sidenav-main"
+      {/* <script src="./assets/js/material-dashboard.min.js?v=3.1.0"></script> */}
+      {isEventOrganizer && isUserConnected ? (
+        <div
+          className={`g-sidenav-show ${
+            isSidenavOpen ? "g-sidenav-pinned" : ""
+          }`}
         >
-          <div className="sidenav-header">
-            <i
-              className="fas fa-times p-3 cursor-pointer text-white opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
-              aria-hidden="true"
-              id="iconSidenav"
-            ></i>
-            <a className="navbar-brand m-0" href="/" target="_blank">
-              <img
-                src={etherTixLogo}
-                className="navbar-brand-img h-100"
-                alt="main_logo"
-              />
-              {/*<span className="ms-1 font-weight-bold text-white"
+          <aside
+            className="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3"
+            id="sidenav-main"
+          >
+            <div className="sidenav-header">
+              <i
+                className="fas fa-times p-3 cursor-pointer text-white opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
+                aria-hidden="true"
+                id="iconSidenav"
+              ></i>
+              <a className="navbar-brand m-0" href="/" target="_blank">
+                <img
+                  src={etherTixLogo}
+                  className="navbar-brand-img h-100"
+                  alt="main_logo"
+                />
+                {/*<span className="ms-1 font-weight-bold text-white"
         >EthTix</span
       >*/}
-            </a>
-          </div>
+              </a>
+            </div>
 
-          <hr className="horizontal light mt-0 mb-2" />
+            <hr className="horizontal light mt-0 mb-2" />
 
-          <div
-            className="collapse navbar-collapse w-auto"
-            id="sidenav-collapse-main"
-          >
-            <ul className="navbar-nav">
-              <li className="nav-item">
-                <a
-                  className={`nav-link text-white ${
-                    isSelected === "dashboard" ? "active" : ""
-                  }`}
-                  onClick={() => handleSelectItem("dashboard")}
-                >
-                  <div className="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                    <FontAwesomeIcon icon={faGauge} />
-                  </div>
-
-                  <span className="nav-link-text ms-1">Dashboard</span>
-                </a>
-              </li>
-
-              <li className="nav-item">
-                <a
-                  className={`nav-link text-white ${
-                    isSelected === "createevent" ? "active" : ""
-                  }`}
-                  onClick={() => handleSelectItem("createevent")}
-                >
-                  <div className="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                    <FontAwesomeIcon icon={faCalendarPlus} />
-                  </div>
-                  <span className="nav-link-text ms-1">Create Event</span>
-                </a>
-              </li>
-
-              <li className="nav-item">
-                <a
-                  className={`nav-link text-white ${
-                    isSelected === "tools" ? "active" : ""
-                  }`}
-                  onClick={() => handleSelectItem("tools")}
-                >
-                  <div className="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                    <FontAwesomeIcon icon={faScrewdriverWrench} />
-                  </div>
-
-                  <span className="nav-link-text ms-1">Tools</span>
-                </a>
-              </li>
-
-              <li className="nav-item">
-                <a
-                  className={`nav-link text-white ${
-                    isSelected === "reports" ? "active" : ""
-                  }`}
-                  onClick={() => handleSelectItem("reports")}
-                >
-                  <div className="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                    <FontAwesomeIcon icon={faBook} />
-                  </div>
-
-                  <span className="nav-link-text ms-1">Reports</span>
-                </a>
-              </li>
-
-              <li className="nav-item">
-                <a
-                  className={`nav-link text-white ${
-                    isSelected === "notification" ? "active" : ""
-                  }`}
-                  onClick={() => handleSelectItem("notification")}
-                >
-                  <div className="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                    <FontAwesomeIcon icon={faBell} />
-                  </div>
-
-                  <span className="nav-link-text ms-1">Notifications</span>
-                </a>
-              </li>
-
-              <li className="nav-item mt-3">
-                <h6 className="ps-4 ms-2 text-xs font-weight-bold text-start opacity-8">
-                  Insight
-                </h6>
-              </li>
-
-              <li className="nav-item">
-                <a
-                  className={`nav-link text-white ${
-                    isSelected === "analytics" ? "active" : ""
-                  }`}
-                  onClick={() => handleSelectItem("analytics")}
-                >
-                  <div className="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                    <FontAwesomeIcon icon={faChartLine} />
-                  </div>
-
-                  <span className="nav-link-text ms-1">Analytics</span>
-                </a>
-              </li>
-
-              <li className="nav-item">
-                <a
-                  className={`nav-link text-white ${
-                    isSelected === "users" ? "active" : ""
-                  }`}
-                  onClick={() => handleSelectItem("users")}
-                >
-                  <div className="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                    <FontAwesomeIcon icon={faUsers} />
-                  </div>
-
-                  <span className="nav-link-text ms-1">Users</span>
-                </a>
-              </li>
-
-              <li className="nav-item">
-                <a
-                  className={`nav-link text-white ${
-                    isSelected === "events" ? "active" : ""
-                  }`}
-                  onClick={() => handleSelectItem("events")}
-                >
-                  <div className="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                    <FontAwesomeIcon icon={faCalendarCheck} />
-                  </div>
-
-                  <span className="nav-link-text ms-1">Events</span>
-                </a>
-              </li>
-              {isUserConnected ? (
+            <div
+              className="collapse navbar-collapse w-auto"
+              id="sidenav-collapse-main"
+            >
+              <ul className="navbar-nav">
                 <li className="nav-item">
                   <a
-                    className="nav-link text-white"
-                    onClick={() => handleDisconnect()}
+                    className={`nav-link text-white ${
+                      isSelected === "dashboard" ? "active" : ""
+                    }`}
+                    onClick={() => handleSelectItem("dashboard")}
                   >
                     <div className="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                      <FontAwesomeIcon icon={faRightFromBracket} />
+                      <FontAwesomeIcon icon={faGauge} />
                     </div>
 
-                    <span className="nav-link-text ms-1">Logout</span>
+                    <span className="nav-link-text ms-1">Dashboard</span>
                   </a>
                 </li>
-              ) : null}
-            </ul>
-          </div>
-        </aside>
-        <main className="main-content border-radius-lg">
-          {/* Navbar*/}
-          <nav
-            className="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl"
-            id="navbarBlur"
-            data-scroll="true"
-          >
-            <div className="container-fluid py-1 px-3">
-              <nav aria-label="breadcrumb">
-                <ol className="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
-                  <li className="breadcrumb-item text-sm">
-                    {isSelected === "createevent" ? (
-                      <>
-                        <FontAwesomeIcon icon={faCalendarPlus} />
-                        &nbsp; Create Event
-                      </>
-                    ) : isSelected === "dashboard" ? (
-                      <>
-                        <FontAwesomeIcon icon={faGauge} />
-                        &nbsp; Dash Board
-                      </>
-                    ) : isSelected === "tools" ? (
-                      <>
-                        <FontAwesomeIcon icon={faScrewdriverWrench} />
-                        &nbsp; Tools
-                      </>
-                    ) : isSelected === "reports" ? (
-                      <>
-                        <FontAwesomeIcon icon={faBook} />
-                        &nbsp; Reports
-                      </>
-                    ) : isSelected === "notification" ? (
-                      <>
-                        <FontAwesomeIcon icon={faBell} />
-                        &nbsp; Notifications
-                      </>
-                    ) : isSelected === "analytics" ? (
-                      <>
-                        <FontAwesomeIcon icon={faChartLine} />
-                        &nbsp; Analytics
-                      </>
-                    ) : isSelected === "users" ? (
-                      <>
-                        <FontAwesomeIcon icon={faUsers} />
-                        &nbsp; Users
-                      </>
-                    ) : isSelected === "events" ? (
-                      <>
-                        <FontAwesomeIcon icon={faCalendarCheck} />
-                        &nbsp; Events
-                      </>
-                    ) : (
-                      ""
-                    )}
+
+                <li className="nav-item">
+                  <a
+                    className={`nav-link text-white ${
+                      isSelected === "createevent" ? "active" : ""
+                    }`}
+                    onClick={() => handleSelectItem("createevent")}
+                  >
+                    <div className="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                      <FontAwesomeIcon icon={faCalendarPlus} />
+                    </div>
+                    <span className="nav-link-text ms-1">Create Event</span>
+                  </a>
+                </li>
+
+                <li className="nav-item">
+                  <a
+                    className={`nav-link text-white ${
+                      isSelected === "tools" ? "active" : ""
+                    }`}
+                    onClick={() => handleSelectItem("tools")}
+                  >
+                    <div className="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                      <FontAwesomeIcon icon={faScrewdriverWrench} />
+                    </div>
+
+                    <span className="nav-link-text ms-1">Tools</span>
+                  </a>
+                </li>
+
+                <li className="nav-item">
+                  <a
+                    className={`nav-link text-white ${
+                      isSelected === "reports" ? "active" : ""
+                    }`}
+                    onClick={() => handleSelectItem("reports")}
+                  >
+                    <div className="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                      <FontAwesomeIcon icon={faBook} />
+                    </div>
+
+                    <span className="nav-link-text ms-1">Reports</span>
+                  </a>
+                </li>
+
+                <li className="nav-item">
+                  <a
+                    className={`nav-link text-white ${
+                      isSelected === "notification" ? "active" : ""
+                    }`}
+                    onClick={() => handleSelectItem("notification")}
+                  >
+                    <div className="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                      <FontAwesomeIcon icon={faBell} />
+                    </div>
+
+                    <span className="nav-link-text ms-1">Notifications</span>
+                  </a>
+                </li>
+
+                <li className="nav-item mt-3">
+                  <h6 className="ps-4 ms-2 text-xs font-weight-bold text-start opacity-8">
+                    Insight
+                  </h6>
+                </li>
+
+                <li className="nav-item">
+                  <a
+                    className={`nav-link text-white ${
+                      isSelected === "analytics" ? "active" : ""
+                    }`}
+                    onClick={() => handleSelectItem("analytics")}
+                  >
+                    <div className="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                      <FontAwesomeIcon icon={faChartLine} />
+                    </div>
+
+                    <span className="nav-link-text ms-1">Analytics</span>
+                  </a>
+                </li>
+
+                <li className="nav-item">
+                  <a
+                    className={`nav-link text-white ${
+                      isSelected === "users" ? "active" : ""
+                    }`}
+                    onClick={() => handleSelectItem("users")}
+                  >
+                    <div className="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                      <FontAwesomeIcon icon={faUsers} />
+                    </div>
+
+                    <span className="nav-link-text ms-1">Users</span>
+                  </a>
+                </li>
+
+                <li className="nav-item">
+                  <a
+                    className={`nav-link text-white ${
+                      isSelected === "events" ? "active" : ""
+                    }`}
+                    onClick={() => handleSelectItem("events")}
+                  >
+                    <div className="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                      <FontAwesomeIcon icon={faCalendarCheck} />
+                    </div>
+
+                    <span className="nav-link-text ms-1">Events</span>
+                  </a>
+                </li>
+                {isUserConnected ? (
+                  <li className="nav-item">
+                    <a
+                      className="nav-link text-white"
+                      onClick={() => handleDisconnect()}
+                    >
+                      <div className="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <FontAwesomeIcon icon={faRightFromBracket} />
+                      </div>
+
+                      <span className="nav-link-text ms-1">Logout</span>
+                    </a>
                   </li>
-                </ol>
-              </nav>
-              <div
-                className="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4"
-                id="navbar"
-              >
-                {/*Search Bar*/}
-                {/*<div className="ms-md-auto pe-md-3 d-flex align-items-center">
+                ) : null}
+              </ul>
+            </div>
+          </aside>
+          <main className="main-content border-radius-lg">
+            {/* Navbar*/}
+            <nav
+              className="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl"
+              id="navbarBlur"
+              data-scroll="true"
+            >
+              <div className="container-fluid py-1 px-3">
+                <nav aria-label="breadcrumb">
+                  <ol className="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
+                    <li className="breadcrumb-item text-sm">
+                      {isSelected === "createevent" ? (
+                        <>
+                          <FontAwesomeIcon icon={faCalendarPlus} />
+                          &nbsp; Create Event
+                        </>
+                      ) : isSelected === "dashboard" ? (
+                        <>
+                          <FontAwesomeIcon icon={faGauge} />
+                          &nbsp; Dash Board
+                        </>
+                      ) : isSelected === "tools" ? (
+                        <>
+                          <FontAwesomeIcon icon={faScrewdriverWrench} />
+                          &nbsp; Tools
+                        </>
+                      ) : isSelected === "reports" ? (
+                        <>
+                          <FontAwesomeIcon icon={faBook} />
+                          &nbsp; Reports
+                        </>
+                      ) : isSelected === "notification" ? (
+                        <>
+                          <FontAwesomeIcon icon={faBell} />
+                          &nbsp; Notifications
+                        </>
+                      ) : isSelected === "analytics" ? (
+                        <>
+                          <FontAwesomeIcon icon={faChartLine} />
+                          &nbsp; Analytics
+                        </>
+                      ) : isSelected === "users" ? (
+                        <>
+                          <FontAwesomeIcon icon={faUsers} />
+                          &nbsp; Users
+                        </>
+                      ) : isSelected === "events" ? (
+                        <>
+                          <FontAwesomeIcon icon={faCalendarCheck} />
+                          &nbsp; Events
+                        </>
+                      ) : (
+                        ""
+                      )}
+                    </li>
+                  </ol>
+                </nav>
+                <div
+                  className="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4"
+                  id="navbar"
+                >
+                  {/*Search Bar*/}
+                  {/*<div className="ms-md-auto pe-md-3 d-flex align-items-center">
               <div className="input-group input-group-outline">
                 <label className="form-label">Type here...</label>
                 <input type="text" className="form-control" />
               </div>
             </div>*/}
-                <ul className="navbar-nav justify-content-end">
-                  <li className="nav-item d-xl-none ps-3 d-flex align-items-center">
-                    <a
-                      className="nav-link text-body p-0"
-                      id="iconNavbarSidenav"
-                      onClick={handleOpenSidenav}
-                    >
-                      <div className="sidenav-toggler-inner">
-                        <i className="sidenav-toggler-line"></i>
-                        <i className="sidenav-toggler-line"></i>
-                        <i className="sidenav-toggler-line"></i>
+                  <ul className="navbar-nav justify-content-end">
+                    <li className="nav-item d-xl-none ps-3 d-flex align-items-center">
+                      <a
+                        className="nav-link text-body p-0"
+                        id="iconNavbarSidenav"
+                        onClick={handleOpenSidenav}
+                      >
+                        <div className="sidenav-toggler-inner">
+                          <i className="sidenav-toggler-line"></i>
+                          <i className="sidenav-toggler-line"></i>
+                          <i className="sidenav-toggler-line"></i>
+                        </div>
+                      </a>
+                    </li>
+                    <li className="nav-item px-3 d-flex align-items-center">
+                      <a
+                        className="nav-link text-body p-0"
+                        onClick={handleOpenSetting}
+                      >
+                        <FontAwesomeIcon icon={faGear} />
+                      </a>
+                    </li>
+                    <li className="nav-item dropdown pe-2 d-flex align-items-center">
+                      <a
+                        className="nav-link text-body p-0"
+                        id="dropdownMenuButton"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                      >
+                        <FontAwesomeIcon icon={faBell} />
+                      </a>
+                    </li>
+                    <li className="nav-item dropdown pe-2 d-flex align-items-center">
+                      <div className="logincontainer">
+                        {isUserConnected ? (
+                          <div
+                            className={"user-icon-container"}
+                            onClick={handleToggleDropdown}
+                          >
+                            <div className="usericonimage">
+                              {/* <FontAwesomeIcon icon={faUser} /> */}
+                              <FontAwesomeIcon icon={faCircleUser} />
+                            </div>
+                            {isDropdownOpen && (
+                              <div className={"userdropdown"}>
+                                <div
+                                  className="nav-item"
+                                  onClick={() => handleSelectItem("mytickets")}
+                                >
+                                  My Tickets
+                                </div>
+                                <div
+                                  className="nav-item"
+                                  onClick={() => {
+                                    window.open("/", "_self");
+                                  }}
+                                >
+                                  Open Home Page
+                                </div>
+                                <div
+                                  className="nav-item"
+                                  onClick={handleDisconnect}
+                                >
+                                  Disconnect
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        ) : (
+                          <button
+                            className="btn btn-outline-success login-button"
+                            onClick={handleOpenPopup}
+                          >
+                            Login
+                          </button>
+                        )}
                       </div>
-                    </a>
-                  </li>
-                  <li className="nav-item px-3 d-flex align-items-center">
-                    <a
-                      className="nav-link text-body p-0"
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </nav>
+            <hr className="horizontal dark mt-4" />
+            <Popup
+              isOpen={isPopupOpen}
+              onClose={handleClosePopup}
+              state={state}
+            />
+
+            {/*End Navbar*/}
+
+            <div className="container-fluid py-4">
+              <div className="row">
+                <div className=" position-relative z-index-2">
+                  {isSelected === "createevent" && (
+                    /* Render CreateEvent component when isSelected is 'createEvent' */
+                    <CreateEvent state={state} />
+                  )}
+
+                  {/* Add more conditions for other components as needed */}
+
+                  {/* ... (rest of your code) */}
+                </div>
+              </div>
+            </div>
+          </main>
+          {isSettingsOpen ? (
+            <div className="fixed-plugin">
+              <a className="fixed-plugin-button text-dark position-fixed px-3 py-2">
+                <i className="fa fa-cog fixed-plugin-button-nav cursor-pointer"></i>
+              </a>
+              <div className="card shadow-lg">
+                <div className="card-header pb-0 pt-3">
+                  <div className="float-start">
+                    <h5 className="mt-3 mb-0">Settings</h5>
+                  </div>
+                  <div className="float-end mt-4">
+                    <button
+                      className="btn btn-link text-dark p-0 fixed-plugin-close-button"
                       onClick={handleOpenSetting}
                     >
-                      <FontAwesomeIcon icon={faGear} />
-                    </a>
-                  </li>
-                  <li className="nav-item dropdown pe-2 d-flex align-items-center">
-                    <a
-                      className="nav-link text-body p-0"
-                      id="dropdownMenuButton"
-                      data-bs-toggle="dropdown"
-                      aria-expanded="false"
+                      <span style={{ width: "1.5em", height: "1.5em" }}>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          width="24"
+                          height="24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <line x1="18" y1="6" x2="6" y2="18"></line>
+                          <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                      </span>
+                    </button>
+                  </div>
+                  {/* <!-- End Toggle Button --> */}
+                </div>
+                <hr className="horizontal dark my-1" />
+                <div className="card-body pt-sm-3 pt-0">
+                  {/* <!-- Sidebar Backgrounds --> */}
+                  <div>
+                    <h6 className="mb-0">Sidebar Colors</h6>
+                  </div>
+
+                  {/* <!-- Sidenav Type --> */}
+
+                  <div className="mt-3">
+                    <h6 className="mb-0">Sidenav Type</h6>
+                    <p className="text-sm">
+                      Choose between 2 different sidenav types.
+                    </p>
+                  </div>
+
+                  <div className="d-flex">
+                    <button
+                      className="btn bg-gradient-dark px-3 mb-2 active"
+                      data-class="bg-gradient-dark"
                     >
-                      <FontAwesomeIcon icon={faBell} />
-                    </a>
-                  </li>
-                  <li className="nav-item dropdown pe-2 d-flex align-items-center">
-                    <div className="logincontainer">
-                      {isUserConnected ? (
-                        <div
-                          className={"user-icon-container"}
-                          onClick={handleToggleDropdown}
-                        >
-                          <div className="usericonimage">
-                            {/* <FontAwesomeIcon icon={faUser} /> */}
-                            <FontAwesomeIcon icon={faCircleUser} />
-                          </div>
-                          {isDropdownOpen && (
-                            <div className={"userdropdown"}>
-                              <div
-                                className="nav-item"
-                                onClick={() => handleSelectItem("mytickets")}
-                              >
-                                My Tickets
-                              </div>
-                              <div
-                                className="nav-item"
-                                onClick={() => {
-                                  window.open("/", "_self");
-                                }}
-                              >
-                                Open Home Page
-                              </div>
-                              <div
-                                className="nav-item"
-                                onClick={handleDisconnect}
-                              >
-                                Logout
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      ) : (
-                        <button
-                          className="btn btn-outline-success login-button"
-                          onClick={handleOpenPopup}
-                        >
-                          Login
-                        </button>
-                      )}
-                    </div>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </nav>
-          <hr className="horizontal dark mt-4" />
-          <Popup
-            isOpen={isPopupOpen}
-            onClose={handleClosePopup}
-            state={state}
-          />
+                      Dark
+                    </button>
+                    <button
+                      className="btn bg-gradient-dark px-3 mb-2 ms-2"
+                      data-class="bg-transparent"
+                    >
+                      Transparent
+                    </button>
+                    <button
+                      className="btn bg-gradient-dark px-3 mb-2 ms-2"
+                      data-class="bg-white"
+                    >
+                      White
+                    </button>
+                  </div>
 
-          {/*End Navbar*/}
-
-          <div className="container-fluid py-4">
-            <div className="row">
-              <div className=" position-relative z-index-2">
-                {isSelected === "createevent" && (
-                  /* Render CreateEvent component when isSelected is 'createEvent' */
-                  <CreateEvent state={state} />
-                )}
-
-                {/* Add more conditions for other components as needed */}
-
-                {/* ... (rest of your code) */}
-              </div>
-            </div>
-          </div>
-        </main>
-        {isSettingsOpen ? (
-          <div className="fixed-plugin">
-            <a className="fixed-plugin-button text-dark position-fixed px-3 py-2">
-              <i className="fa fa-cog fixed-plugin-button-nav cursor-pointer"></i>
-            </a>
-            <div className="card shadow-lg">
-              <div className="card-header pb-0 pt-3">
-                <div className="float-start">
-                  <h5 className="mt-3 mb-0">Settings</h5>
-                </div>
-                <div className="float-end mt-4">
-                  <button
-                    className="btn btn-link text-dark p-0 fixed-plugin-close-button"
-                    onClick={handleOpenSetting}
-                  >
-                    <span style={{ width: "1.5em", height: "1.5em" }}>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        width="24"
-                        height="24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                        <line x1="6" y1="6" x2="18" y2="18"></line>
-                      </svg>
-                    </span>
-                  </button>
-                </div>
-                {/* <!-- End Toggle Button --> */}
-              </div>
-              <hr className="horizontal dark my-1" />
-              <div className="card-body pt-sm-3 pt-0">
-                {/* <!-- Sidebar Backgrounds --> */}
-                <div>
-                  <h6 className="mb-0">Sidebar Colors</h6>
-                </div>
-
-                {/* <!-- Sidenav Type --> */}
-
-                <div className="mt-3">
-                  <h6 className="mb-0">Sidenav Type</h6>
-                  <p className="text-sm">
-                    Choose between 2 different sidenav types.
+                  <p className="text-sm d-xl-none d-block mt-2">
+                    You can change the sidenav type just on desktop view.
                   </p>
-                </div>
 
-                <div className="d-flex">
-                  <button
-                    className="btn bg-gradient-dark px-3 mb-2 active"
-                    data-class="bg-gradient-dark"
-                  >
-                    Dark
-                  </button>
-                  <button
-                    className="btn bg-gradient-dark px-3 mb-2 ms-2"
-                    data-class="bg-transparent"
-                  >
-                    Transparent
-                  </button>
-                  <button
-                    className="btn bg-gradient-dark px-3 mb-2 ms-2"
-                    data-class="bg-white"
-                  >
-                    White
-                  </button>
-                </div>
+                  {/* <!-- Navbar Fixed --> */}
 
-                <p className="text-sm d-xl-none d-block mt-2">
-                  You can change the sidenav type just on desktop view.
-                </p>
-
-                {/* <!-- Navbar Fixed --> */}
-
-                <div className="mt-3 d-flex">
-                  <h6 className="mb-0">Navbar Fixed</h6>
-                  <div className="form-check form-switch ps-0 ms-auto my-auto">
-                    <input
-                      className="form-check-input mt-1 ms-auto"
-                      type="checkbox"
-                      id="navbarFixed"
-                      // onClick={(e) => navbarFixed(e.target.checked)}
-                    />
+                  <div className="mt-3 d-flex">
+                    <h6 className="mb-0">Navbar Fixed</h6>
+                    <div className="form-check form-switch ps-0 ms-auto my-auto">
+                      <input
+                        className="form-check-input mt-1 ms-auto"
+                        type="checkbox"
+                        id="navbarFixed"
+                        // onClick={(e) => navbarFixed(e.target.checked)}
+                      />
+                    </div>
                   </div>
-                </div>
 
-                <hr className="horizontal dark my-3" />
-                <div className="mt-2 d-flex">
-                  <h6 className="mb-0">Light / Dark</h6>
-                  <div className="form-check form-switch ps-0 ms-auto my-auto">
-                    <input
-                      className="form-check-input mt-1 ms-auto"
-                      type="checkbox"
-                      id="dark-version"
-                    />
+                  <hr className="horizontal dark my-3" />
+                  <div className="mt-2 d-flex">
+                    <h6 className="mb-0">Light / Dark</h6>
+                    <div className="form-check form-switch ps-0 ms-auto my-auto">
+                      <input
+                        className="form-check-input mt-1 ms-auto"
+                        type="checkbox"
+                        id="dark-version"
+                      />
+                    </div>
                   </div>
+                  <hr className="horizontal dark my-sm-4" />
                 </div>
-                <hr className="horizontal dark my-sm-4" />
               </div>
             </div>
-          </div>
-        ) : null}
-      </div>
+          ) : null}
+        </div>
+      ) : (
+        <Triangle
+          visible={true}
+          height="80"
+          width="80"
+          color="#008eb0"
+          ariaLabel="triangle-loading"
+          wrapperStyle={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100vh", // 100% of the viewport height
+          }}
+          wrapperClass=""
+        />
+      )}
     </>
   );
 };

@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; // Import the default styles
 import { signData, uploadToIPFS } from "../utils/ipfsUtils";
-import { toast } from "react-toastify";
 
 const EventOrganizer = ({ state }) => {
   const [nextpage, setNextpage] = useState(false);

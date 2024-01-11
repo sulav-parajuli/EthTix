@@ -71,7 +71,7 @@ const UserIcon = () => {
             </Link>
           ) : null}
           <div className="nav-item" onClick={handleDisconnect}>
-            Logout
+            Disconnect
           </div>
         </div>
       )}

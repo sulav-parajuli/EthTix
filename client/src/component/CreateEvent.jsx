@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import { ethers } from "ethers";
 import { useAppContext } from "./AppContext";
+import { Triangle } from "react-loader-spinner";
 import eventcreation from "../assets/images/eventcreation.png";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css"; // Import the default styles
 import { signData, uploadToIPFS } from "../utils/ipfsUtils";
 
 const CreateEvent = ({ state }) => {
@@ -15,6 +18,7 @@ const CreateEvent = ({ state }) => {
   const [allvalueverified, setAllvalueverified] = useState(false);
   const { isUserConnected } = useAppContext();
   const [confirmationNeeded, setConfirmationNeeded] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate(); //to redirect to another page
 
   const handleEventNameChange = (event) => {
@@ -164,6 +168,7 @@ const CreateEvent = ({ state }) => {
     //console.log("Connected to ticketsContract:", ticketsContract);
 
     try {
+      setIsLoading(true);
       if (!ticketsContract) {
         alert("ticketsContract is not deployed");
         return;
@@ -205,12 +210,22 @@ const CreateEvent = ({ state }) => {
       await transaction.wait();
 
       console.log("Event Created");
+      toast.success("Event Created Successfully", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
       // Redirect to a events route when event created successfully
       navigate("/events");
       document.querySelector(".topnav").style.display = "flex";
       document.querySelector(".footer-container").style.display = "block";
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -218,102 +233,119 @@ const CreateEvent = ({ state }) => {
     <>
       {isUserConnected ? (
         <div className="createevent">
-          <form
-            onSubmit={
-              confirmationNeeded ? handleConfirmation : handleFormSubmit
-            }
-          >
-            <div className="mb-4">
-              <label htmlFor="eventName" className="form-label">
-                Event Name
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                id="eventName"
-                value={eventName}
-                onChange={handleEventNameChange}
-              />
-              <div className="errorineventname"></div>
-            </div>
-            <div className="mb-3">
-              <label htmlFor="price" className="form-label">
-                Price per Ticket(ETH)
-              </label>
-              <input
-                type="number"
-                step="0.01"
-                className="form-control"
-                id="price"
-                value={priceInEther}
-                onChange={handlePriceChange}
-              />
-              <div className="errorinprice"></div>
-            </div>
+          {isLoading ? (
+            <Triangle
+              visible={true}
+              height="80"
+              width="80"
+              color="#008eb0"
+              ariaLabel="triangle-loading"
+              wrapperStyle={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "100vh", // 100% of the viewport height
+              }}
+              wrapperClass=""
+            />
+          ) : (
+            <form
+              onSubmit={
+                confirmationNeeded ? handleConfirmation : handleFormSubmit
+              }
+            >
+              <div className="mb-4">
+                <label htmlFor="eventName" className="form-label">
+                  Event Name
+                </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="eventName"
+                  value={eventName}
+                  onChange={handleEventNameChange}
+                />
+                <div className="errorineventname"></div>
+              </div>
+              <div className="mb-3">
+                <label htmlFor="price" className="form-label">
+                  Price per Ticket(ETH)
+                </label>
+                <input
+                  type="number"
+                  step="0.01"
+                  className="form-control"
+                  id="price"
+                  value={priceInEther}
+                  onChange={handlePriceChange}
+                />
+                <div className="errorinprice"></div>
+              </div>
 
-            <div className="mb-3">
-              <label htmlFor="date" className="form-label">
-                Date
-              </label>
-              <input
-                type="date"
-                className="form-control"
-                id="date"
-                value={date}
-                onChange={handleDateChange}
-                onKeyDown={(e) => e.preventDefault()}
-              />
-              <div className="errorindate"></div>
-            </div>
+              <div className="mb-3">
+                <label htmlFor="date" className="form-label">
+                  Date
+                </label>
+                <input
+                  type="date"
+                  className="form-control"
+                  id="date"
+                  value={date}
+                  onChange={handleDateChange}
+                  onKeyDown={(e) => e.preventDefault()}
+                />
+                <div className="errorindate"></div>
+              </div>
 
-            <div className="mb-3">
-              <label htmlFor="location" className="form-label">
-                Time
-              </label>
-              <input
-                type="time"
-                className="form-control"
-                id="location"
-                value={time}
-                onChange={handleTimeChange}
-                onKeyDown={(e) => e.preventDefault()}
-              />
-              <div className="errorintime"></div>
-            </div>
+              <div className="mb-3">
+                <label htmlFor="location" className="form-label">
+                  Time
+                </label>
+                <input
+                  type="time"
+                  className="form-control"
+                  id="location"
+                  value={time}
+                  onChange={handleTimeChange}
+                  onKeyDown={(e) => e.preventDefault()}
+                />
+                <div className="errorintime"></div>
+              </div>
 
-            <div className="mb-3">
-              <label htmlFor="totalTicket" className="form-label">
-                Total Number Of Tickets
-              </label>
-              <input
-                type="number"
-                step="1"
-                className="form-control"
-                id="TotalTickets"
-                value={totalTickets}
-                onChange={handleTotalTicketsChange}
-              />
-              <div className="errorintotalticket"></div>
-            </div>
+              <div className="mb-3">
+                <label htmlFor="totalTicket" className="form-label">
+                  Total Number Of Tickets
+                </label>
+                <input
+                  type="number"
+                  step="1"
+                  className="form-control"
+                  id="TotalTickets"
+                  value={totalTickets}
+                  onChange={handleTotalTicketsChange}
+                />
+                <div className="errorintotalticket"></div>
+              </div>
 
-            <div className="mb-3">
-              <label htmlFor="location" className="form-label">
-                Location
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                id="location"
-                value={location}
-                onChange={handleLocationChange}
-              />
-              <div className="errorinlocation"></div>
-            </div>
+              <div className="mb-3">
+                <label htmlFor="location" className="form-label">
+                  Location
+                </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="location"
+                  value={location}
+                  onChange={handleLocationChange}
+                />
+                <div className="errorinlocation"></div>
+              </div>
 
-            <button type="submit" className="btn btn-danger">
-              {confirmationNeeded ? "Confirm Event Creation" : "Create Event"}
-            </button>
-          </form>
+              <button type="submit" className="btn btn-danger">
+                {confirmationNeeded ? "Confirm Event Creation" : "Create Event"}
+              </button>
+            </form>
+          )}
         </div>
       ) : (
         <div className="createevent">
