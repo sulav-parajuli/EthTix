@@ -77,9 +77,9 @@ const BrowseEvent = ({ state }) => {
         return;
       }
 
-      // const eventCID = await ticketsContract.geteventCID(eventId);
-
-      // const newEvent = await retrieveFromIPFS(eventCID);
+      //   const newEvent = await retrieveFromIPFS(eventCID);
+      // Fetch the newly created event details from the contract
+      const newEvent = await ticketsContract.events(eventId);
 
       setEvents((prevEvents) => [...prevEvents, newEvent]);
 
@@ -91,16 +91,6 @@ const BrowseEvent = ({ state }) => {
       console.error("Error fetching and updating new event:", error);
     }
   };
-
-  // // Function to format time to AM/PM format
-  // const formatTime = (time) => {
-  //   const formattedTime = new Date(`1970-01-01T${time}`);
-  //   return formattedTime.toLocaleString("en-US", {
-  //     hour: "numeric",
-  //     minute: "numeric",
-  //     hour12: true,
-  //   });
-  // };
 
   useEffect(() => {
     const initializeContract = async () => {
@@ -239,6 +229,7 @@ const BrowseEvent = ({ state }) => {
                         }}
                         ke={selectedEventIndex}
                         event={events[selectedEventIndex]}
+                        state={state}
                       />
                     </div>
                   ))}
