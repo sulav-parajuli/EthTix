@@ -1,26 +1,19 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { toast } from "react-toastify"; // Import toastify for displaying notifications
-import { retrieveFromIPFS } from "../utils/ipfsUtils";
 
 const AppContext = createContext();
 
 const AppProvider = ({ children, template, account, state }) => {
-  const [isConnected, setConnected] = useState(false);
   const [reload, setReload] = useState(false); // sets to true when user tries to reload the page
   const [isUserConnected, setUserConnected] = useState(false);
   const [isEventOrganizer, setEventOrganizer] = useState(false);
-  const [rememberme, setRememberme] = useState(false);
   const [isOnline, setIsOnline] = useState(window.navigator.onLine); // Check if the user is online or not.
-  const { userContract, eventOrganizerContract } = state;
+  const { signer, ticketsContract } = state;
   const contextValue = {
-    isConnected,
-    setConnected,
     isUserConnected,
     setUserConnected,
     isEventOrganizer,
     setEventOrganizer,
-    rememberme,
-    setRememberme,
     formatTime,
     account,
     template,
@@ -31,9 +24,19 @@ const AppProvider = ({ children, template, account, state }) => {
       try {
         if ((await account) !== "Not connected") {
           //console.log(account);
-          setConnected(true);
+          setUserConnected(true);
+          // Check if the user address is already registered as an event organizer or not.
+          const isAlreadyOrganizer = await ticketsContract.isOrganizers(
+            signer.getAddress()
+          );
+          // console.log(isAlreadyOrganizer);
+          if (isAlreadyOrganizer) {
+            setEventOrganizer(true);
+          } else {
+            setEventOrganizer(false);
+          }
         } else {
-          setConnected(false);
+          setUserConnected(false);
         }
       } catch (error) {
         console.error("Error fetching account:", error);
@@ -87,71 +90,6 @@ const AppProvider = ({ children, template, account, state }) => {
     };
   }, [isOnline]);
 
-  useEffect(() => {
-    if (isConnected === true) {
-      userSession();
-    }
-  }, [isConnected]);
-
-  async function userSession() {
-    try {
-      const eventorg = localStorage.getItem("isEventOrganizer");
-      const user = localStorage.getItem("isUserConnected");
-      const remember = localStorage.getItem("rememberme");
-      const username = localStorage.getItem("username");
-      const userAddress = localStorage.getItem("userAddress");
-      if (eventorg === "true") {
-        setEventOrganizer(true);
-      }
-      if (user === "true") {
-        setUserConnected(true);
-      }
-      if (remember === "true") {
-        if (userAddress === account) {
-          //check if user is registered or not
-          const userCID = await userContract.getUserCID(userAddress);
-          const retrievedData = await retrieveFromIPFS(userCID);
-          const userAddresss = retrievedData.userAddress;
-          const usernamee = retrievedData.username;
-          // console.log(userAddresss);
-          // console.log(usernamee);
-          if (userAddress === userAddresss && username === usernamee) {
-            setUserConnected(true); // Set isUserConnected to true when user gets logged in
-            localStorage.setItem("isUserConnected", true);
-            //check if user is event organizer or not.
-            const eventorgCID = await eventOrganizerContract.getOrganizerCID(
-              userAddress
-            );
-            // console.log(eventorgCID);
-            if (eventorgCID !== "") {
-              setEventOrganizer(true);
-            } else {
-              setEventOrganizer(false);
-            }
-          } else {
-            toast.error(
-              "You are not a valid user. Register first to continue.",
-              {
-                position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-              }
-            );
-            return;
-          }
-        }
-      } else if (remember === "false") {
-        localStorage.removeItem("username");
-        localStorage.removeItem("userAddress");
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
   // Function to format time to AM/PM format
   function formatTime(time) {
     const formattedTime = new Date(`1970-01-01T${time}`);
@@ -161,13 +99,6 @@ const AppProvider = ({ children, template, account, state }) => {
       hour12: true,
     });
   }
-
-  useEffect(() => {
-    if (isConnected !== true) {
-      setUserConnected(false);
-      localStorage.setItem("isUserConnected", isUserConnected);
-    }
-  }, [!isConnected]);
 
   return (
     <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>

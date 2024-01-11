@@ -24,7 +24,7 @@ const Popup = ({ isOpen, onClose, state }) => {
 const Navbar = ({ state }) => {
   const [isPopupOpen, setPopupOpen] = useState(false);
   const [isNavbarOpen, setNavbarOpen] = useState(false);
-  const { setConnected, account, isUserConnected } = useAppContext();
+  const { setUserConnected, account, isUserConnected } = useAppContext();
 
   useEffect(() => {
     if (isUserConnected) {
@@ -37,23 +37,19 @@ const Navbar = ({ state }) => {
     setPopupOpen(true);
     document.body.classList.add("popup-open"); // Prevent scrolling
     document.querySelector(".App").background = "rgba(0,0,0,0.9)";
-    document.querySelector(".topnav").style.background =
-      "rgba(255,255,255,0.9)";
     // If you want to close the popup after successful connection
     if (isUserConnected) {
       setPopupOpen(false);
-      document.querySelector(".topnav").style.background = "transparent";
     }
   };
 
   const handleClosePopup = async () => {
     if ((await account) !== "Not connected") {
-      setConnected(true);
+      setUserConnected(true);
     } else {
-      setConnected(false);
+      setUserConnected(false);
     }
     setPopupOpen(false);
-    document.querySelector(".topnav").style.background = "transparent";
     document.body.classList.remove("popup-open"); // Allow scrolling
   };
 
