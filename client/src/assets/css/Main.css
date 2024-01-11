@@ -263,7 +263,7 @@ img.ticketcounter {
 }
 
 .row {
-  width: "-webkit-fill-available";
+  width: -webkit-fill-available;
 }
 
 /*--------------------------------------------------------------

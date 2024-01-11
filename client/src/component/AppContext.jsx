@@ -29,7 +29,7 @@ const AppProvider = ({ children, template, account, state }) => {
           const isAlreadyOrganizer = await ticketsContract.isOrganizers(
             signer.getAddress()
           );
-          console.log(isAlreadyOrganizer);
+          // console.log(isAlreadyOrganizer);
           if (isAlreadyOrganizer) {
             setEventOrganizer(true);
           } else {

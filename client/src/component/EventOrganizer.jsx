@@ -150,7 +150,7 @@ const EventOrganizer = ({ state }) => {
       // }
     } catch (error) {
       console.log(error);
-      toast.error("Contract not deployed. Please deploy the contract first.", {
+      toast.error("Error Occured!", {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
