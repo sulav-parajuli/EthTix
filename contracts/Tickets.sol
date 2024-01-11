@@ -1,6 +1,6 @@
 //SPDX-License-Identifier:MIT
 pragma solidity ^0.8.19;
-//import "./EventOrganizer.sol";
+
 contract Tickets{
     struct Event{
         string eventCID;
@@ -30,6 +30,8 @@ contract Tickets{
     //State variables
     address payable public owner;
     uint256 eventId;
+
+    //Constructor
     constructor(){
     owner = payable(msg.sender);
 
