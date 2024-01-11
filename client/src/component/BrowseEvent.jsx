@@ -79,10 +79,22 @@ const BrowseEvent = ({ state }) => {
 
       //   const newEvent = await retrieveFromIPFS(eventCID);
       // Fetch the newly created event details from the contract
-      const newEvent = await ticketsContract.events(eventId);
-
-      setEvents((prevEvents) => [...prevEvents, newEvent]);
-
+      const eventCreatedEvent = await ticketsContract.queryFilter(
+        ticketsContract.filters.EventCreated(eventId)
+      );
+      if (!eventCreatedEvent || eventCreatedEvent.length === 0) {
+        console.log("Event not found");
+        return;
+      }
+      const createEvent = {
+        id: eventId,
+      };
+      const updatedEvent = await fetchEventIpfsContent(createEvent);
+      //Combine the event details with the IPFS content
+      const finalEvent = { ...createEvent, ...updatedEvent };
+      //Update the events state
+      setEvents((prevEvents) => [...prevEvents, finalEvent]);
+      //Set the selected event index and open the popup
       setSelectedEventIndex(prevEvents.length);
 
       setPopupOpen(true);

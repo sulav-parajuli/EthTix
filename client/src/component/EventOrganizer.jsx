@@ -3,6 +3,7 @@ import { useAppContext } from "./AppContext";
 import { Triangle } from "react-loader-spinner";
 import { useNavigate } from "react-router-dom";
 import { signData, uploadToIPFS } from "../utils/ipfsUtils";
+import { toast } from "react-toastify";
 
 const EventOrganizer = ({ state }) => {
   const [nextpage, setNextpage] = useState(false);
@@ -57,7 +58,7 @@ const EventOrganizer = ({ state }) => {
         );
         if (isAlreadyOrganizer) {
           const eventorgCID = await ticketsContract.getOrganizerCID(
-            userAddress
+            signer.getAddress()
           );
           // console.log(eventorgCID);
           if (!eventorgCID) {
@@ -121,6 +122,7 @@ const EventOrganizer = ({ state }) => {
           ipfsCid
         );
         await transaction.wait();
+        console.log(transaction);
         const isOrganizer = await ticketsContract.isOrganizers(
           signer.getAddress()
         );
