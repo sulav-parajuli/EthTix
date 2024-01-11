@@ -7,37 +7,38 @@ import { useAppContext } from "./AppContext";
 import { Triangle } from "react-loader-spinner";
 const Login = ({ state }) => {
   const {
-    isConnected,
-    setConnected,
     setUserConnected,
+    isUserConnected,
     setEventOrganizer,
     account,
     template,
-    // rememberme,
-    // setRememberme,
   } = useAppContext();
-  const {
-    // userContract,
-    signer,
-    ticketsContract,
-  } = state;
+  const { signer, ticketsContract } = state;
   const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
     async function fetchAccount() {
       try {
         if ((await account) !== "Not connected") {
-          setConnected(true);
           //check if user is registered or not and show the login or register page accordingly.
           setUserConnected(true);
+          // Check if the user address is already registered as an event organizer or not.
+          const isAlreadyOrganizer = await ticketsContract.isOrganizers(
+            signer.getAddress()
+          );
+          if (isAlreadyOrganizer) {
+            setEventOrganizer(true);
+          } else {
+            setEventOrganizer(false);
+          }
         } else {
-          setConnected(false);
+          setUserConnected(false);
         }
       } catch (error) {
         console.error("Error fetching account:", error);
       }
     }
     fetchAccount();
-  }, []);
+  }, [account, !account]);
 
   const connectToWallet = async (event) => {
     event.preventDefault();
@@ -51,6 +52,7 @@ const Login = ({ state }) => {
       const isAlreadyOrganizer = await ticketsContract.isOrganizers(
         signer.getAddress()
       );
+      console.log(isAlreadyOrganizer);
       if (isAlreadyOrganizer) {
         setEventOrganizer(true);
       } else {
@@ -68,25 +70,11 @@ const Login = ({ state }) => {
       });
     } finally {
       setIsLoading(false);
-      // document.querySelector(".topnav").style.background = "transparent";
+      document.querySelector(".topnav").style.background = "transparent";
       document.querySelector(".popup-inner").style.backgroundColor = "white";
       document.querySelector(".close").style.display = "block";
     }
   };
-
-  // } catch (error) {
-  //   if (!isEventOrganizer) {
-  //   } else {
-  //     console.error("Error Occured!:", error);
-  //     toast.error("Error Occured!.", error, {
-  //       position: "top-right",
-  //       autoClose: 5000,
-  //       hideProgressBar: false,
-  //       closeOnClick: true,
-  //       pauseOnHover: true,
-  //       draggable: true,
-  //     });
-  //   }
 
   return (
     <div className="login-container">
@@ -110,7 +98,7 @@ const Login = ({ state }) => {
           <div className="left-section">
             <div className="login-title">Connect</div>
             <div className="sub-title">
-              {isConnected
+              {isUserConnected
                 ? "Wallet connected!"
                 : "Connect your wallet to get started"}
             </div>
@@ -119,10 +107,10 @@ const Login = ({ state }) => {
           <div className="right-section">
             <form className="login-form">
               <hr className="line" />
-              {isConnected ? (
+              {isUserConnected ? (
                 <div className="user-address">{`Connected Wallet: ${account}`}</div>
               ) : null}
-              {isConnected ? null : (
+              {isUserConnected ? null : (
                 <button className="login-button" onClick={connectToWallet}>
                   Connect Wallet
                 </button>

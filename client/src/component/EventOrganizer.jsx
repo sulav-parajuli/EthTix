@@ -2,22 +2,20 @@ import { React, useState } from "react";
 import { useAppContext } from "./AppContext";
 import { Triangle } from "react-loader-spinner";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css"; // Import the default styles
 import { signData, uploadToIPFS } from "../utils/ipfsUtils";
 
 const EventOrganizer = ({ state }) => {
   const [nextpage, setNextpage] = useState(false);
-  const { setEventOrganizer, isEventOrganizer } = useAppContext();
+  const { setEventOrganizer, account } = useAppContext();
   const [name, setName] = useState("");
   const [organizationName, setOrganizationName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [organizationType, setOrganizationType] = useState("");
   const [organizationLocation, setOrganizationLocation] = useState("");
   const [organizationEmail, setOrganizationEmail] = useState("");
-  const {
-    signer,
-
-    ticketsContract,
-  } = state;
+  const { signer, ticketsContract } = state;
   const [agreetermsconditions, setagreetermsconditions] = useState(false);
   const navigate = useNavigate(); //to redirect to another page
   //console.log(state);
@@ -50,45 +48,45 @@ const EventOrganizer = ({ state }) => {
         });
         return;
       }
+      // console.log(ticketsContract);
       // Check if the address is already registered as an event organizer
-      try {
-        const isAlreadyOrganizer = await ticketsContract.isOrganizers(
-          signer.getAddress()
-        );
-        if (isAlreadyOrganizer) {
-          const eventorgCID = await ticketsContract.getOrganizerCID(
-            userAddress
-          );
-          // console.log(eventorgCID);
-          if (!eventorgCID) {
-            setEventOrganizer(false);
-          } else {
-            setEventOrganizer(true);
+      if (!ticketsContract) {
+        console.log("Contract not deployed");
+        toast.error(
+          "Contract not deployed. Please deploy the contract first.",
+          {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
           }
-          toast.success(
-            "This address is already registered as an event organizer.",
-            {
-              position: "top-right",
-              autoClose: 5000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-            }
-          );
-          return;
-        }
-      } catch (error) {
-        console.error("Error checking organizer status:", error);
-        toast.error("Error checking organizer status. Please try again.", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-        });
-        return;
+        );
+      }
+      const isAlreadyOrganizer = await ticketsContract.isOrganizers(account);
+      // console.log(isAlreadyOrganizer);
+      if (isAlreadyOrganizer) {
+        // const eventorgCID = await ticketsContract.getOrganizerCID(
+        //   userAddress
+        // );
+        // console.log(eventorgCID);
+        // if (!eventorgCID) {
+        setEventOrganizer(true);
+        setIsLoading(false);
+        toast.success(
+          "This address is already registered as an event organizer.",
+          {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+          }
+        );
+      } else {
+        setEventOrganizer(false);
       }
       const eventOrganizerData = {
         name,
@@ -104,54 +102,52 @@ const EventOrganizer = ({ state }) => {
         JSON.stringify(eventOrganizerData)
       );
 
-      //const userAddress = await signer.getAddress();
       //upload to ipfs
       const { ipfsCid } = await uploadToIPFS(data, signature);
-      if (!ticketsContract) {
-        console.log("Contract not deployed");
-        return;
-      } else {
-        // const userregistered = await userContract.isRegisteredUser(userAddress);
-        // console.log(userregistered);
-        // console.log(ipfsCid);
-        // console.log(ticketsContract);
-        //verify if user is registered or not
-        // if (userregistered) {
-        const transaction = await ticketsContract.registerEventOrganizer(
-          ipfsCid
-        );
-        await transaction.wait();
-        const isOrganizer = await ticketsContract.isOrganizers(
-          signer.getAddress()
-        );
-        // console.log(isOrganizer);
-        //console.log("Event Organizer registered successfully");
-        // } else {
-        //   console.error(
-        //     "Only registered users can call this function. Register as a user first."
-        //   );
-        //   toast.error(
-        //     "Only registered users can call this function. Register as a user first.",
-        //     {
-        //       position: "top-right",
-        //       autoClose: 5000,
-        //       hideProgressBar: false,
-        //       closeOnClick: true,
-        //       pauseOnHover: true,
-        //       draggable: true,
-        //     }
-        //   );
-        // }
+      const transaction = await ticketsContract.registerEventOrganizer(ipfsCid);
+      await transaction.wait();
+      const isOrganizer = await ticketsContract.isOrganizers(
+        signer.getAddress()
+      );
+      // console.log(isOrganizer);
+      //console.log("Event Organizer registered successfully");
+      // } else {
+      //   console.error(
+      //     "Only registered users can call this function. Register as a user first."
+      //   );
+      //   toast.error(
+      //     "Only registered users can call this function. Register as a user first.",
+      //     {
+      //       position: "top-right",
+      //       autoClose: 5000,
+      //       hideProgressBar: false,
+      //       closeOnClick: true,
+      //       pauseOnHover: true,
+      //       draggable: true,
+      //     }
+      //   );
+      // }
 
-        // console.log(transaction);
-        if (isOrganizer) {
-          setEventOrganizer(true);
-        }
+      // console.log(transaction);
+      if (isOrganizer) {
+        setEventOrganizer(true);
+        toast.success(
+          "Successful! You are now registered as an event organizer",
+          {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+          }
+        );
         //You might require local storage or session storage. It helps to set cookies.
-        localStorage.setItem("isEventOrganizer", isEventOrganizer);
+        // localStorage.setItem("isEventOrganizer", isEventOrganizer);
         document.body.classList.remove("popup-open"); // Allow scrolling
         navigate("/dashboard");
       }
+      // }
     } catch (error) {
       console.log(error);
       toast.error("Contract not deployed. Please deploy the contract first.", {

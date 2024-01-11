@@ -8,7 +8,7 @@ import "../assets/css/UserIcon.css";
 import { useAppContext } from "./AppContext";
 
 const UserIcon = () => {
-  const { setConnected, setUserConnected, isEventOrganizer } = useAppContext();
+  const { setUserConnected, isEventOrganizer } = useAppContext();
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [isSmallScreen, setIsSmallScreen] = useState(false);
 
@@ -28,8 +28,7 @@ const UserIcon = () => {
     // Additional cleanup if needed
 
     setUserConnected(false); // Set isUserConnected to false when logging out
-    localStorage.setItem("isUserConnected", false);
-    setConnected(false); // Set isConnected to false when logging out
+    // localStorage.setItem("isUserConnected", false);
   };
 
   useEffect(() => {
