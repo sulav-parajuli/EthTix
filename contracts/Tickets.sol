@@ -69,12 +69,14 @@ contract Tickets{
     //calculate creation fee and check if enough ether is sent
     uint256 eventCreationFee= (_price*_totalTickets*3)/100;
     require(msg.value>=eventCreationFee,"Not enough ether sent");
+    //send fee to owner
+    owner.transfer(eventCreationFee);
+    //send excess ether back to organizer
     uint256 excessAmount = msg.value - eventCreationFee;
     if (excessAmount > 0) {
         payable(msg.sender).transfer(excessAmount);
     }
-    //send fee to owner
-    owner.transfer(eventCreationFee);
+    
     eventId++;
     emit EventCreated(eventId, msg.sender);
     events[eventId] = Event({
