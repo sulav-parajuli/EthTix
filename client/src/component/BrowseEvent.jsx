@@ -41,8 +41,17 @@ const BrowseEvent = ({ state }) => {
 
   const fetchEventIpfsContent = async (event) => {
     const eventCID = event.eventCID;
-    const eventContent = await retrieveFromIPFS(eventCID);
-    return eventContent;
+    if (!eventCID) {
+      console.error("Event id is undefined");
+      return null;
+    }
+    try {
+      const eventContent = await retrieveFromIPFS(eventCID);
+      return eventContent;
+    } catch (error) {
+      console.error("Error fetching event content from IPFS:", error);
+      return null;
+    }
   };
   const getAllEventsWithIPFSContent = async () => {
     try {

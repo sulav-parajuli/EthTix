@@ -186,6 +186,8 @@ const CreateEvent = ({ state }) => {
       );
       //upload to ipfs
       const { ipfsCid } = await uploadToIPFS(data, signature);
+
+      console.log("IPFS CID:", ipfsCid);
       //convert ether to wei
       const priceInWei = ethers.utils.parseEther(priceInEther);
       //conver calculatefee value to wei
@@ -210,6 +212,7 @@ const CreateEvent = ({ state }) => {
       await transaction.wait();
 
       console.log("Event Created");
+
       toast.success("Event Created Successfully", {
         position: "top-right",
         autoClose: 5000,
