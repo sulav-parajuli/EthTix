@@ -34,9 +34,7 @@ function App() {
   const [state, setState] = useState({
     provider: null,
     signer: null,
-    // accessControlContract: null,
-    //userContract: null,
-    //ticketsContract: null,
+
     ticketsContract: null,
   });
   const [account, setAccount] = useState("Not connected");
