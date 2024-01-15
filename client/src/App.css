@@ -328,3 +328,18 @@ button.btn.btn-danger {
   background-color: #c1292e;
   border-color: #c1292e;
 }
+
+.to-top-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: white;
+  color: white;
+  border-color: #008eb0;
+  border-radius: 20px;
+  padding: 10px 20px;
+  cursor: pointer;
+  text-decoration: none;
+  margin-right: 10px;
+  z-index: 100;
+}

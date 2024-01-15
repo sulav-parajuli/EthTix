@@ -20,6 +20,10 @@ import "react-toastify/dist/ReactToastify.css"; // Import the default styles
 //Import bootstrap css
 import "bootstrap/dist/css/bootstrap.min.css";
 
+//Font Awesome Icons
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowUp } from "@fortawesome/free-solid-svg-icons";
+
 //Import other components
 import Home from "./component/Home.jsx";
 import MyTickets from "./component/MyTickets.jsx";
@@ -38,6 +42,7 @@ function App() {
     ticketsContract: null,
   });
   const [account, setAccount] = useState("Not connected");
+  const [showToTopButton, setShowToTopButton] = useState(false);
   //When react app is running this will automatically fetch contract instance
   const template = async (connectWallet) => {
     //code to connect to metamask wallet
@@ -142,7 +147,28 @@ function App() {
   useEffect(() => {
     //Setting parameter to 'false' means to skips wallet connection request but allows fetching the contract instance.
     template(false);
+
+    // Add a scroll event listener to show/hide the "to the top" button
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+
+      // You can adjust the threshold value as needed
+      const showButtonThreshold = 300;
+
+      setShowToTopButton(scrollY > showButtonThreshold);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, []);
+
+  const handleToTopClick = () => {
+    // Scroll to the top of the page
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   return (
     <BrowserRouter>
@@ -158,6 +184,12 @@ function App() {
               <Route path="about" element={<About />} />
             </>
           </Routes>
+          {/* "To the Top" button */}
+          {showToTopButton && (
+            <button className="btn to-top-button" onClick={handleToTopClick}>
+              <FontAwesomeIcon icon={faArrowUp} />
+            </button>
+          )}
           <Footer />
         </div>
         <ToastContainer /> {/* Add ToastContainer at the top level */}

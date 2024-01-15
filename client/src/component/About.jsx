@@ -1,8 +1,7 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import aakriti from "../assets/images/team/aakriti.png";
-// import karuna from "../assets/images/team/karuna.png";
-import karuna from "../assets/images/abstract.png";
+import karuna from "../assets/images/team/karuna.png";
 import sulav from "../assets/images/team/sulav.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {

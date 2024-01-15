@@ -107,7 +107,7 @@ const Admin = ({ state }) => {
 
     // Additional cleanup if needed
     setUserConnected(false); // Set isUserConnected to false when logging out
-    toast.success("logging out...", {
+    toast.success("disconnecting...", {
       position: "top-right",
       autoClose: 3000,
       hideProgressBar: false,
@@ -161,8 +161,6 @@ const Admin = ({ state }) => {
 
   return (
     <>
-      {/* <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc --> */}
-      {/* <script src="./assets/js/material-dashboard.min.js?v=3.1.0"></script> */}
       {isEventOrganizer && isUserConnected ? (
         <div
           className={`g-sidenav-show ${
@@ -332,7 +330,7 @@ const Admin = ({ state }) => {
                         <FontAwesomeIcon icon={faRightFromBracket} />
                       </div>
 
-                      <span className="nav-link-text ms-1">Logout</span>
+                      <span className="nav-link-text ms-1">Disconnect</span>
                     </a>
                   </li>
                 ) : null}
@@ -480,7 +478,7 @@ const Admin = ({ state }) => {
                             className="btn btn-outline-success login-button"
                             onClick={handleOpenPopup}
                           >
-                            Login
+                            Connect
                           </button>
                         )}
                       </div>

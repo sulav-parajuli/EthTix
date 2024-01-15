@@ -212,6 +212,8 @@ const BrowseEvent = ({ state }) => {
                           setPopupOpen(false);
                           document.body.classList.remove("popup-open");
                           setSelectedEventIndex(null);
+                          document.querySelector(".topnav").style.background =
+                            "transparent";
                         }}
                         ke={selectedEventIndex}
                         event={events[selectedEventIndex]}

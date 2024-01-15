@@ -154,7 +154,8 @@ const CreateEvent = ({ state }) => {
     event.preventDefault();
 
     const fee = await calculateFee();
-    const confirmationMessage = `You will be charged ${fee} ETH for creating this event. Are you sure you want to continue?`;
+    const confirmationMessage = `Event Name: ${eventName}\nPrice: ${priceInEther} ETH\nDate: ${date}\nTime: ${time}\nLocation: ${location}\nTotal Tickets: ${totalTickets}\n
+    You will be charged ${fee} ETH for creating this event. Are you sure you want to continue?`;
     if (window.confirm(confirmationMessage)) {
       createEvent();
       setConfirmationNeeded(false);
