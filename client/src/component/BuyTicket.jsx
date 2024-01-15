@@ -1,62 +1,98 @@
-import React, { useState, useEffect } from "react";
+// BuyTicket.jsx
 
+import React, { useState } from "react";
+import { ethers } from "ethers";
 import { useAppContext } from "./AppContext";
 
-const BuyTicket = ({ state }) => {
-  const { account } = useAppContext();
-  const [ticketAmount, setTicketAmount] = useState(0);
+const BuyTicket = ({ eventIndex, event, state }) => {
+  const { ticketsContract, signer } = state;
+  const [quantity, setQuantity] = useState(1);
 
-  const [selectedEvent, setSelectedEvent] = useState(0);
-  const [totalTickets, setTotalTickets] = useState(0);
-  const handleTicketPurchase = async (event) => {
-    event.preventDefault();
-    const { ticketContract } = state;
-    if (!ticketContract) {
-      console.log("Contract not deployed");
-      return;
-    }
+  const handleBuyTicket = async () => {
     try {
-      //BrowseEvent must sent selectedEvent to BuyTicket
-      const eventId = parseInt(selectedEvent);
-      //call the buyTicket function
-      //user must themselves enter the value of ticketAmount in metamask
+      // Check the structure of the event being passed
+      console.log("Event Structure:", event);
 
-      const transaction = await ticketContract.buyTicket(
-        eventId,
-        ticketAmount,
-        { value: ticketAmount }
-      );
+      if (!ticketsContract || !signer || !event || !event.price || !quantity) {
+        console.error(
+          "Invalid contract, signer, event, event price, or quantity"
+        );
+        return;
+      }
+
+      // Check the structure and value of event.price
+      console.log("Event Price Structure:", event.price);
+      console.log("Event Price Value:", event.price.toString());
+
+      // Calculate total price
+      const totalPrice = event.price.mul(quantity);
+
+      // Log relevant values
+      console.log("Total Price:", totalPrice.toString());
+      console.log("Quantity:", quantity);
+      console.log("Event ID:", event.id);
+
+      // Call the buyTicket function from the smart contract
+      const transaction = await ticketsContract.buyTicket(event.id, quantity, {
+        value: totalPrice,
+      });
+
+      // Wait for the transaction to be mined
       await transaction.wait();
-      alert("Ticket purchased");
+
+      // Handle success or show a confirmation message
+      console.log("Ticket purchase successful!");
     } catch (error) {
-      console.log(error);
+      console.error("Error buying ticket:", error.message);
+      // Handle errors or display an error message
     }
   };
-  useEffect(() => {
-    // Fetch events or any necessary data for the dropdown
-    // and populate the dropdown with event options
-  }, []); // Add any dependencies for fetching events
+
   return (
-    <div>
-      <h2>Buy Tickets</h2>
-      <form onSubmit={handleTicketPurchase}>
-        <label>
-          Select Event:
-          <select onChange={(e) => setSelectedEvent(e.target.value)}></select>
-        </label>
-        <br />
-        <label>
-          Number of Tickets:
+    <div className="container">
+      <div className="row py-2">
+        {/* Display Ticket Purchase Form */}
+        <div className="col-lg-6">
+          <h2>Buy Ticket</h2>
+          {event ? (
+            <>
+              <p>
+                Event: {event.eventName ? event.eventName.toString() : "N/A"}
+              </p>
+              <p>
+                Price per Ticket:{" "}
+                {event.price
+                  ? ethers.utils.formatEther(event.price).toString()
+                  : "N/A"}{" "}
+                ETH
+              </p>
+            </>
+          ) : (
+            <p>Event information not available</p>
+          )}
+          <label htmlFor="quantity">Quantity:</label>
           <input
             type="number"
-            value={ticketAmount}
-            onChange={(e) => setTicketAmount(e.target.value)}
+            id="quantity"
+            name="quantity"
+            min="1"
+            value={quantity}
+            onChange={(e) => setQuantity(parseInt(e.target.value, 10))}
           />
-        </label>
-        <br />
-        <button type="submit">Purchase Tickets</button>
-      </form>
+          <p>
+            Total Price:{" "}
+            {event && event.price
+              ? ethers.utils.formatEther(event.price.mul(quantity)).toString()
+              : "N/A"}{" "}
+            ETH
+          </p>
+          <button className="main-button color-white" onClick={handleBuyTicket}>
+            Confirm Purchase
+          </button>
+        </div>
+      </div>
     </div>
   );
 };
+
 export default BuyTicket;

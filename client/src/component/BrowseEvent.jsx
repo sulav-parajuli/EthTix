@@ -8,14 +8,18 @@ import { retrieveFromIPFS } from "../utils/ipfsUtils";
 import { useAppContext } from "./AppContext";
 import { Triangle } from "react-loader-spinner";
 
-const Popup = ({ isOpen, onClose, ke, event, state }) => {
+const Popup = ({ isOpen, onClose, event, state, selectedEventIndex }) => {
   return isOpen ? (
     <div className="popup">
       <div className="popup-inner">
         <button className="close" onClick={onClose}>
           Close
         </button>
-        <EventDetail index={ke} event={event} state={state} />
+        <EventDetail
+          index={selectedEventIndex}
+          event={event[selectedEventIndex]}
+          state={state}
+        />
       </div>
     </div>
   ) : null;
@@ -24,10 +28,8 @@ const Popup = ({ isOpen, onClose, ke, event, state }) => {
 const BrowseEvent = ({ state }) => {
   const { formatTime } = useAppContext();
   const [isLoading, setIsLoading] = useState(true);
-  const [eventIds, setEventIds] = useState([]);
   const [events, setEvents] = useState([]);
   const [selectedEventIndex, setSelectedEventIndex] = useState(null);
-  const [isContractReady, setIsContractReady] = useState(false);
   const { ticketsContract } = state;
 
   const [isPopupOpen, setPopupOpen] = useState(false);
@@ -74,8 +76,6 @@ const BrowseEvent = ({ state }) => {
 
       // Fetch updated events
       const updatedEvents = await fetchEvents();
-      // Update the eventIds state
-      setEventIds(updatedEvents.map((event) => event.eventId));
       // Update the events state
       setEvents(updatedEvents);
     } catch (error) {
@@ -91,12 +91,11 @@ const BrowseEvent = ({ state }) => {
     // Fetch initial events
     fetchEvents().then((initialEvents) => {
       setEvents(initialEvents);
-      setEventIds(initialEvents.map((event) => event.eventId));
       setIsLoading(false); // Set loading to false once events are fetched
     });
 
     return () => {
-      if (isContractReady && ticketsContract) {
+      if (ticketsContract) {
         try {
           // Unsubscribe from the EventCreated event when component unmounts
           ticketsContract.removeAllListeners("EventCreated");
@@ -105,7 +104,7 @@ const BrowseEvent = ({ state }) => {
         }
       }
     };
-  }, [ticketsContract, setEvents, isContractReady]);
+  }, [ticketsContract]);
 
   return (
     <>
@@ -163,14 +162,6 @@ const BrowseEvent = ({ state }) => {
                         <div className="row justify-space-between py-2">
                           <div className="col-6 mx-auto">
                             <div className="card shadow-lg mt-4">
-                              {/* <div className="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
-                              <a className="d-block blur-shadow-image">
-                                <img
-                                  src={ethtix}
-                                  className="img-fluid shadow border-radius-lg"
-                                />
-                              </a>
-                            </div> */}
                               <div className="card-body">
                                 <h4>{event.eventName.toString()}</h4>
                                 <p>
@@ -183,7 +174,6 @@ const BrowseEvent = ({ state }) => {
                                 <p>
                                   Total Tickets: {event.totalTickets.toNumber()}
                                 </p>
-
                                 <p>Location: {event.location.toString()}</p>
                                 <p>
                                   Date and Time:{" "}
@@ -215,9 +205,9 @@ const BrowseEvent = ({ state }) => {
                           document.querySelector(".topnav").style.background =
                             "transparent";
                         }}
-                        ke={selectedEventIndex}
-                        event={events[selectedEventIndex]}
+                        event={events}
                         state={state}
+                        selectedEventIndex={selectedEventIndex}
                       />
                     </div>
                   ))}
