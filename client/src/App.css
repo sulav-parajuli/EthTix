@@ -333,13 +333,11 @@ button.btn.btn-danger {
   position: fixed;
   bottom: 20px;
   right: 20px;
-  background-color: white;
-  color: white;
-  border-color: #008eb0;
-  border-radius: 20px;
-  padding: 10px 20px;
+  background-color: white !important;
+  border-color: #008eb0 !important;
+  border-radius: 20px !important;
+  padding: 10px 20px !important;
   cursor: pointer;
-  text-decoration: none;
   margin-right: 10px;
   z-index: 100;
 }
