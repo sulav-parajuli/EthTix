@@ -104,11 +104,12 @@ const EventOrganizer = ({ state }) => {
 
       //upload to ipfs
       const { ipfsCid } = await uploadToIPFS(data, signature);
+      console.log(ipfsCid);
       const transaction = await ticketsContract.registerEventOrganizer(ipfsCid);
       await transaction.wait();
-      const isOrganizer = await ticketsContract.isOrganizers(
-        signer.getAddress()
-      );
+      // const isOrganizer = await ticketsContract.isOrganizers(
+      //   signer.getAddress()
+      // );
       // console.log(isOrganizer);
       //console.log("Event Organizer registered successfully");
       // } else {
@@ -129,24 +130,24 @@ const EventOrganizer = ({ state }) => {
       // }
 
       // console.log(transaction);
-      if (isOrganizer) {
-        setEventOrganizer(true);
-        toast.success(
-          "Successful! You are now registered as an event organizer",
-          {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-          }
-        );
-        //You might require local storage or session storage. It helps to set cookies.
-        // localStorage.setItem("isEventOrganizer", isEventOrganizer);
-        document.body.classList.remove("popup-open"); // Allow scrolling
-        navigate("/dashboard");
-      }
+      // if (isOrganizer) {
+      setEventOrganizer(true);
+      toast.success(
+        "Successful! You are now registered as an event organizer",
+        {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        }
+      );
+      //You might require local storage or session storage. It helps to set cookies.
+      // localStorage.setItem("isEventOrganizer", isEventOrganizer);
+      document.body.classList.remove("popup-open"); // Allow scrolling
+      navigate("/dashboard");
+      // }
       // }
     } catch (error) {
       console.log(error);
