@@ -95,7 +95,7 @@ contract Tickets{
     //creates a new dynamic array of type Event with a length equal to the current value of the eventId variable
         Event[] memory allEvents = new Event[](eventId);
 
-        for (uint256 i = 0; i <= eventId; i++) {
+        for (uint256 i = 0; i < eventId; i++) {
            allEvents[i] = events[i + 1];
         }
 
