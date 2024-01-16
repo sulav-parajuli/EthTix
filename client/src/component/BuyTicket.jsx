@@ -8,12 +8,33 @@ const BuyTicket = ({ eventIndex, event, state }) => {
   const { ticketsContract, signer } = state;
   const [quantity, setQuantity] = useState(1);
 
+  const handlequantityChange = (event) => {
+    const inputValue = event.target.value;
+    const parsedValue = parseInt(inputValue, 10);
+
+    // Check if parsing is successful and the parsed value is within the specified range
+    if (!isNaN(parsedValue) && parsedValue >= 1 && parsedValue <= 10) {
+      setQuantity(parsedValue);
+    } else {
+      // Handle the case where the input is not a valid number or outside the range
+      // You might choose to set the quantity to a default value or show an error message
+      setQuantity(1); // Setting a default value of 1 in this example
+    }
+  };
+
   const handleBuyTicket = async () => {
     try {
       // Check the structure of the event being passed
       console.log("Event Structure:", event);
 
-      if (!ticketsContract || !signer || !event || !event.price || !quantity) {
+      if (
+        !ticketsContract ||
+        !signer ||
+        !event ||
+        !event.price ||
+        quantity < 1 ||
+        quantity > 10
+      ) {
         console.error(
           "Invalid contract, signer, event, event price, or quantity"
         );
@@ -30,12 +51,16 @@ const BuyTicket = ({ eventIndex, event, state }) => {
       // Log relevant values
       console.log("Total Price:", totalPrice.toString());
       console.log("Quantity:", quantity);
-      console.log("Event ID:", event.id);
+      console.log("Event ID:", eventIndex);
 
       // Call the buyTicket function from the smart contract
-      const transaction = await ticketsContract.buyTicket(event.id, quantity, {
-        value: totalPrice,
-      });
+      const transaction = await ticketsContract.buyTicket(
+        eventIndex + 1,
+        quantity,
+        {
+          value: totalPrice,
+        }
+      );
 
       // Wait for the transaction to be mined
       await transaction.wait();
@@ -76,11 +101,12 @@ const BuyTicket = ({ eventIndex, event, state }) => {
             id="quantity"
             name="quantity"
             min="1"
+            max="10"
             value={quantity}
-            onChange={(e) => setQuantity(parseInt(e.target.value, 10))}
+            onChange={handlequantityChange}
           />
           <p>
-            Total Price:{" "}
+            Total Price:
             {event && event.price
               ? ethers.utils.formatEther(event.price.mul(quantity)).toString()
               : "N/A"}{" "}
