@@ -32,7 +32,10 @@ import Footer from "./component/footer.jsx";
 import Admin from "./component/Admin.jsx";
 import BrowseEvent from "./component/BrowseEvent.jsx";
 import About from "./component/About.jsx";
+import ErrorPage from "./component/ErrorPage.jsx";
 import { AppProvider } from "./component/AppContext.jsx"; // Import AppProvider
+import PrivacyPolicy from "./component/PrivacyPolicy.jsx";
+import TermsAndConditions from "./component/TermsAndConditions.jsx";
 
 function App() {
   const [state, setState] = useState({
@@ -182,6 +185,10 @@ function App() {
               <Route path="events" element={<BrowseEvent state={state} />} />
               <Route path="mytickets" element={<MyTickets state={state} />} />
               <Route path="about" element={<About />} />
+              <Route path="privacy" element={<PrivacyPolicy />} />
+              <Route path="terms" element={<TermsAndConditions />} />
+              {/* Catch-all other routes for displaying an error page */}
+              <Route path="*" element={<ErrorPage />} />
             </>
           </Routes>
           {/* "To the Top" button */}

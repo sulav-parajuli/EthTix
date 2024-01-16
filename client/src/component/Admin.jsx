@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Triangle } from "react-loader-spinner";
 //Import css
 import "../assets/css/Admin.css";
 import "../assets/css/UserIcon.css";
@@ -27,6 +26,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; // Import the default styles
 import CreateEvent from "./CreateEvent";
 import Login from "./Login";
+import ErrorPage from "./ErrorPage";
 
 const Popup = ({ isOpen, onClose, state }) => {
   return isOpen ? (
@@ -619,20 +619,7 @@ const Admin = ({ state }) => {
           ) : null}
         </div>
       ) : (
-        <Triangle
-          visible={true}
-          height="80"
-          width="80"
-          color="#008eb0"
-          ariaLabel="triangle-loading"
-          wrapperStyle={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            height: "100vh", // 100% of the viewport height
-          }}
-          wrapperClass=""
-        />
+        <ErrorPage />
       )}
     </>
   );
