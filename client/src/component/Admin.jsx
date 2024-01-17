@@ -25,8 +25,10 @@ import { useAppContext } from "./AppContext";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; // Import the default styles
 import CreateEvent from "./CreateEvent";
+import AdminEvents from "./AdminEvents";
 import Login from "./Login";
 import ErrorPage from "./ErrorPage";
+import Reports from "./Reports";
 
 const Popup = ({ isOpen, onClose, state }) => {
   return isOpen ? (
@@ -502,6 +504,14 @@ const Admin = ({ state }) => {
                   {isSelected === "createevent" && (
                     /* Render CreateEvent component when isSelected is 'createEvent' */
                     <CreateEvent state={state} />
+                  )}
+                  {isSelected === "events" && (
+                    /* Render AdminEvents component when isSelected is 'Events' */
+                    <AdminEvents state={state} />
+                  )}
+                  {isSelected === "reports" && (
+                    /* Render Reports component when isSelected is 'reports' */
+                    <Reports state={state} />
                   )}
 
                   {/* Add more conditions for other components as needed */}
