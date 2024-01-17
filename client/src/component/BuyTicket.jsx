@@ -18,7 +18,7 @@ const BuyTicket = ({ eventIndex, event, state }) => {
     } else {
       // Handle the case where the input is not a valid number or outside the range
       // You might choose to set the quantity to a default value or show an error message
-      setQuantity(1); // Setting a default value of 1 in this example
+      setQuantity(1); // Setting a default value of 1
     }
   };
 
@@ -41,17 +41,8 @@ const BuyTicket = ({ eventIndex, event, state }) => {
         return;
       }
 
-      // Check the structure and value of event.price
-      console.log("Event Price Structure:", event.price);
-      console.log("Event Price Value:", event.price.toString());
-
       // Calculate total price
       const totalPrice = event.price.mul(quantity);
-
-      // Log relevant values
-      console.log("Total Price:", totalPrice.toString());
-      console.log("Quantity:", quantity);
-      console.log("Event ID:", eventIndex);
 
       // Call the buyTicket function from the smart contract
       const transaction = await ticketsContract.buyTicket(
