@@ -78,17 +78,14 @@ function App() {
       if (accounts.length !== 0) {
         setAccount(accounts[0]);
         if (connectWallet == true) {
-          toast.success(
-            "Wallet Connected! Login or register now to elevate your EthTix experience!",
-            {
-              position: "top-right",
-              autoClose: 5000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-            }
-          );
+          toast.success("Wallet Connected Successfully!", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+          });
         }
       }
       //changing account address

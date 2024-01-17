@@ -185,10 +185,6 @@ const BrowseEvent = ({ state }) => {
                                     onClick={() => handleOpenPopup(index)}
                                   >
                                     View Details
-                                    <i
-                                      className="fas fa-arrow-right text-xs ms-1"
-                                      aria-hidden="true"
-                                    ></i>
                                   </button>
                                 </div>
                               </div>

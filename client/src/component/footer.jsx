@@ -61,10 +61,10 @@ const Footer = () => {
               <ol>
                 Explore
                 <li>
-                  <a href="#">Terms & Condition</a>
+                  <a href="/terms">Terms & Condition</a>
                 </li>
                 <li>
-                  <a href="#">Privacy Policy</a>
+                  <a href="/privacy">Privacy Policy</a>
                 </li>
                 <li>
                   <a href="#">Security</a>
