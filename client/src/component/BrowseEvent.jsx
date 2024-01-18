@@ -171,11 +171,9 @@ const BrowseEvent = ({ state }) => {
                                     .toString()}{" "}
                                   ETH
                                 </p>
+
                                 <p>
-                                  Total Tickets: {event.totalTickets.toNumber()}
-                                </p>
-                                <p>
-                                  Remaining Tickets:
+                                  Available Tickets:
                                   {event.remTickets.toNumber()}
                                 </p>
                                 <p>Location: {event.location.toString()}</p>
