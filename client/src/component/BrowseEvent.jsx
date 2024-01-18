@@ -174,6 +174,10 @@ const BrowseEvent = ({ state }) => {
                                 <p>
                                   Total Tickets: {event.totalTickets.toNumber()}
                                 </p>
+                                <p>
+                                  Remaining Tickets:
+                                  {event.remTickets.toNumber()}
+                                </p>
                                 <p>Location: {event.location.toString()}</p>
                                 <p>
                                   Date and Time:{" "}
