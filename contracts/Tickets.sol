@@ -89,6 +89,10 @@ contract Tickets{
     }
     );
 }
+    //function to check if user is owner
+    function isOwner() public view returns(bool){
+    return msg.sender==owner;
+    }
 
 
     function getAllEvents() public  view returns (Event[] memory) {
