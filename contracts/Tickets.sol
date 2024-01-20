@@ -37,9 +37,9 @@ contract Tickets{
 
     }
     
-    event OrganizerRegistered(address indexed organizerAddress,string indexed CID);
-    event EventCreated(uint256 indexed eventId,address indexed organizer);
-    event TicketPurchased(uint256 indexed eventId,uint256 indexed ticketsBought,address indexed buyer);
+    event OrganizerRegistered(address indexed organizerAddress,string CID);
+    event EventCreated(uint256 eventId,address indexed organizer, string eventCid);
+    event TicketPurchased(uint256 eventId,uint256 indexed ticketsBought,address indexed buyer);
    
    //function to register organizer and store their CID
     function registerEventOrganizer(string memory _CID)public {
@@ -78,7 +78,7 @@ contract Tickets{
     }
     
     eventId++;
-    emit EventCreated(eventId, msg.sender);
+    emit EventCreated(eventId, msg.sender, _eventCid);
     events[eventId] = Event({
        eventCID:_eventCid,
        totalTickets: _totalTickets,

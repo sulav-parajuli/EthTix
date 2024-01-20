@@ -4,7 +4,6 @@ import "../assets/css/Main.css";
 import ticket from "../assets/images/tickets.png";
 import search from "../assets/images/search symbol.png";
 import EventDetail from "./EventDetail";
-import { retrieveFromIPFS } from "../utils/ipfsUtils";
 import { useAppContext } from "./AppContext";
 import { Triangle } from "react-loader-spinner";
 
@@ -26,9 +25,9 @@ const Popup = ({ isOpen, onClose, event, state, selectedEventIndex }) => {
 };
 
 const BrowseEvent = ({ state }) => {
-  const { formatTime } = useAppContext();
+  const { formatTime, events, setEvents, fetchEvents, handleEventCreated } =
+    useAppContext();
   const [isLoading, setIsLoading] = useState(true);
-  const [events, setEvents] = useState([]);
   const [selectedEventIndex, setSelectedEventIndex] = useState(null);
   const { ticketsContract } = state;
 
@@ -41,46 +40,6 @@ const BrowseEvent = ({ state }) => {
     document.body.classList.add("popup-open"); // Prevent scrolling
     document.querySelector(".topnav").style.background =
       "rgba(255,255,255,0.9)";
-  };
-
-  // Function to fetch events from the smart contract
-  const fetchEvents = async () => {
-    try {
-      if (!ticketsContract) {
-        return [];
-      }
-
-      // Fetch all events when the component mounts
-      const allEvents = await ticketsContract.getAllEvents();
-      const eventsWithDetails = await Promise.all(
-        allEvents.map(async (event, index) => {
-          const details = await retrieveFromIPFS(event.eventCID);
-          return { ...event, ...details, index };
-        })
-      );
-
-      return eventsWithDetails;
-    } catch (error) {
-      console.error("Error fetching events:", error);
-      return [];
-    }
-  };
-
-  // Function to handle the "EventCreated" event from the smart contract
-  const handleEventCreated = async () => {
-    try {
-      if (!ticketsContract) {
-        alert("Contract not found");
-        return;
-      }
-
-      // Fetch updated events
-      const updatedEvents = await fetchEvents();
-      // Update the events state
-      setEvents(updatedEvents);
-    } catch (error) {
-      console.error("Error fetching and updating new event:", error);
-    }
   };
 
   useEffect(() => {

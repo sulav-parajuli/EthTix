@@ -1,4 +1,6 @@
 import axios from "axios"; //js library for making http requests from node.js
+import { toast } from "react-toastify"; // to notify users of axios network errors.
+import "react-toastify/dist/ReactToastify.css"; //toastify css
 
 //import signData from "./signerMetamask.js";
 async function signData(signer, data) {
@@ -43,10 +45,26 @@ async function uploadToIPFS(Data, signature) {
         },
       }
     );
-    const ipfsCid = response.data.IpfsHash;
-    return { ipfsCid, signature };
+    // Check if the request was successful
+    if (response.status === 200) {
+      const ipfsCid = response.data.IpfsHash;
+      return { ipfsCid, signature };
+    } else {
+      console.error("Failed to pin file. Status code:", response.status);
+      console.error("Response:", response.data);
+      toast.error("Failed to pin file. See console for details.");
+      throw new Error("Failed to pin file.");
+    }
   } catch (error) {
-    console.log(error);
+    // Check if the error is a network error
+    if (error.message === "Network Error") {
+      // Network error occurred, show toast message
+      toast.error("Internet is not connected. Check your connection.");
+    } else {
+      // Handle other errors or show a generic error message
+      console.error(error);
+      toast.error("An unexpected error occurred.");
+    }
     throw error;
   }
 }
@@ -70,7 +88,15 @@ async function retrieveFromIPFS(ipfsCid) {
       return null;
     }
   } catch (error) {
-    console.error("Error retrieving data from IPFS:", error);
+    // Check if the error is a network error
+    if (error.message === "Network Error") {
+      // Network error occurred, show toast message
+      toast.error("Internet is not connected. Check your connection.");
+    } else {
+      // Handle other errors or show a generic error message
+      console.error("Error retrieving data from IPFS:", error);
+      toast.error("An unexpected error occurred.");
+    }
     throw error;
   }
 }

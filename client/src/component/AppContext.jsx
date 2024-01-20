@@ -1,22 +1,82 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { toast } from "react-toastify"; // Import toastify for displaying notifications
+import { retrieveFromIPFS } from "../utils/ipfsUtils";
 
 const AppContext = createContext();
 
 const AppProvider = ({ children, template, account, state }) => {
   const [reload, setReload] = useState(false); // sets to true when user tries to reload the page
   const [isUserConnected, setUserConnected] = useState(false);
+  const [reports, setReports] = useState([]); // State to store reports
   const [isEventOrganizer, setEventOrganizer] = useState(false);
+  const [isAdmin, setAdmin] = useState(false);
   const [isOnline, setIsOnline] = useState(window.navigator.onLine); // Check if the user is online or not.
   const { signer, ticketsContract } = state;
+  const [events, setEvents] = useState([]);
+  // Function to fetch events from the smart contract
+  const fetchEvents = async () => {
+    try {
+      if (!ticketsContract) {
+        return [];
+      }
+
+      // Fetch all events when the component mounts
+      const allEvents = await ticketsContract.getAllEvents();
+      const eventsWithDetails = await Promise.all(
+        allEvents.map(async (event, index) => {
+          const details = await retrieveFromIPFS(event.eventCID);
+          return { ...event, ...details, index };
+        })
+      );
+
+      return eventsWithDetails;
+    } catch (error) {
+      console.error("Error fetching events:", error);
+      return [];
+    }
+  };
+
+  // Function to handle the "EventCreated" event from the smart contract
+  const handleEventCreated = async () => {
+    try {
+      if (!ticketsContract) {
+        console.error("Contract not found");
+        toast.error("Contract not found", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+        });
+        return;
+      }
+
+      // Fetch updated events
+      const updatedEvents = await fetchEvents();
+      // Update the events state
+      setEvents(updatedEvents);
+      localStorage.setItem("events", events);
+    } catch (error) {
+      console.error("Error fetching and updating new event:", error);
+    }
+  };
+
   const contextValue = {
     isUserConnected,
     setUserConnected,
     isEventOrganizer,
     setEventOrganizer,
+    isAdmin,
+    setAdmin,
     formatTime,
     account,
+    reports,
+    setReports,
     template,
+    events,
+    setEvents,
+    fetchEvents,
+    handleEventCreated,
   };
 
   useEffect(() => {
@@ -29,11 +89,18 @@ const AppProvider = ({ children, template, account, state }) => {
           const isAlreadyOrganizer = await ticketsContract.isOrganizers(
             signer.getAddress()
           );
+          const isOwner = await ticketsContract.isOwner(signer.getAddress());
           // console.log(isAlreadyOrganizer);
+          // console.log(isOwner);
           if (isAlreadyOrganizer) {
             setEventOrganizer(true);
           } else {
             setEventOrganizer(false);
+          }
+          if (isOwner) {
+            setAdmin(true);
+          } else {
+            setAdmin(false);
           }
         } else {
           setUserConnected(false);

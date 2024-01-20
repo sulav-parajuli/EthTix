@@ -44,7 +44,10 @@ const EventDetail = ({ index, event, state }) => {
           <div className="col-lg-6">
             <h2>{event.eventName.toString()}</h2>
             <p>Price: {ethers.utils.formatEther(event.price).toString()} ETH</p>
-            <p>Total Tickets: {event.totalTickets.toNumber()}</p>
+            <p>
+              Available Tickets:
+              {event.remTickets.toNumber()}
+            </p>
             <p>Location: {event.location.toString()}</p>
             <p>Date: {event.date + ", " + formatTime(event.time)}</p>
             {/* <p>Creator: {event.creator}</p> */}

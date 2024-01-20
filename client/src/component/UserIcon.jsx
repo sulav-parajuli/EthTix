@@ -8,7 +8,7 @@ import "../assets/css/UserIcon.css";
 import { useAppContext } from "./AppContext";
 
 const UserIcon = () => {
-  const { setUserConnected, isEventOrganizer } = useAppContext();
+  const { setUserConnected, isEventOrganizer, isAdmin } = useAppContext();
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [isSmallScreen, setIsSmallScreen] = useState(false);
 
@@ -65,7 +65,7 @@ const UserIcon = () => {
           <Link to="/mytickets" className="nav-item">
             My Tickets
           </Link>
-          {isEventOrganizer ? (
+          {isEventOrganizer || isAdmin ? (
             <Link to="/dashboard" className="nav-item">
               Open Dashboard
             </Link>

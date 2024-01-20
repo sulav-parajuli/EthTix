@@ -49,8 +49,13 @@ const Admin = ({ state }) => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [isSidenavOpen, setSidenavOpen] = useState(false);
   const [isSelected, setIsSelected] = useState("dashboard"); // Initial selection, you can change it as needed
-  const { account, isUserConnected, isEventOrganizer, setUserConnected } =
-    useAppContext();
+  const {
+    account,
+    isUserConnected,
+    isEventOrganizer,
+    setUserConnected,
+    isAdmin,
+  } = useAppContext();
   const navigate = useNavigate();
   useEffect(() => {
     //hide top navbar and footer while dashboard component is opened.
@@ -163,7 +168,7 @@ const Admin = ({ state }) => {
 
   return (
     <>
-      {isEventOrganizer && isUserConnected ? (
+      {(isEventOrganizer && isUserConnected) || (isAdmin && isUserConnected) ? (
         <div
           className={`g-sidenav-show ${
             isSidenavOpen ? "g-sidenav-pinned" : ""

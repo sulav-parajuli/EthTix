@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import "../assets/css/Main.css";
 import ethtix from "../assets/images/abstract.png";
-import { retrieveFromIPFS } from "../utils/ipfsUtils";
 import { useAppContext } from "./AppContext";
 import { Triangle } from "react-loader-spinner";
 //Import fontawesome icons
@@ -10,11 +9,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 
 const AdminEvents = ({ state }) => {
-  const { formatTime } = useAppContext();
-  const [isLoading, setIsLoading] = useState(true);
-  const [events, setEvents] = useState([]);
-  const [selectedEventIndex, setSelectedEventIndex] = useState(null);
+  const { formatTime, events, fetchEvents, handleEventCreated, setEvents } =
+    useAppContext();
   const { ticketsContract } = state;
+  const [isLoading, setIsLoading] = useState(true);
+  // const [events, setEvents] = useState([]);
+  const [selectedEventIndex, setSelectedEventIndex] = useState(null);
+  // const { ticketsContract } = state;
   const [EventDetail, setEventDetail] = useState(false);
 
   const handleSelectEvent = (index) => {
@@ -24,46 +25,6 @@ const AdminEvents = ({ state }) => {
 
   const handleGoBack = () => {
     setEventDetail(false);
-  };
-
-  // Function to fetch events from the smart contract
-  const fetchEvents = async () => {
-    try {
-      if (!ticketsContract) {
-        return [];
-      }
-
-      // Fetch all events when the component mounts
-      const allEvents = await ticketsContract.getAllEvents();
-      const eventsWithDetails = await Promise.all(
-        allEvents.map(async (event, index) => {
-          const details = await retrieveFromIPFS(event.eventCID);
-          return { ...event, ...details, index };
-        })
-      );
-
-      return eventsWithDetails;
-    } catch (error) {
-      console.error("Error fetching events:", error);
-      return [];
-    }
-  };
-
-  // Function to handle the "EventCreated" event from the smart contract
-  const handleEventCreated = async () => {
-    try {
-      if (!ticketsContract) {
-        alert("Contract not found");
-        return;
-      }
-
-      // Fetch updated events
-      const updatedEvents = await fetchEvents();
-      // Update the events state
-      setEvents(updatedEvents);
-    } catch (error) {
-      console.error("Error fetching and updating new event:", error);
-    }
   };
 
   useEffect(() => {
