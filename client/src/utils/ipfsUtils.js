@@ -68,6 +68,65 @@ async function uploadToIPFS(Data, signature) {
     throw error;
   }
 }
+
+async function uploadReportToIPFS(Data) {
+  const formData = new FormData();
+
+  //COnvert the data to a blob
+  const blob = new Blob([Data], { type: "application/octet-stream" });
+
+  //Append the blobl as file
+  formData.append("file", blob);
+
+  try {
+    const pinataMetadata = JSON.stringify({
+      name: "ReportDetails",
+    });
+    formData.append("pinataMetadata", pinataMetadata);
+    const pinataOptions = JSON.stringify({
+      cidVersion: 0,
+    });
+    formData.append("pinataOptions", pinataOptions);
+
+    const pinataApiKey = "650c7f4f05a6eaa3640c";
+    const pinataSecrestApiKey =
+      "61763a9c7d8b68dee951c5e1b22145721613093f59e07d1dbe60d81b0a6e3b67";
+
+    const response = await axios.post(
+      "https://api.pinata.cloud/pinning/pinFileToIPFS",
+      formData,
+      {
+        maxBodyLength: "Infinity", //this is needed to prevent axios from erroring out with large files
+        headers: {
+          "Content-Type": `multipart/form-data; boundary= ${formData._boundary}`,
+          pinata_api_key: pinataApiKey,
+          pinata_secret_api_key: pinataSecrestApiKey,
+        },
+      }
+    );
+    // Check if the request was successful
+    if (response.status === 200) {
+      const ipfsCid = response.data.IpfsHash;
+      return { ipfsCid };
+    } else {
+      console.error("Failed to pin report file. Status code:", response.status);
+      console.error("Response:", response.data);
+      toast.error("Failed to pin file. See console for details.");
+      throw new Error("Failed to pin file.");
+    }
+  } catch (error) {
+    // Check if the error is a network error
+    if (error.message === "Network Error") {
+      // Network error occurred, show toast message
+      toast.error("Internet is not connected. Check your connection.");
+    } else {
+      // Handle other errors or show a generic error message
+      console.error(error);
+      toast.error("An unexpected error occurred.");
+    }
+    throw error;
+  }
+}
 // Retrieve data from IPFS
 
 async function retrieveFromIPFS(ipfsCid) {
@@ -101,4 +160,4 @@ async function retrieveFromIPFS(ipfsCid) {
   }
 }
 
-export { signData, uploadToIPFS, retrieveFromIPFS };
+export { signData, uploadToIPFS, retrieveFromIPFS, uploadReportToIPFS };

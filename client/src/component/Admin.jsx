@@ -218,21 +218,23 @@ const Admin = ({ state }) => {
                   </a>
                 </li>
 
-                <li className="nav-item">
-                  <a
-                    className={`nav-link text-white ${
-                      isSelected === "createevent" ? "active" : ""
-                    }`}
-                    onClick={() => handleSelectItem("createevent")}
-                  >
-                    <div className="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                      <FontAwesomeIcon icon={faCalendarPlus} />
-                    </div>
-                    <span className="nav-link-text ms-1">Create Event</span>
-                  </a>
-                </li>
+                {isEventOrganizer && isUserConnected ? (
+                  <li className="nav-item">
+                    <a
+                      className={`nav-link text-white ${
+                        isSelected === "createevent" ? "active" : ""
+                      }`}
+                      onClick={() => handleSelectItem("createevent")}
+                    >
+                      <div className="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <FontAwesomeIcon icon={faCalendarPlus} />
+                      </div>
+                      <span className="nav-link-text ms-1">Create Event</span>
+                    </a>
+                  </li>
+                ) : null}
 
-                <li className="nav-item">
+                {/* <li className="nav-item">
                   <a
                     className={`nav-link text-white ${
                       isSelected === "tools" ? "active" : ""
@@ -245,7 +247,7 @@ const Admin = ({ state }) => {
 
                     <span className="nav-link-text ms-1">Tools</span>
                   </a>
-                </li>
+                </li> */}
 
                 <li className="nav-item">
                   <a
@@ -262,7 +264,7 @@ const Admin = ({ state }) => {
                   </a>
                 </li>
 
-                <li className="nav-item">
+                {/* <li className="nav-item">
                   <a
                     className={`nav-link text-white ${
                       isSelected === "notification" ? "active" : ""
@@ -275,7 +277,7 @@ const Admin = ({ state }) => {
 
                     <span className="nav-link-text ms-1">Notifications</span>
                   </a>
-                </li>
+                </li> */}
 
                 <li className="nav-item mt-3">
                   <h6 className="ps-4 ms-2 text-xs font-weight-bold text-start opacity-8">

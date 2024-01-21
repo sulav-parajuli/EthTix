@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { ethers } from "ethers";
 import "../assets/css/Main.css";
 import ethtix from "../assets/images/abstract.png";
-import { retrieveFromIPFS } from "../utils/ipfsUtils";
+// import { retrieveFromIPFS, uploadReportToIPFS } from "../utils/ipfsUtils";
 import { useAppContext } from "./AppContext";
 import { Triangle } from "react-loader-spinner";
 //Import fontawesome icons
@@ -11,7 +10,8 @@ import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-toastify"; // Import toastify for displaying notifications
 
 const Reports = ({ state }) => {
-  const { formatTime, reports, setReports } = useAppContext();
+  const { formatTime, reports, setReports, fetchReports, createReports } =
+    useAppContext();
   const { ticketsContract } = state;
   const [isLoading, setIsLoading] = useState(true);
   const [selectedReportIndex, setSelectedReportIndex] = useState(null);
@@ -26,90 +26,15 @@ const Reports = ({ state }) => {
     setReportDetail(false);
   };
 
-  const fetchReports = async () => {
-    try {
-      // Subscribe to the "OrganizerRegistered" event
-      ticketsContract.on(
-        "OrganizerRegistered",
-        async (organizerAddress, CID) => {
-          // console.log(
-          //   "OrganizerRegistered event triggered:",
-          //   organizerAddress,
-          //   CID
-          // );
-          const details = await retrieveFromIPFS(CID);
-          // console.log(details);
-          // Create a new report for OrganizerRegistered event
-          const newReport = {
-            eventType: "OrganizerRegistered",
-            reportName: "Register Event Organizer",
-            details,
-            organizerAddress,
-            CID,
-          };
-
-          // Add the new report to the existing reports
-          setReports((prevReports) => [...prevReports, newReport]);
-        }
-      );
-
-      // console.log(events[0].eventName.toString());
-      // Subscribe to the "EventCreated" event
-      ticketsContract.on(
-        "EventCreated",
-        async (eventId, organizer, eventCid) => {
-          // console.log("EventCreated event triggered:", eventId.toString(), organizer);
-
-          const details = await retrieveFromIPFS(eventCid);
-          console.log(details);
-          // Create a new report for EventCreated event
-          const newReport = {
-            eventType: "EventCreated",
-            reportName: "Event Created",
-            eventId,
-            organizer,
-            details,
-          };
-
-          // Add the new report to the existing reports
-          setReports((prevReports) => [...prevReports, newReport]);
-        }
-      );
-
-      // Subscribe to the "TicketPurchased" event
-      ticketsContract.on("TicketPurchased", (eventId, ticketsBought, buyer) => {
-        console.log(
-          "TicketPurchased event triggered:",
-          eventId,
-          ticketsBought,
-          buyer
-        );
-
-        // Create a new report for TicketPurchased event
-        const newReport = {
-          eventType: "TicketPurchased",
-          reportName: "Ticket Purchased",
-          eventId,
-          ticketsBought,
-          buyer,
-        };
-
-        // Add the new report to the existing reports
-        setReports((prevReports) => [...prevReports, newReport]);
-      });
-
-      // Subscribe to other events as needed...
-    } catch (error) {
-      console.error("Error fetching reports:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
   useEffect(() => {
     try {
       const initialize = async () => {
         if (ticketsContract) {
-          fetchReports();
+          createReports();
+          // Fetch initial reports using the fetchReports function
+          const initialReports = await fetchReports();
+          setReports(initialReports);
+          setIsLoading(false); // Set loading to false once reports are fetched
         } else {
           console.error("Contract is not deployed!");
           toast.error("Contract is not deployed!", {
@@ -200,7 +125,9 @@ const Reports = ({ state }) => {
             </p>
             {reports[selectedReportIndex].eventType === "TicketPurchased" ||
             reports[selectedReportIndex].eventType === "EventCreated" ? (
-              <p>Event ID: {reports[selectedReportIndex].eventId.toString()}</p>
+              <p>
+                Event ID: {parseInt(reports[selectedReportIndex].eventId.hex)}
+              </p>
             ) : null}
             {reports[selectedReportIndex].eventType === "EventCreated" ? (
               <>
@@ -225,7 +152,7 @@ const Reports = ({ state }) => {
               <>
                 <p>
                   Ticket Bought:{" "}
-                  {reports[selectedReportIndex].ticketsBought.toString()}
+                  {parseInt(reports[selectedReportIndex].ticketsBought.hex)}
                 </p>
                 <p> Buyer: {reports[selectedReportIndex].buyer}</p>
               </>

@@ -16,7 +16,7 @@ const CreateEvent = ({ state }) => {
   const [totalTickets, setTotalTickets] = useState("");
   const [location, setLocation] = useState("");
   const [allvalueverified, setAllvalueverified] = useState(false);
-  const { isUserConnected } = useAppContext();
+  const { isUserConnected, isEventOrganizer } = useAppContext();
   const [confirmationNeeded, setConfirmationNeeded] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate(); //to redirect to another page
@@ -171,7 +171,16 @@ const CreateEvent = ({ state }) => {
     try {
       setIsLoading(true);
       if (!ticketsContract) {
-        alert("ticketsContract is not deployed");
+        // alert("ticketsContract is not deployed");
+        console.error("ticketsContract is not deployed");
+        toast.error("ticketsContract is not deployed", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
         return;
       }
       const eventData = {
@@ -235,7 +244,7 @@ const CreateEvent = ({ state }) => {
 
   return (
     <>
-      {isUserConnected ? (
+      {isUserConnected && isEventOrganizer ? (
         <div className="createevent">
           {isLoading ? (
             <Triangle
