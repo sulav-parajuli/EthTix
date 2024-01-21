@@ -1,12 +1,12 @@
-// BuyTicket.jsx
-
 import React, { useState } from "react";
 import { ethers } from "ethers";
 import { useAppContext } from "./AppContext";
+import { useNavigate } from "react-router-dom";
 
 const BuyTicket = ({ eventIndex, event, state }) => {
   const { ticketsContract, signer } = state;
   const [quantity, setQuantity] = useState(1);
+  const navigate = useNavigate();
 
   const handlequantityChange = (event) => {
     const inputValue = event.target.value;
@@ -58,6 +58,7 @@ const BuyTicket = ({ eventIndex, event, state }) => {
 
       // Handle success or show a confirmation message
       console.log("Ticket purchase successful!");
+      navigate("/mytickets");
     } catch (error) {
       console.error("Error buying ticket:", error.message);
       // Handle errors or display an error message

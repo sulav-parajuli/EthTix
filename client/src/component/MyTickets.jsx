@@ -1,9 +1,19 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useAppContext } from "./AppContext";
 import logo from "../assets/images/logo/etherTixLogo.png";
 
 const MyTickets = ({ state }) => {
   const { account } = useAppContext();
+  const { ticketsContract } = state;
+  // useEffect(()=>{
+  //   if(!ticketsContract){
+  //     return;
+  //   }
+  //   ticketsContract.on("TicketPurchased",async(eventId, ticketsBought)
+  //   {
+
+  //   })
+  // })
   return (
     <div className="mcontainer">
       <div className="myprofile">
