@@ -29,6 +29,7 @@ import AdminEvents from "./AdminEvents";
 import Login from "./Login";
 import ErrorPage from "./ErrorPage";
 import Reports from "./Reports";
+import Users from "./Users";
 
 const Popup = ({ isOpen, onClose, state }) => {
   return isOpen ? (
@@ -519,6 +520,10 @@ const Admin = ({ state }) => {
                   {isSelected === "reports" && (
                     /* Render Reports component when isSelected is 'reports' */
                     <Reports state={state} />
+                  )}
+                  {isSelected === "users" && (
+                    /* Render Reports component when isSelected is 'reports' */
+                    <Users state={state} />
                   )}
 
                   {/* Add more conditions for other components as needed */}
