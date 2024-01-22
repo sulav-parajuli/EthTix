@@ -3,17 +3,16 @@ import { useAppContext } from "./AppContext";
 import logo from "../assets/images/logo/etherTixLogo.png";
 
 const MyTickets = ({ state }) => {
-  const { account } = useAppContext();
+  const { account, events } = useAppContext();
   const { ticketsContract } = state;
-  // useEffect(()=>{
-  //   if(!ticketsContract){
-  //     return;
-  //   }
-  //   ticketsContract.on("TicketPurchased",async(eventId, ticketsBought)
-  //   {
-
-  //   })
-  // })
+  useEffect(() => {
+    if (!ticketsContract) {
+      return;
+    }
+    ticketsContract.on("TicketPurchased", async (eventId, ticketsBought) => {
+      console.log(events[eventId.toNumber() - 1]);
+    });
+  });
   return (
     <div className="mcontainer">
       <div className="myprofile">

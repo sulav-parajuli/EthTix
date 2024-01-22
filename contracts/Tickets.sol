@@ -8,6 +8,7 @@ contract Tickets{
         uint256 remTickets;
         uint256 price;
         address payable creator;
+        uint256 creationTime;
         
     }
     struct TicketHolder{
@@ -66,6 +67,7 @@ contract Tickets{
     require(isOrganizers(msg.sender),"Only organizer can create event");
    // require(bytes(_eventImageCid).length > 0, "Event Image CID should not be empty");
     require(_totalTickets > 0, "Total tickets should be greater than 0");
+    require(!isOwner(),"Owner cannot create event");
     //calculate creation fee and check if enough ether is sent
     uint256 eventCreationFee= (_price*_totalTickets*3)/100;
     require(msg.value>=eventCreationFee,"Not enough ether sent");
@@ -84,8 +86,8 @@ contract Tickets{
        totalTickets: _totalTickets,
        remTickets: _totalTickets,
        price: _price,
-       creator:payable(msg.sender)
-       //eventImageCID:_eventImageCid
+       creator:payable(msg.sender),
+       creationTime:block.timestamp
     }
     );
 }
@@ -111,6 +113,7 @@ contract Tickets{
     function buyTicket(uint256 _eventId, uint256 _totalTicketsToBuy) public payable {
     require(_eventId <= eventId, "Event does not exist");
     require(events[_eventId].remTickets >= _totalTicketsToBuy, "Not enough tickets left");
+    require(!isOrganizers(msg.sender), "Organizer cannot buy tickets for their own event");
     uint256 totalPrice = events[_eventId].price * _totalTicketsToBuy;
     require(msg.value >= totalPrice, "Not enough ether sent");
 
