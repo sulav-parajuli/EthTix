@@ -134,6 +134,10 @@ const BrowseEvent = ({ state }) => {
                                   Available Tickets:
                                   {event.remTickets.toNumber()}
                                 </p>
+                                <p>
+                                  EventDescription:
+                                  {event.description.toString()}
+                                </p>
                                 <p>Location: {event.location.toString()}</p>
                                 <p>
                                   Date and Time:{" "}

@@ -18,6 +18,7 @@ const CreateEvent = ({ state }) => {
   const [allvalueverified, setAllvalueverified] = useState(false);
   const { isUserConnected, isEventOrganizer } = useAppContext();
   const [confirmationNeeded, setConfirmationNeeded] = useState(false);
+  const [description, setDescription] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate(); //to redirect to another page
 
@@ -35,6 +36,9 @@ const CreateEvent = ({ state }) => {
 
   const handleTotalTicketsChange = (event) => {
     setTotalTickets(event.target.value);
+  };
+  const handleDescriptionChange = (event) => {
+    setDescription(event.target.value);
   };
 
   const handleLocationChange = (event) => {
@@ -120,7 +124,15 @@ const CreateEvent = ({ state }) => {
       document.querySelector(".errorintime").innerHTML = "";
       setAllvalueverified(true);
     }
-
+    //handling description validation
+    if (description.trim() === "") {
+      document.querySelector(".errorindescription").innerHTML =
+        "description cannot be empty";
+      setAllvalueverified(false);
+    } else {
+      document.querySelector(".errorindescription").innerHTML = "";
+      setAllvalueverified(true);
+    }
     //handling location validation
     if (location.trim() === "") {
       document.querySelector(".errorinlocation").innerHTML =
@@ -187,6 +199,7 @@ const CreateEvent = ({ state }) => {
         eventName,
         date,
         time,
+        description,
         location,
       };
       //sign Data
@@ -340,6 +353,19 @@ const CreateEvent = ({ state }) => {
                 <div className="errorintotalticket"></div>
               </div>
 
+              <div className="mb-3">
+                <label htmlFor="location" className="form-label">
+                  Event Description
+                </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="description"
+                  value={description}
+                  onChange={handleDescriptionChange}
+                />
+                <div className="errorindescription"></div>
+              </div>
               <div className="mb-3">
                 <label htmlFor="location" className="form-label">
                   Location
