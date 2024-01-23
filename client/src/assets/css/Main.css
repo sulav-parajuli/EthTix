@@ -266,6 +266,20 @@ img.ticketcounter {
   width: -webkit-fill-available;
 }
 
+.insection.card-body {
+  border-radius: 0.25rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0);
+  cursor: pointer;
+}
+
+.insection.card-body:hover {
+  background-color: #f8fafa;
+}
+
+.insection.card {
+  border: 0px;
+}
+
 /*--------------------------------------------------------------
 # F.A.Q
 --------------------------------------------------------------*/

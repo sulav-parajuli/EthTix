@@ -6,7 +6,7 @@ import { useAppContext } from "./AppContext";
 import { Triangle } from "react-loader-spinner";
 //Import fontawesome icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
+import { faChevronRight, faClock } from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-toastify"; // Import toastify for displaying notifications
 
 const Reports = ({ state }) => {
@@ -45,6 +45,11 @@ const Reports = ({ state }) => {
             pauseOnHover: true,
             draggable: true,
           });
+          const newToastMessage = {
+            notificationName: "Contract is not deployed!",
+          };
+
+          createNotification(newToastMessage);
         }
       };
 
@@ -121,7 +126,7 @@ const Reports = ({ state }) => {
             <p>Report Name: {reports[selectedReportIndex].reportName}</p>
             {/* date and time to know when was the event being subscribed. */}
             <p>
-              Date and Time: {/* {reports[selectedReportIndex].organizer} */}
+              Created Time: {/* {reports[selectedReportIndex].organizer} */}
             </p>
             {reports[selectedReportIndex].eventType === "TicketPurchased" ||
             reports[selectedReportIndex].eventType === "EventCreated" ? (
@@ -224,13 +229,27 @@ const Reports = ({ state }) => {
                     style={{ padding: "0px" }}
                   >
                     <div
-                      className="card-body"
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                      }}
+                      className="insection card-body d-flex justify-content-between align-items-center"
+                      onClick={() => handleSelectReport(index)}
+                      style={{ padding: "10px" }}
                     >
-                      <h4 style={{ margin: "0px" }}>{report.reportName}</h4>
+                      <div>
+                        <h4 style={{ margin: "0px" }}>{report.reportName}</h4>
+                        <div className="d-flex align-items-center">
+                          <FontAwesomeIcon
+                            icon={faClock}
+                            className="mr-2"
+                            style={{ fontSize: "70%" }}
+                          />
+                          &nbsp;
+                          <p
+                            className="text-muted mb-0"
+                            style={{ fontSize: "70%" }}
+                          >
+                            {formatTime(report.creationTime)}
+                          </p>
+                        </div>
+                      </div>
                       <FontAwesomeIcon
                         icon={faChevronRight}
                         onClick={() => handleSelectReport(index)}

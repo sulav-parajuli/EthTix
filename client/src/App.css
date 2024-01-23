@@ -200,8 +200,13 @@ body.popup-open {
 .errorinimage,
 .errorindate,
 .errorintime,
-.errorintotalticket {
+.errorintotalticket,
+.errorindescription {
   text-align: justify;
+  color: #c1292e;
+}
+
+.required {
   color: #c1292e;
 }
 
@@ -340,4 +345,15 @@ button.btn.btn-danger {
   cursor: pointer;
   margin-right: 10px;
   z-index: 100;
+}
+
+/* notification */
+.notification-dot {
+  position: absolute;
+  top: 8px;
+  right: 4px;
+  width: 10px;
+  height: 10px;
+  background-color: #c1292e;
+  border-radius: 50%;
 }

@@ -30,6 +30,9 @@ import Login from "./Login";
 import ErrorPage from "./ErrorPage";
 import Reports from "./Reports";
 import Users from "./Users";
+import Dashboard from "./Dashboard";
+import MyTickets from "./MyTickets";
+import NotificationDropdown from "./NotificationDropdown";
 
 const Popup = ({ isOpen, onClose, state }) => {
   return isOpen ? (
@@ -48,14 +51,18 @@ const Admin = ({ state }) => {
   const [isPopupOpen, setPopupOpen] = useState(false);
   const [isSettingsOpen, setSettingsOpen] = useState(false);
   const [isDropdownOpen, setDropdownOpen] = useState(false);
+  const [isNotificationOpen, setNotificationOpen] = useState(false);
   const [isSidenavOpen, setSidenavOpen] = useState(false);
-  const [isSelected, setIsSelected] = useState("dashboard"); // Initial selection, you can change it as needed
   const {
     account,
     isUserConnected,
     isEventOrganizer,
     setUserConnected,
     isAdmin,
+    isSelected,
+    setIsSelected,
+    createNotification,
+    hasNotifications,
   } = useAppContext();
   const navigate = useNavigate();
   useEffect(() => {
@@ -100,8 +107,17 @@ const Admin = ({ state }) => {
     }
   }, [isUserConnected]);
 
+  useEffect(() => {
+    if (isSelected === "mytickets") {
+      document.querySelector(".ticketcontainer").classList.remove("mcontainer");
+    }
+  }, [isSelected === "mytickets"]);
+
   const handleToggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
+  };
+  const handleToggleNotification = () => {
+    setNotificationOpen(!isNotificationOpen);
   };
 
   const handleDisconnect = () => {
@@ -122,6 +138,11 @@ const Admin = ({ state }) => {
       closeOnClick: true,
       draggable: true,
     });
+    const newToastMessage = {
+      notificationName: "Wallet disconnected, redirecting to home page.",
+    };
+
+    createNotification(newToastMessage);
     setTimeout(() => {
       toast.error("You are not event organizer.", {
         position: "top-right",
@@ -156,6 +177,7 @@ const Admin = ({ state }) => {
 
   const handleSelectItem = (item) => {
     setIsSelected(item);
+    setSidenavOpen(false);
     document.querySelector(".nav-link.active").classList.remove("active");
   };
 
@@ -442,16 +464,22 @@ const Admin = ({ state }) => {
                         className="nav-link text-body p-0"
                         id="dropdownMenuButton"
                         data-bs-toggle="dropdown"
-                        aria-expanded="false"
+                        aria-expanded="true"
+                        onClick={handleToggleNotification}
                       >
                         <FontAwesomeIcon icon={faBell} />
+                        {/* Display small dot if there are notifications */}
+                        {hasNotifications && (
+                          <div className="notification-dot" />
+                        )}
                       </a>
+                      {isNotificationOpen && <NotificationDropdown />}
                     </li>
                     <li className="nav-item dropdown pe-2 d-flex align-items-center">
                       <div className="logincontainer">
                         {isUserConnected ? (
                           <div
-                            className={"user-icon-container"}
+                            className="user-icon-container"
                             onClick={handleToggleDropdown}
                           >
                             <div className="usericonimage">
@@ -459,13 +487,17 @@ const Admin = ({ state }) => {
                               <FontAwesomeIcon icon={faCircleUser} />
                             </div>
                             {isDropdownOpen && (
-                              <div className={"userdropdown"}>
-                                <div
-                                  className="nav-item"
-                                  onClick={() => handleSelectItem("mytickets")}
-                                >
-                                  My Tickets
-                                </div>
+                              <div className="userdropdown">
+                                {!isEventOrganizer ? (
+                                  <div
+                                    className="nav-item"
+                                    onClick={() =>
+                                      handleSelectItem("mytickets")
+                                    }
+                                  >
+                                    My Tickets
+                                  </div>
+                                ) : null}
                                 <div
                                   className="nav-item"
                                   onClick={() => {
@@ -524,6 +556,14 @@ const Admin = ({ state }) => {
                   {isSelected === "users" && (
                     /* Render Reports component when isSelected is 'reports' */
                     <Users state={state} />
+                  )}
+                  {isSelected === "dashboard" && (
+                    /* Render Reports component when isSelected is 'reports' */
+                    <Dashboard state={state} />
+                  )}
+                  {isSelected === "mytickets" && (
+                    /* Render Reports component when isSelected is 'reports' */
+                    <MyTickets state={state} />
                   )}
 
                   {/* Add more conditions for other components as needed */}

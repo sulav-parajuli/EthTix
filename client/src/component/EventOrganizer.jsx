@@ -8,7 +8,7 @@ import { signData, uploadToIPFS } from "../utils/ipfsUtils";
 
 const EventOrganizer = ({ state }) => {
   const [nextpage, setNextpage] = useState(false);
-  const { setEventOrganizer, account } = useAppContext();
+  const { setEventOrganizer, account, createNotification } = useAppContext();
   const [name, setName] = useState("");
   const [organizationName, setOrganizationName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -46,6 +46,11 @@ const EventOrganizer = ({ state }) => {
           pauseOnHover: true,
           draggable: true,
         });
+        const newToastMessage = {
+          notificationName: "Please fill all the fields.",
+        };
+
+        createNotification(newToastMessage);
         return;
       }
       // console.log(ticketsContract);
@@ -63,6 +68,11 @@ const EventOrganizer = ({ state }) => {
             draggable: true,
           }
         );
+        const newToastMessage = {
+          notificationName: "Contract not deployed.",
+        };
+
+        createNotification(newToastMessage);
       }
       const isAlreadyOrganizer = await ticketsContract.isOrganizers(account);
       // console.log(isAlreadyOrganizer);
@@ -85,6 +95,11 @@ const EventOrganizer = ({ state }) => {
             draggable: true,
           }
         );
+        const newToastMessage = {
+          notificationName: "This address is already registered.",
+        };
+
+        createNotification(newToastMessage);
       } else {
         setEventOrganizer(false);
       }
@@ -107,30 +122,6 @@ const EventOrganizer = ({ state }) => {
       console.log(ipfsCid);
       const transaction = await ticketsContract.registerEventOrganizer(ipfsCid);
       await transaction.wait();
-      // const isOrganizer = await ticketsContract.isOrganizers(
-      //   signer.getAddress()
-      // );
-      // console.log(isOrganizer);
-      //console.log("Event Organizer registered successfully");
-      // } else {
-      //   console.error(
-      //     "Only registered users can call this function. Register as a user first."
-      //   );
-      //   toast.error(
-      //     "Only registered users can call this function. Register as a user first.",
-      //     {
-      //       position: "top-right",
-      //       autoClose: 5000,
-      //       hideProgressBar: false,
-      //       closeOnClick: true,
-      //       pauseOnHover: true,
-      //       draggable: true,
-      //     }
-      //   );
-      // }
-
-      // console.log(transaction);
-      // if (isOrganizer) {
       setEventOrganizer(true);
       toast.success(
         "Successful! You are now registered as an event organizer",
@@ -159,6 +150,11 @@ const EventOrganizer = ({ state }) => {
         pauseOnHover: true,
         draggable: true,
       });
+      const newToastMessage = {
+        notificationName: "Error Occurred.",
+      };
+
+      createNotification(newToastMessage);
     } finally {
       setIsLoading(false);
       document.querySelector(".popup-inner").style.backgroundColor = "white";
@@ -195,7 +191,7 @@ const EventOrganizer = ({ state }) => {
                   <div className="mb-3">
                     <input
                       type="text"
-                      placeholder="Enter your Name"
+                      placeholder="Enter your Name*"
                       className="form-control"
                       id="name"
                       value={name}
@@ -205,7 +201,7 @@ const EventOrganizer = ({ state }) => {
                   <div className="mb-3">
                     <input
                       type="text"
-                      placeholder="Enter your organization name"
+                      placeholder="Enter your organization name*"
                       className="form-control"
                       id="organizationname"
                       value={organizationName}
@@ -215,7 +211,7 @@ const EventOrganizer = ({ state }) => {
                   <div className="mb-3">
                     <input
                       type="text"
-                      placeholder="Type of organization"
+                      placeholder="Type of organization*"
                       className="form-control"
                       id="organizationname"
                       value={organizationType}
@@ -225,7 +221,7 @@ const EventOrganizer = ({ state }) => {
                   <div className="mb-3">
                     <input
                       type="text"
-                      placeholder="Organization location"
+                      placeholder="Organization location*"
                       className="form-control"
                       id="organization location"
                       value={organizationLocation}
@@ -235,7 +231,7 @@ const EventOrganizer = ({ state }) => {
                   <div className="mb-3">
                     <input
                       type="text"
-                      placeholder="Organization email"
+                      placeholder="Organization email*"
                       className="form-control"
                       id="organization email"
                       value={organizationEmail}
@@ -257,6 +253,7 @@ const EventOrganizer = ({ state }) => {
                       htmlFor="flexCheckDefault"
                     >
                       I agree to the terms and conditions
+                      <span className="required">*</span>
                     </label>
                   </div>
                   <button

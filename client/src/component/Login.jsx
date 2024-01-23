@@ -12,6 +12,7 @@ const Login = ({ state }) => {
     setEventOrganizer,
     account,
     template,
+    createNotification,
   } = useAppContext();
   const { signer, ticketsContract } = state;
   const [isLoading, setIsLoading] = useState(false);
@@ -68,6 +69,11 @@ const Login = ({ state }) => {
         pauseOnHover: true,
         draggable: true,
       });
+      const newToastMessage = {
+        notificationName: "Error connecting to wallet.",
+      };
+
+      createNotification(newToastMessage);
     } finally {
       setIsLoading(false);
       document.querySelector(".topnav").style.background = "transparent";

@@ -3303,3 +3303,8 @@ hr.horizontal.light {
 .switch-trigger {
   text-align: center;
 }
+
+.userdropdown {
+  max-width: 20rem;
+  max-height: 20rem;
+}
