@@ -1,7 +1,7 @@
 import axios from "axios"; //js library for making http requests from node.js
 import { toast } from "react-toastify"; // to notify users of axios network errors.
 import "react-toastify/dist/ReactToastify.css"; //toastify css
-
+require("dotenv").config();
 //import signData from "./signerMetamask.js";
 async function signData(signer, data) {
   const signature = await signer.signMessage(data);
@@ -29,9 +29,8 @@ async function uploadToIPFS(Data, signature) {
     });
     formData.append("pinataOptions", pinataOptions);
 
-    const pinataApiKey = "650c7f4f05a6eaa3640c";
-    const pinataSecrestApiKey =
-      "61763a9c7d8b68dee951c5e1b22145721613093f59e07d1dbe60d81b0a6e3b67";
+    const pinataApiKey = process.env.PINATA_KEY;
+    const pinataSecrestApiKey = process.env.PINATA_SECRET_KEY;
 
     const response = await axios.post(
       "https://api.pinata.cloud/pinning/pinFileToIPFS",
@@ -88,9 +87,8 @@ async function uploadReportToIPFS(Data) {
     });
     formData.append("pinataOptions", pinataOptions);
 
-    const pinataApiKey = "650c7f4f05a6eaa3640c";
-    const pinataSecrestApiKey =
-      "61763a9c7d8b68dee951c5e1b22145721613093f59e07d1dbe60d81b0a6e3b67";
+    const pinataApiKey = process.env.PINATA_KEY;
+    const pinataSecrestApiKey = process.env.PINATA_SECRET_KEY;
 
     const response = await axios.post(
       "https://api.pinata.cloud/pinning/pinFileToIPFS",
