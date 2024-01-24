@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useAppContext } from "./AppContext";
 import { Triangle } from "react-loader-spinner";
 
-const Users = ({ state }) => {
+const Dashboard = ({ state }) => {
   const { ticketsContract } = state;
   const [isLoading, setIsLoading] = useState(true);
   return (
@@ -24,11 +24,11 @@ const Users = ({ state }) => {
         />
       ) : (
         <div>
-          <h1>Users</h1>
+          <h1>Dashboard</h1>
         </div>
       )}
     </>
   );
 };
 
-export default Users;
+export default Dashboard;

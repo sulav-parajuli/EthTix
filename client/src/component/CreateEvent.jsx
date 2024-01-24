@@ -16,7 +16,8 @@ const CreateEvent = ({ state }) => {
   const [totalTickets, setTotalTickets] = useState("");
   const [location, setLocation] = useState("");
   const [allvalueverified, setAllvalueverified] = useState(false);
-  const { isUserConnected, isEventOrganizer } = useAppContext();
+  const { isUserConnected, isEventOrganizer, createNotification } =
+    useAppContext();
   const [confirmationNeeded, setConfirmationNeeded] = useState(false);
   const [description, setDescription] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -125,9 +126,9 @@ const CreateEvent = ({ state }) => {
       setAllvalueverified(true);
     }
     //handling description validation
-    if (description.trim() === "") {
+    if (description.length > 100) {
       document.querySelector(".errorindescription").innerHTML =
-        "description cannot be empty";
+        "description cannot be greater than 100 characters";
       setAllvalueverified(false);
     } else {
       document.querySelector(".errorindescription").innerHTML = "";
@@ -193,6 +194,11 @@ const CreateEvent = ({ state }) => {
           pauseOnHover: true,
           draggable: true,
         });
+        const newToastMessage = {
+          notificationName: "ticketsContract is not deployed.",
+        };
+
+        createNotification(newToastMessage);
         return;
       }
       const eventData = {
@@ -244,6 +250,11 @@ const CreateEvent = ({ state }) => {
         pauseOnHover: true,
         draggable: true,
       });
+      const newToastMessage = {
+        notificationName: "Event Created Successfully.",
+      };
+
+      createNotification(newToastMessage);
       // Redirect to a events route when event created successfully
       navigate("/events");
       document.querySelector(".topnav").style.display = "flex";
@@ -282,20 +293,25 @@ const CreateEvent = ({ state }) => {
             >
               <div className="mb-4">
                 <label htmlFor="eventName" className="form-label">
-                  Event Name
+                  <b>
+                    Event Name<span className="required">*</span>
+                  </b>
                 </label>
                 <input
                   type="text"
                   className="form-control"
                   id="eventName"
                   value={eventName}
+                  placeholder="Enter Event Name"
                   onChange={handleEventNameChange}
                 />
                 <div className="errorineventname"></div>
               </div>
               <div className="mb-3">
                 <label htmlFor="price" className="form-label">
-                  Price per Ticket(ETH)
+                  <b>
+                    Price per Ticket(ETH)<span className="required">*</span>
+                  </b>
                 </label>
                 <input
                   type="number"
@@ -303,6 +319,7 @@ const CreateEvent = ({ state }) => {
                   className="form-control"
                   id="price"
                   value={priceInEther}
+                  placeholder="Enter Price in Ether"
                   onChange={handlePriceChange}
                 />
                 <div className="errorinprice"></div>
@@ -310,7 +327,9 @@ const CreateEvent = ({ state }) => {
 
               <div className="mb-3">
                 <label htmlFor="date" className="form-label">
-                  Date
+                  <b>
+                    Date<span className="required">*</span>
+                  </b>
                 </label>
                 <input
                   type="date"
@@ -325,7 +344,9 @@ const CreateEvent = ({ state }) => {
 
               <div className="mb-3">
                 <label htmlFor="location" className="form-label">
-                  Time
+                  <b>
+                    Time<span className="required">*</span>
+                  </b>
                 </label>
                 <input
                   type="time"
@@ -340,7 +361,9 @@ const CreateEvent = ({ state }) => {
 
               <div className="mb-3">
                 <label htmlFor="totalTicket" className="form-label">
-                  Total Number Of Tickets
+                  <b>
+                    Total Number Of Tickets<span className="required">*</span>
+                  </b>
                 </label>
                 <input
                   type="number"
@@ -348,6 +371,7 @@ const CreateEvent = ({ state }) => {
                   className="form-control"
                   id="TotalTickets"
                   value={totalTickets}
+                  placeholder="Enter Total Number Of Tickets"
                   onChange={handleTotalTicketsChange}
                 />
                 <div className="errorintotalticket"></div>
@@ -355,29 +379,40 @@ const CreateEvent = ({ state }) => {
 
               <div className="mb-3">
                 <label htmlFor="location" className="form-label">
-                  Event Description
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="description"
-                  value={description}
-                  onChange={handleDescriptionChange}
-                />
-                <div className="errorindescription"></div>
-              </div>
-              <div className="mb-3">
-                <label htmlFor="location" className="form-label">
-                  Location
+                  <b>
+                    Location<span className="required">*</span>
+                  </b>
                 </label>
                 <input
                   type="text"
                   className="form-control"
                   id="location"
                   value={location}
+                  placeholder="Enter Event Location"
                   onChange={handleLocationChange}
                 />
                 <div className="errorinlocation"></div>
+              </div>
+
+              <div className="mb-3">
+                <label htmlFor="location" className="form-label">
+                  <b>Event Description</b>
+                </label>
+                <textarea
+                  rows={1}
+                  type="text"
+                  className="form-control"
+                  id="description"
+                  value={description}
+                  placeholder="Enter Event Description, Links etc."
+                  onChange={handleDescriptionChange}
+                  style={{
+                    overflow: "hidden",
+                    maxHeight: "100px",
+                    maxLength: "100",
+                  }}
+                ></textarea>
+                <div className="errorindescription"></div>
               </div>
 
               <button type="submit" className="btn btn-danger">
@@ -389,7 +424,10 @@ const CreateEvent = ({ state }) => {
       ) : (
         <div className="createevent">
           <img src={eventcreation} alt="Event Creation" />
-          <div>Connect your wallet first, to get started.</div>
+          <div>
+            Begin by connecting your wallet as the event organizer to initiate
+            the process.
+          </div>
         </div>
       )}
     </>

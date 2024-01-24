@@ -45,12 +45,15 @@ const EventDetail = ({ index, event, state }) => {
             <h2>{event.eventName.toString()}</h2>
             <p>Price: {ethers.utils.formatEther(event.price).toString()} ETH</p>
             <p>
-              Available Tickets:
+              Available Tickets:&nbsp;
               {event.remTickets.toNumber()}
             </p>
             <p>Location: {event.location.toString()}</p>
             <p>Date: {event.date + ", " + formatTime(event.time)}</p>
-            {/* <p>Creator: {event.creator}</p> */}
+            <p>
+              Description:&nbsp;
+              {event.description?.toString() || "No Description"}
+            </p>
             <button
               className="main-button color-white"
               onClick={handlebuyticket}

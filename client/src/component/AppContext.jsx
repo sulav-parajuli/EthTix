@@ -15,6 +15,9 @@ const AppProvider = ({ children, template, account, state }) => {
   const [isOnline, setIsOnline] = useState(window.navigator.onLine); // Check if the user is online or not.
   const { signer, ticketsContract } = state;
   const [events, setEvents] = useState([]);
+  const [notifications, setNotifications] = useState([]);
+  const [hasNotifications, setHasNotifications] = useState(false);
+  const [isSelected, setIsSelected] = useState("dashboard"); // Initial selection, you can change it as needed
   // Function to fetch events from the smart contract
   const fetchEvents = async () => {
     try {
@@ -50,6 +53,11 @@ const AppProvider = ({ children, template, account, state }) => {
           closeOnClick: true,
           pauseOnHover: true,
         });
+        const newToastMessage = {
+          notificationName: "Contract not found.",
+        };
+
+        createNotification(newToastMessage);
         return;
       }
 
@@ -206,6 +214,17 @@ const AppProvider = ({ children, template, account, state }) => {
     }
   };
 
+  const createNotification = (newNotification) => {
+    setNotifications((prevNotifications) => {
+      const updatedNotifications = [...prevNotifications, newNotification];
+      localStorage.setItem(
+        "notifications",
+        JSON.stringify(updatedNotifications)
+      );
+      return updatedNotifications;
+    });
+  };
+
   const contextValue = {
     isUserConnected,
     setUserConnected,
@@ -224,6 +243,13 @@ const AppProvider = ({ children, template, account, state }) => {
     handleEventCreated,
     createReports,
     fetchReports,
+    isSelected,
+    setIsSelected,
+    createNotification,
+    setNotifications,
+    notifications,
+    hasNotifications,
+    setHasNotifications,
   };
 
   const ticketContractAddress = contractAddresses.tickets;
@@ -258,6 +284,13 @@ const AppProvider = ({ children, template, account, state }) => {
           } else {
             setAdmin(false);
           }
+          const storedNotifications = localStorage.getItem("notifications");
+          const parsedNotifications = JSON.parse(storedNotifications);
+          if (parsedNotifications.length > 0) {
+            setHasNotifications(true);
+          } else {
+            setHasNotifications(false);
+          }
         } else {
           setUserConnected(false);
         }
@@ -285,6 +318,11 @@ const AppProvider = ({ children, template, account, state }) => {
           pauseOnHover: true,
           draggable: true,
         });
+        const newToastMessage = {
+          notificationName: "Internet is not connected.Check your connection.",
+        };
+
+        createNotification(newToastMessage);
       } else if (isOnline) {
         toast.success("Internet connection reestablished.", {
           position: "top-right",
@@ -294,6 +332,11 @@ const AppProvider = ({ children, template, account, state }) => {
           pauseOnHover: true,
           draggable: true,
         });
+        const newToastMessage = {
+          notificationName: "Internet connection reestablished.",
+        };
+
+        createNotification(newToastMessage);
       }
     }
 

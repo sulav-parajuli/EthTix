@@ -6,7 +6,7 @@ import { useAppContext } from "./AppContext";
 import { Triangle } from "react-loader-spinner";
 //Import fontawesome icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
+import { faChevronRight, faClock } from "@fortawesome/free-solid-svg-icons";
 
 const AdminEvents = ({ state }) => {
   const { formatTime, events, fetchEvents, handleEventCreated, setEvents } =
@@ -174,15 +174,32 @@ const AdminEvents = ({ state }) => {
                     style={{ padding: "0px" }}
                   >
                     <div
-                      className="card-body"
+                      className="insection card-body"
                       style={{
                         display: "flex",
                         justifyContent: "space-between",
                       }}
+                      onClick={() => handleSelectEvent(index)}
                     >
-                      <h4 style={{ margin: "0px" }}>
-                        {event.eventName.toString()}{" "}
-                      </h4>
+                      <div>
+                        <h4 style={{ margin: "0px" }}>
+                          {event.eventName.toString()}{" "}
+                        </h4>
+                        <div className="d-flex align-items-center">
+                          <FontAwesomeIcon
+                            icon={faClock}
+                            className="mr-2"
+                            style={{ fontSize: "70%" }}
+                          />
+                          &nbsp;
+                          <p
+                            className="text-muted mb-0"
+                            style={{ fontSize: "70%" }}
+                          >
+                            {formatTime(event.creationTime)}
+                          </p>
+                        </div>
+                      </div>
                       <FontAwesomeIcon
                         icon={faChevronRight}
                         onClick={() => handleSelectEvent(index)}
