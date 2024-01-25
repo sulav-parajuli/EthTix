@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 const BuyTicket = ({ eventIndex, event, state }) => {
   const { ticketsContract, signer } = state;
   const [quantity, setQuantity] = useState(1);
+  const { savetransactionHashToLocalStorage } = useAppContext();
   const navigate = useNavigate();
 
   const handlequantityChange = (event) => {
@@ -55,6 +56,9 @@ const BuyTicket = ({ eventIndex, event, state }) => {
 
       // Wait for the transaction to be mined
       await transaction.wait();
+      const TransactionHash = await transaction.hash;
+      savetransactionHashToLocalStorage(TransactionHash);
+      // console.log("Transaction Hash:", TransactionHash);
 
       // Handle success or show a confirmation message
       console.log("Ticket purchase successful!");

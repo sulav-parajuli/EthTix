@@ -10,8 +10,16 @@ import { faChevronRight, faClock } from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-toastify"; // Import toastify for displaying notifications
 
 const Reports = ({ state }) => {
-  const { formatTime, reports, setReports, fetchReports, createReports } =
-    useAppContext();
+  const {
+    formatTime,
+    reports,
+    setReports,
+    fetchReports,
+    createReports,
+    retrieveAllTransactionsFromLocalStorage,
+    getTransactionDetails,
+    viewTransactionOnEtherscan,
+  } = useAppContext();
   const { ticketsContract } = state;
   const [isLoading, setIsLoading] = useState(true);
   const [selectedReportIndex, setSelectedReportIndex] = useState(null);
@@ -24,6 +32,23 @@ const Reports = ({ state }) => {
 
   const handleGoBack = () => {
     setReportDetail(false);
+  };
+
+  const handletransactionDetails = () => {
+    const transactions = retrieveAllTransactionsFromLocalStorage();
+    // console.log("transaction hash", transactions[selectedReportIndex]);
+    // const transactionDetails = getTransactionDetails(
+    //   transactions[selectedReportIndex]
+    // );
+    // console.log("transaction details", transactionDetails);
+    const transactionPromise = viewTransactionOnEtherscan(
+      transactions[selectedReportIndex]
+    );
+
+    transactionPromise.then((transactionUrl) => {
+      // console.log("transaction url", transactionUrl);
+      window.open(transactionUrl, "_self"); // Open the transaction url in a same page if written as "_self" and in a new tab if written as "_blank"
+    });
   };
 
   useEffect(() => {
@@ -208,7 +233,7 @@ const Reports = ({ state }) => {
               </button>
               <button
                 className="main-button color-white"
-                onClick={handleGoBack}
+                onClick={handletransactionDetails}
               >
                 View transaction details
               </button>
