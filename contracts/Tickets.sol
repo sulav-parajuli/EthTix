@@ -8,7 +8,7 @@ contract Tickets{
         uint256 remTickets;
         uint256 price;
         address payable creator;
-        uint256 creationTime;
+        
         
     }
     struct TicketHolder{
@@ -38,16 +38,16 @@ contract Tickets{
 
     }
     
-    event OrganizerRegistered(address indexed organizerAddress,string CID);
-    event EventCreated(uint256 eventId,address indexed organizer, string eventCid);
-    event TicketPurchased(uint256 eventId,uint256 ticketsBought,address indexed buyer);
+    event OrganizerRegistered(address indexed organizerAddress,string CID,uint256 registerTime);
+    event EventCreated(uint256 eventId,address indexed organizer, string eventCid , uint256 creationTime);
+    event TicketPurchased(uint256 eventId,uint256 ticketsBought,address indexed buyer , uint256 purchaseTime);
    
    //function to register organizer and store their CID
     function registerEventOrganizer(string memory _CID)public {
     require(bytes(_CID).length>0,"CID cannot be empty");
     organizerCID[msg.sender]=_CID; 
     organizers[msg.sender]=true;
-    emit OrganizerRegistered(msg.sender,_CID);
+    emit OrganizerRegistered(msg.sender,_CID,block.timestamp);
    }
 
    
@@ -80,14 +80,14 @@ contract Tickets{
     }
     
     eventId++;
-    emit EventCreated(eventId, msg.sender, _eventCid);
+    emit EventCreated(eventId, msg.sender, _eventCid, block.timestamp);
     events[eventId] = Event({
        eventCID:_eventCid,
        totalTickets: _totalTickets,
        remTickets: _totalTickets,
        price: _price,
-       creator:payable(msg.sender),
-       creationTime:block.timestamp
+    creator:payable(msg.sender)
+       
     }
     );
 }
@@ -132,7 +132,7 @@ contract Tickets{
     // Update the ticket holders mapping
     TicketHolder[] storage userTickets = ticketHolders[msg.sender];
     userTickets.push(TicketHolder(msg.sender, events[_eventId].eventCID, _eventId, _totalTicketsToBuy));
-    emit TicketPurchased(_eventId, _totalTicketsToBuy, msg.sender);
+    emit TicketPurchased(_eventId, _totalTicketsToBuy, msg.sender, block.timestamp);
 }
 
     }
