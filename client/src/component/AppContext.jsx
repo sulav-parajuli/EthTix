@@ -172,6 +172,48 @@ const AppProvider = ({ children, template, account, state }) => {
       console.error("Error subscribing to events and creating reports:", error);
     }
   };
+
+  // Function to get the transaction details
+  const getTransactionDetails = async (transactionHash) => {
+    try {
+      const transactionDetails = await signer.provider.getTransaction(
+        transactionHash
+      );
+      return transactionDetails;
+    } catch (error) {
+      console.error("Error fetching transaction details:", error);
+      return {};
+    }
+  };
+
+  // Function to get the transaction receipt
+  const viewTransactionOnEtherscan = async (transactionHash) => {
+    try {
+      const network = await signer.provider.getNetwork();
+      const networkName = network.name;
+      const etherscanUrl = `https://${networkName}.etherscan.io/tx/${transactionHash}`;
+      return etherscanUrl;
+    } catch (error) {
+      console.error("Error fetching network details:", error);
+      return "";
+    }
+  };
+
+  // Function to save transactionHash to localStorage without duplicacy
+  const savetransactionHashToLocalStorage = (transactionHash) => {
+    let storedTransactions =
+      JSON.parse(localStorage.getItem("transactions")) || [];
+
+    // Check if transactionHash already exists in the array
+    if (!storedTransactions.includes(transactionHash)) {
+      // Add transactionHash to top of the array
+      storedTransactions = [transactionHash, ...storedTransactions];
+
+      // Update localStorage
+      localStorage.setItem("transactions", JSON.stringify(storedTransactions));
+    }
+  };
+
   // Function to save IPFS CIDs to localStorage without duplicacy
   const saveIpfsCidToLocalStorage = (ipfsCid) => {
     let storedCids = JSON.parse(localStorage.getItem("ipfsCids")) || [];
@@ -190,6 +232,13 @@ const AppProvider = ({ children, template, account, state }) => {
   const retrieveAllIpfsCidsFromLocalStorage = () => {
     const storedCids = JSON.parse(localStorage.getItem("ipfsCids")) || {};
     return storedCids;
+  };
+
+  // Function to retrieve all IPFS CIDs from localStorage
+  const retrieveAllTransactionsFromLocalStorage = () => {
+    const storedTransactions =
+      JSON.parse(localStorage.getItem("transactions")) || {};
+    return storedTransactions;
   };
 
   // Function to fetch reports using IPFS CIDs from localStorage
@@ -250,6 +299,10 @@ const AppProvider = ({ children, template, account, state }) => {
     notifications,
     hasNotifications,
     setHasNotifications,
+    getTransactionDetails,
+    viewTransactionOnEtherscan,
+    savetransactionHashToLocalStorage,
+    retrieveAllTransactionsFromLocalStorage,
   };
 
   const ticketContractAddress = contractAddresses.tickets;
@@ -266,6 +319,8 @@ const AppProvider = ({ children, template, account, state }) => {
             localStorage.setItem("contractAddress", ticketContractAddress);
             // console.log("contractAddress:", ticketContractAddress);
             localStorage.removeItem("ipfsCids");
+            localStorage.removeItem("notifications");
+            localStorage.removeItem("transactions");
           }
           // Check if the user address is already registered as an event organizer or not.
           const isAlreadyOrganizer = await ticketsContract.isOrganizers(

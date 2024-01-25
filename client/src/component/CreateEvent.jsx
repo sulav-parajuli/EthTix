@@ -16,8 +16,12 @@ const CreateEvent = ({ state }) => {
   const [totalTickets, setTotalTickets] = useState("");
   const [location, setLocation] = useState("");
   const [allvalueverified, setAllvalueverified] = useState(false);
-  const { isUserConnected, isEventOrganizer, createNotification } =
-    useAppContext();
+  const {
+    isUserConnected,
+    isEventOrganizer,
+    createNotification,
+    savetransactionHashToLocalStorage,
+  } = useAppContext();
   const [confirmationNeeded, setConfirmationNeeded] = useState(false);
   const [description, setDescription] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -239,6 +243,9 @@ const CreateEvent = ({ state }) => {
 
       // Wait for transaction to finish
       await transaction.wait();
+      const TransactionHash = await transaction.hash;
+      savetransactionHashToLocalStorage(TransactionHash);
+      // console.log("Transaction Hash:", TransactionHash);
 
       console.log("Event Created");
 

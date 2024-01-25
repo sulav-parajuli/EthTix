@@ -8,7 +8,12 @@ import { signData, uploadToIPFS } from "../utils/ipfsUtils";
 
 const EventOrganizer = ({ state }) => {
   const [nextpage, setNextpage] = useState(false);
-  const { setEventOrganizer, account, createNotification } = useAppContext();
+  const {
+    setEventOrganizer,
+    account,
+    createNotification,
+    savetransactionHashToLocalStorage,
+  } = useAppContext();
   const [name, setName] = useState("");
   const [organizationName, setOrganizationName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -122,6 +127,9 @@ const EventOrganizer = ({ state }) => {
       console.log(ipfsCid);
       const transaction = await ticketsContract.registerEventOrganizer(ipfsCid);
       await transaction.wait();
+      const TransactionHash = await transaction.hash;
+      savetransactionHashToLocalStorage(TransactionHash);
+      // console.log("Transaction Hash:", TransactionHash);
       setEventOrganizer(true);
       toast.success(
         "Successful! You are now registered as an event organizer",
@@ -134,6 +142,12 @@ const EventOrganizer = ({ state }) => {
           draggable: true,
         }
       );
+      const newToastMessage = {
+        notificationName:
+          "Successful! You are now registered as an event organizer",
+      };
+
+      createNotification(newToastMessage);
       //You might require local storage or session storage. It helps to set cookies.
       // localStorage.setItem("isEventOrganizer", isEventOrganizer);
       document.body.classList.remove("popup-open"); // Allow scrolling
