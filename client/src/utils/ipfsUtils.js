@@ -22,20 +22,16 @@ async function getPinataKeys() {
 async function uploadToIPFS(Data, signature) {
   try {
     const { pinataApiKey, pinataSecretApiKey } = await getPinataKeys();
-    // console.log("pinataApiKey", JSON.stringify(pinataApiKey));
-    // console.log("pinataSecretApiKey", JSON.stringify(pinataSecretApiKey));
 
     const formData = new FormData();
     //COnvert the data to a blob
     const blob = new Blob([Data], { type: "application/octet-stream" });
     //Append the blobl as file
     formData.append("file", blob);
-    //Append the signature as a custom field
-    formData.append("signature", signature);
+    if (signature) {
+      formData.append("signature", signature);
+    }
 
-    const pinataMetadata = JSON.stringify({
-      name: "UserDetails",
-    });
     formData.append("pinataMetadata", pinataMetadata);
     const pinataOptions = JSON.stringify({
       cidVersion: 0,
@@ -60,51 +56,6 @@ async function uploadToIPFS(Data, signature) {
       return { ipfsCid, signature };
     } else {
       console.error("Failed to pin file. Status code:", response.status);
-      console.error("Response:", response.data);
-      toast.error("Failed to pin file. See console for details.");
-      throw new Error("Failed to pin file.");
-    }
-  } catch (error) {
-    handleUploadError(error);
-  }
-}
-
-async function uploadReportToIPFS(Data) {
-  try {
-    const { pinataApiKey, pinataSecretApiKey } = await getPinataKeys();
-
-    const formData = new FormData();
-    const blob = new Blob([Data], { type: "application/octet-stream" });
-    formData.append("file", blob);
-
-    const pinataMetadata = JSON.stringify({
-      name: "ReportDetails",
-    });
-    formData.append("pinataMetadata", pinataMetadata);
-
-    const pinataOptions = JSON.stringify({
-      cidVersion: 0,
-    });
-    formData.append("pinataOptions", pinataOptions);
-
-    const response = await axios.post(
-      "https://api.pinata.cloud/pinning/pinFileToIPFS",
-      formData,
-      {
-        maxBodyLength: "Infinity",
-        headers: {
-          "Content-Type": `multipart/form-data; boundary=${formData._boundary}`,
-          pinata_api_key: pinataApiKey,
-          pinata_secret_api_key: pinataSecretApiKey,
-        },
-      }
-    );
-
-    if (response.status === 200) {
-      const ipfsCid = response.data.IpfsHash;
-      return { ipfsCid };
-    } else {
-      console.error("Failed to pin report file. Status code:", response.status);
       console.error("Response:", response.data);
       toast.error("Failed to pin file. See console for details.");
       throw new Error("Failed to pin file.");
