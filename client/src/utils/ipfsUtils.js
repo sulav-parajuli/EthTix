@@ -32,7 +32,7 @@ async function uploadToIPFS(Data, signature) {
       formData.append("signature", signature);
     }
 
-    formData.append("pinataMetadata", pinataMetadata);
+    // formData.append("pinataMetadata", pinataMetadata);
     const pinataOptions = JSON.stringify({
       cidVersion: 0,
     });
@@ -107,4 +107,4 @@ function handleUploadError(error) {
   throw error;
 }
 
-export { signData, uploadToIPFS, retrieveFromIPFS, uploadReportToIPFS };
+export { signData, uploadToIPFS, retrieveFromIPFS };

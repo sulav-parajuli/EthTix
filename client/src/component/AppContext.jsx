@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { toast } from "react-toastify"; // Import toastify for displaying notifications
-import { retrieveFromIPFS, uploadReportToIPFS } from "../utils/ipfsUtils";
+import { retrieveFromIPFS, uploadToIPFS } from "../utils/ipfsUtils";
+import { ethers } from "ethers"; // Import ethers
 // Import the contract addresses from the JSON file
 import contractAddresses from "../../../contractAddresses.json";
 
@@ -70,18 +71,56 @@ const AppProvider = ({ children, template, account, state }) => {
     }
   };
 
+  function convertUnixTimestampToDateTime(unixTimestamp) {
+    try {
+      // console.log(unixTimestamp);
+      // Ensure that the timestamp is defined and numeric
+      if (typeof unixTimestamp !== "undefined" && !isNaN(unixTimestamp)) {
+        // Convert the timestamp to a JavaScript number
+        const timestampNumber = ethers.BigNumber.from(unixTimestamp).toNumber();
+
+        // Check if the conversion to JavaScript number was successful
+        if (!isNaN(timestampNumber)) {
+          // Create a Date object using the timestamp
+          const date = new Date(timestampNumber * 1000); // Convert seconds to milliseconds
+
+          // Format the date and time
+          const formattedDateTime = date.toLocaleString(); // Adjust this based on your formatting preferences
+
+          return formattedDateTime;
+        } else {
+          throw new Error("Invalid timestamp conversion to JavaScript number");
+        }
+      } else {
+        throw new Error("Invalid or undefined timestamp value");
+      }
+    } catch (error) {
+      console.error("Error converting timestamp:", error.message);
+      return ""; // Return an empty string or handle the error case accordingly
+    }
+  }
+
+  // Example usage
+  // const unixTimestamp = "0x65b3afdc"; // Replace with your actual timestamp
+  // const formattedDateTime = convertUnixTimestampToDateTime(unixTimestamp);
+  // console.log("Formatted Date and Time:", formattedDateTime);
+
   const createReports = async () => {
     try {
       // Subscribe to the "OrganizerRegistered" event
       ticketsContract.on(
         "OrganizerRegistered",
-        async (organizerAddress, CID) => {
+        async (organizerAddress, CID, registerTime) => {
           // console.log(
           //   "OrganizerRegistered event triggered:",
           //   organizerAddress,
-          //   CID
+          //   CID,
+          //   registerTime
           // );
           const details = await retrieveFromIPFS(CID);
+          // console.log(registerTime);
+          const time = convertUnixTimestampToDateTime(registerTime); // Convert Unix time to Date and Time
+          // console.log(time);
           // console.log(details);
           // Create a new report for OrganizerRegistered event
           const newReport = {
@@ -90,11 +129,12 @@ const AppProvider = ({ children, template, account, state }) => {
             details,
             organizerAddress,
             CID,
+            creationTime: time,
           };
 
           const data = JSON.stringify(newReport);
           //upload report to IPFS
-          const { ipfsCid } = await uploadReportToIPFS(data);
+          const { ipfsCid } = await uploadToIPFS(data);
           // console.log("IPFS CID:", ipfsCid);
           saveIpfsCidToLocalStorage(ipfsCid);
           // console.log("Report Created");
@@ -108,10 +148,13 @@ const AppProvider = ({ children, template, account, state }) => {
       // Subscribe to the "EventCreated" event
       ticketsContract.on(
         "EventCreated",
-        async (eventId, organizer, eventCid) => {
-          // console.log("EventCreated event triggered:", eventId.toString(), organizer);
+        async (eventId, organizer, eventCid, creationTime) => {
+          // console.log("EventCreated event triggered:", eventId.toString(), organizer, eventCid, creationTime);
 
           const details = await retrieveFromIPFS(eventCid);
+          // console.log(creationTime);
+          const time = convertUnixTimestampToDateTime(creationTime); // Convert Unix time to Date and Time
+          // console.log(time);
           // console.log(details);
           // Create a new report for EventCreated event
           const newReport = {
@@ -121,11 +164,12 @@ const AppProvider = ({ children, template, account, state }) => {
             organizer,
             details,
             eventCid,
+            creationTime: time,
           };
 
           const data = JSON.stringify(newReport);
           //upload report to IPFS
-          const { ipfsCid } = await uploadReportToIPFS(data);
+          const { ipfsCid } = await uploadToIPFS(data);
           // console.log("IPFS CID:", ipfsCid);
           saveIpfsCidToLocalStorage(ipfsCid);
           // console.log("Report Created");
@@ -139,14 +183,17 @@ const AppProvider = ({ children, template, account, state }) => {
       // Subscribe to the "TicketPurchased" event
       ticketsContract.on(
         "TicketPurchased",
-        async (eventId, ticketsBought, buyer) => {
+        async (eventId, ticketsBought, buyer, purchaseTime) => {
           // console.log(
           //   "TicketPurchased event triggered:",
           //   eventId,
           //   ticketsBought,
-          //   buyer
+          //   buyer,
+          //   purchaseTime
           // );
 
+          const time = convertUnixTimestampToDateTime(purchaseTime); // Convert Unix time to Date and Time
+          // console.log(time);
           // Create a new report for TicketPurchased event
           const newReport = {
             eventType: "TicketPurchased",
@@ -154,11 +201,12 @@ const AppProvider = ({ children, template, account, state }) => {
             eventId,
             ticketsBought,
             buyer,
+            creationTime: time,
           };
 
           const data = JSON.stringify(newReport);
           //upload report to IPFS
-          const { ipfsCid } = await uploadReportToIPFS(data);
+          const { ipfsCid } = await uploadToIPFS(data);
           // console.log("IPFS CID:", ipfsCid);
           saveIpfsCidToLocalStorage(ipfsCid);
           // console.log("Report Created");
@@ -313,7 +361,7 @@ const AppProvider = ({ children, template, account, state }) => {
         if ((await account) !== "Not connected") {
           //console.log(account);
           setUserConnected(true);
-          // Listen to every events emitted by the smart contract.
+          // Listen to every events emitted by the smart contract and create it's reports.
           createReports();
           if (contractadd !== ticketContractAddress) {
             localStorage.setItem("contractAddress", ticketContractAddress);

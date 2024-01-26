@@ -2,11 +2,13 @@ import React, { useState } from "react";
 import { ethers } from "ethers";
 import { useAppContext } from "./AppContext";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify"; // Import toastify for displaying notifications
 
 const BuyTicket = ({ eventIndex, event, state }) => {
   const { ticketsContract, signer } = state;
   const [quantity, setQuantity] = useState(1);
-  const { savetransactionHashToLocalStorage } = useAppContext();
+  const { savetransactionHashToLocalStorage, isEventOrganizer } =
+    useAppContext();
   const navigate = useNavigate();
 
   const handlequantityChange = (event) => {
@@ -25,6 +27,10 @@ const BuyTicket = ({ eventIndex, event, state }) => {
 
   const handleBuyTicket = async () => {
     try {
+      if (isEventOrganizer) {
+        toast.error("You are the event organizer. You cannot buy tickets.");
+        return;
+      }
       // Check the structure of the event being passed
       console.log("Event Structure:", event);
 

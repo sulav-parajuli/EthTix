@@ -150,9 +150,7 @@ const Reports = ({ state }) => {
             </p>
             <p>Report Name: {reports[selectedReportIndex].reportName}</p>
             {/* date and time to know when was the event being subscribed. */}
-            <p>
-              Created Time: {/* {reports[selectedReportIndex].organizer} */}
-            </p>
+            <p>Created Time: {reports[selectedReportIndex].creationTime}</p>
             {reports[selectedReportIndex].eventType === "TicketPurchased" ||
             reports[selectedReportIndex].eventType === "EventCreated" ? (
               <p>
@@ -271,7 +269,7 @@ const Reports = ({ state }) => {
                             className="text-muted mb-0"
                             style={{ fontSize: "70%" }}
                           >
-                            {formatTime(report.creationTime)}
+                            {report.creationTime}
                           </p>
                         </div>
                       </div>
