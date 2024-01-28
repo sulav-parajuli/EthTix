@@ -9,6 +9,7 @@ import { Triangle } from "react-loader-spinner";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronRight, faClock } from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-toastify"; // Import toastify for displaying notifications
+import search from "../assets/images/search symbol.png";
 
 const Reports = ({ state }) => {
   const {
@@ -28,14 +29,45 @@ const Reports = ({ state }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedReportIndex, setSelectedReportIndex] = useState(null);
   const [ReportDetail, setReportDetail] = useState(false);
+  const [isSearch, setSearch] = useState(false); // Implement search
+  const [selectedIndex, setSelectedIndex] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filteredReports, setFilteredReports] = useState([]);
 
   const handleSelectReport = (index) => {
     setSelectedReportIndex(index);
     setReportDetail(true);
   };
 
+  const handleFilteredReport = (index) => {
+    setSelectedIndex(index);
+    console.log(selectedIndex);
+
+    const selectedFilteredReport = filteredReports[selectedIndex];
+    const selectedReportIndex = reports.findIndex(
+      (report) => report.ipfsCid === selectedFilteredReport.ipfsCid
+    );
+
+    if (selectedReportIndex !== -1) {
+      setSelectedReportIndex(selectedReportIndex);
+      setReportDetail(true);
+    } else {
+      console.error("Report not found in the original reports array");
+    }
+  };
+
   const handleGoBack = () => {
     setReportDetail(false);
+  };
+
+  const handleSearchButton = () => {
+    setSearch(true);
+    const filterReports = reports.filter((report) =>
+      report.reportDetails.reportName
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase())
+    );
+    setFilteredReports(filterReports);
   };
 
   const handletransactionDetails = () => {
@@ -153,57 +185,91 @@ const Reports = ({ state }) => {
             <p>
               Event Type:{" "}
               <span style={{ color: "#008eb0" }}>
-                {reports[selectedReportIndex].eventType}
+                {reports[selectedReportIndex].reportDetails.eventType}
               </span>
             </p>
-            <p>Report Name: {reports[selectedReportIndex].reportName}</p>
+            <p>
+              Report Name:{" "}
+              {reports[selectedReportIndex].reportDetails.reportName}
+            </p>
             {/* date and time to know when was the event being subscribed. */}
-            <p>Created Time: {reports[selectedReportIndex].creationTime}</p>
-            {reports[selectedReportIndex].eventType === "TicketPurchased" ||
-            reports[selectedReportIndex].eventType === "EventCreated" ? (
+            <p>
+              Created Time:{" "}
+              {reports[selectedReportIndex].reportDetails.creationTime}
+            </p>
+            {reports[selectedReportIndex].reportDetails.eventType ===
+              "TicketPurchased" ||
+            reports[selectedReportIndex].reportDetails.eventType ===
+              "EventCreated" ? (
               <p>
-                Event ID: {parseInt(reports[selectedReportIndex].eventId.hex)}
+                Event ID:{" "}
+                {parseInt(
+                  reports[selectedReportIndex].reportDetails.eventId.hex
+                )}
               </p>
             ) : null}
-            {reports[selectedReportIndex].eventType === "EventCreated" ? (
+            {reports[selectedReportIndex].reportDetails.eventType ===
+            "EventCreated" ? (
               <>
-                <p>Creater: {reports[selectedReportIndex].organizer}</p>
+                <p>
+                  Creater:{" "}
+                  {reports[selectedReportIndex].reportDetails.organizer}
+                </p>
                 <p>
                   Event Name:{" "}
-                  {reports[selectedReportIndex].details.eventName.toString()}
+                  {reports[
+                    selectedReportIndex
+                  ].reportDetails.details.eventName.toString()}
                 </p>
                 <p>
                   Event Date:{" "}
-                  {reports[selectedReportIndex].details.date +
+                  {reports[selectedReportIndex].reportDetails.details.date +
                     ", " +
-                    formatTime(reports[selectedReportIndex].details.time)}
+                    formatTime(
+                      reports[selectedReportIndex].reportDetails.details.time
+                    )}
                 </p>
                 <p>
                   Location:{" "}
-                  {reports[selectedReportIndex].details.location.toString()}
+                  {reports[
+                    selectedReportIndex
+                  ].reportDetails.details.location.toString()}
                 </p>
               </>
             ) : null}
-            {reports[selectedReportIndex].eventType === "TicketPurchased" ? (
+            {reports[selectedReportIndex].reportDetails.eventType ===
+            "TicketPurchased" ? (
               <>
                 <p>
                   Event Name:{" "}
                   {events[
-                    parseInt(reports[selectedReportIndex].eventId.hex) - 1
+                    parseInt(
+                      reports[selectedReportIndex].reportDetails.eventId.hex
+                    ) - 1
                   ].eventName.toString()}
                 </p>
                 <p>
                   Ticket Bought:{" "}
-                  {parseInt(reports[selectedReportIndex].ticketsBought.hex)}
+                  {parseInt(
+                    reports[selectedReportIndex].reportDetails.ticketsBought.hex
+                  )}
                 </p>
-                <p> Buyer: {reports[selectedReportIndex].buyer}</p>
+                <p>
+                  {" "}
+                  Buyer: {reports[selectedReportIndex].reportDetails.buyer}
+                </p>
                 <p>
                   Price Paid:&nbsp;
-                  {parseInt(reports[selectedReportIndex].ticketsBought.hex) *
+                  {parseInt(
+                    reports[selectedReportIndex].reportDetails.ticketsBought.hex
+                  ) *
                     ethers.utils
                       .formatEther(
                         events[
-                          parseInt(reports[selectedReportIndex].eventId.hex) - 1
+                          parseInt(
+                            reports[selectedReportIndex].reportDetails.eventId
+                              .hex
+                          ) - 1
                         ].price
                       )
                       .toString()}
@@ -211,40 +277,42 @@ const Reports = ({ state }) => {
                 </p>
               </>
             ) : null}
-            {reports[selectedReportIndex].eventType ===
+            {reports[selectedReportIndex].reportDetails.eventType ===
             "OrganizerRegistered" ? (
               <>
                 <p>
                   Organizer Address:{" "}
-                  {reports[selectedReportIndex].organizerAddress}
+                  {reports[selectedReportIndex].reportDetails.organizerAddress}
                 </p>
                 <p>
                   Organizer Name:{" "}
-                  {reports[selectedReportIndex].details.name.toString()}
+                  {reports[
+                    selectedReportIndex
+                  ].reportDetails.details.name.toString()}
                 </p>
                 <p>
                   Organization Name:{" "}
                   {reports[
                     selectedReportIndex
-                  ].details.organizationName.toString()}
+                  ].reportDetails.details.organizationName.toString()}
                 </p>
                 <p>
                   Organization Type:{" "}
                   {reports[
                     selectedReportIndex
-                  ].details.organizationType.toString()}
+                  ].reportDetails.details.organizationType.toString()}
                 </p>
                 <p>
                   Organization Location:{" "}
                   {reports[
                     selectedReportIndex
-                  ].details.organizationLocation.toString()}
+                  ].reportDetails.details.organizationLocation.toString()}
                 </p>
                 <p>
                   Organization Email:{" "}
                   {reports[
                     selectedReportIndex
-                  ].details.organizationEmail.toString()}
+                  ].reportDetails.details.organizationEmail.toString()}
                 </p>
               </>
             ) : null}
@@ -266,50 +334,149 @@ const Reports = ({ state }) => {
         </div>
       ) : (
         <>
-          <div className="event-blocks">
-            {reports.length === 0 ? (
-              <p>No any reports found..</p>
-            ) : (
-              <div className="row">
-                {reports.map((report, index) => (
-                  <div
-                    key={index}
-                    className="col-12 mb-4 card"
-                    style={{ padding: "0px" }}
-                  >
-                    <div
-                      className="insection card-body d-flex justify-content-between align-items-center"
-                      onClick={() => handleSelectReport(index)}
-                      style={{ padding: "10px" }}
+          <div>
+            {isSearch && (
+              <div
+                className="searchforevent alert alert-success alert-dismissible fade show"
+                role="alert"
+              >
+                <p className="mb-0">{`Searched Reports for: ${searchQuery}`}</p>
+                <div
+                  type="button"
+                  className="searchforeventclose"
+                  data-dismiss="alert"
+                  aria-label="Close"
+                  onClick={() => setSearch(false)}
+                >
+                  <span style={{ width: "1.5em", height: "1.5em" }}>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      width="24"
+                      height="24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
                     >
-                      <div>
-                        <h4 style={{ margin: "0px" }}>{report.reportName}</h4>
-                        <div className="d-flex align-items-center">
-                          <FontAwesomeIcon
-                            icon={faClock}
-                            className="mr-2"
-                            style={{ fontSize: "70%" }}
-                          />
-                          &nbsp;
-                          <p
-                            className="text-muted mb-0"
-                            style={{ fontSize: "70%" }}
-                          >
-                            {report.creationTime}
-                          </p>
-                        </div>
-                      </div>
-                      <FontAwesomeIcon
-                        icon={faChevronRight}
-                        onClick={() => handleSelectReport(index)}
-                        style={{ alignSelf: "center" }}
-                      />
-                    </div>
-                  </div>
-                ))}
+                      <line x1="18" y1="6" x2="6" y2="18"></line>
+                      <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                  </span>
+                </div>
               </div>
             )}
+            <div className="adminsearchcontainer">
+              <input
+                type="text"
+                placeholder="Search Reports"
+                className="search-input"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              <button className="search-button" onClick={handleSearchButton}>
+                <img src={search} alt="Search" />
+              </button>
+            </div>
           </div>
+          {isSearch ? (
+            <>
+              <div className="event-blocks">
+                {filteredReports.length === 0 ? (
+                  <p>Searched Reports not available....</p>
+                ) : (
+                  <div className="row">
+                    {filteredReports.map((report, index) => (
+                      <div
+                        key={index}
+                        className="col-12 mb-4 card"
+                        style={{ padding: "0px" }}
+                      >
+                        <div
+                          className="insection card-body d-flex justify-content-between align-items-center"
+                          onClick={() => handleFilteredReport(index)}
+                          style={{ padding: "10px" }}
+                        >
+                          <div>
+                            <h4 style={{ margin: "0px" }}>
+                              {report.reportDetails.reportName}
+                            </h4>
+                            <div className="d-flex align-items-center">
+                              <FontAwesomeIcon
+                                icon={faClock}
+                                className="mr-2"
+                                style={{ fontSize: "70%" }}
+                              />
+                              &nbsp;
+                              <p
+                                className="text-muted mb-0"
+                                style={{ fontSize: "70%" }}
+                              >
+                                {report.reportDetails.creationTime}
+                              </p>
+                            </div>
+                          </div>
+                          <FontAwesomeIcon
+                            icon={faChevronRight}
+                            onClick={() => handleFilteredReport(index)}
+                            style={{ alignSelf: "center" }}
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </>
+          ) : (
+            <div className="event-blocks">
+              {reports.length === 0 ? (
+                <p>No any reports found..</p>
+              ) : (
+                <div className="row">
+                  {reports.map((report, index) => (
+                    <div
+                      key={index}
+                      className="col-12 mb-4 card"
+                      style={{ padding: "0px" }}
+                    >
+                      <div
+                        className="insection card-body d-flex justify-content-between align-items-center"
+                        onClick={() => handleSelectReport(index)}
+                        style={{ padding: "10px" }}
+                      >
+                        <div>
+                          <h4 style={{ margin: "0px" }}>
+                            {report.reportDetails.reportName}
+                          </h4>
+                          <div className="d-flex align-items-center">
+                            <FontAwesomeIcon
+                              icon={faClock}
+                              className="mr-2"
+                              style={{ fontSize: "70%" }}
+                            />
+                            &nbsp;
+                            <p
+                              className="text-muted mb-0"
+                              style={{ fontSize: "70%" }}
+                            >
+                              {report.reportDetails.creationTime}
+                            </p>
+                          </div>
+                        </div>
+                        <FontAwesomeIcon
+                          icon={faChevronRight}
+                          onClick={() => handleSelectReport(index)}
+                          style={{ alignSelf: "center" }}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
         </>
       )}
     </div>

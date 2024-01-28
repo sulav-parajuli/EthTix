@@ -301,7 +301,8 @@ const AppProvider = ({ children, template, account, state }) => {
       for (let i = 0; i < storedCids.length; i++) {
         const ipfsCid = storedCids[i];
         const reportDetails = await retrieveFromIPFS(ipfsCid);
-        fetchedReports.push(reportDetails);
+        const combinedData = { ipfsCid, reportDetails }; // Combine ipfsCid and reportDetails
+        fetchedReports.push(combinedData);
       }
 
       return fetchedReports;
