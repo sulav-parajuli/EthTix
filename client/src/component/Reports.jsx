@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "../assets/css/Main.css";
+import { ethers } from "ethers";
 import ethtix from "../assets/images/abstract.png";
 // import { retrieveFromIPFS, uploadReportToIPFS } from "../utils/ipfsUtils";
 import { useAppContext } from "./AppContext";
@@ -13,8 +14,11 @@ const Reports = ({ state }) => {
   const {
     formatTime,
     reports,
+    events,
     setReports,
     fetchReports,
+    fetchEvents,
+    setEvents,
     createReports,
     retrieveAllTransactionsFromLocalStorage,
     getTransactionDetails,
@@ -56,6 +60,10 @@ const Reports = ({ state }) => {
       const initialize = async () => {
         if (ticketsContract) {
           createReports();
+          // Fetch initial events
+          await fetchEvents().then((initialEvents) => {
+            setEvents(initialEvents);
+          });
           // Fetch initial reports using the fetchReports function
           const initialReports = await fetchReports();
           setReports(initialReports);
@@ -179,10 +187,28 @@ const Reports = ({ state }) => {
             {reports[selectedReportIndex].eventType === "TicketPurchased" ? (
               <>
                 <p>
+                  Event Name:{" "}
+                  {events[
+                    parseInt(reports[selectedReportIndex].eventId.hex) - 1
+                  ].eventName.toString()}
+                </p>
+                <p>
                   Ticket Bought:{" "}
                   {parseInt(reports[selectedReportIndex].ticketsBought.hex)}
                 </p>
                 <p> Buyer: {reports[selectedReportIndex].buyer}</p>
+                <p>
+                  Price Paid:&nbsp;
+                  {parseInt(reports[selectedReportIndex].ticketsBought.hex) *
+                    ethers.utils
+                      .formatEther(
+                        events[
+                          parseInt(reports[selectedReportIndex].eventId.hex) - 1
+                        ].price
+                      )
+                      .toString()}
+                  &nbsp;ETH
+                </p>
               </>
             ) : null}
             {reports[selectedReportIndex].eventType ===
