@@ -30,8 +30,10 @@ const BrowseEvent = ({ state }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedEventIndex, setSelectedEventIndex] = useState(null);
   const { ticketsContract } = state;
-
+  const [isSearch, setSearch] = useState(false); // Implement search
   const [isPopupOpen, setPopupOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filteredEvents, setFilteredEvents] = useState([]);
 
   // Function to handle opening the popup for a selected event
   const handleOpenPopup = (index) => {
@@ -40,6 +42,14 @@ const BrowseEvent = ({ state }) => {
     document.body.classList.add("popup-open"); // Prevent scrolling
     document.querySelector(".topnav").style.background =
       "rgba(255,255,255,0.9)";
+  };
+
+  const handleSearchButton = () => {
+    setSearch(true);
+    const filterEvents = events.filter((event) =>
+      event.eventName.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    setFilteredEvents(filterEvents);
   };
 
   useEffect(() => {
@@ -79,8 +89,10 @@ const BrowseEvent = ({ state }) => {
               type="text"
               placeholder="Search events"
               className="search-input"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
-            <button className="search-button">
+            <button className="search-button" onClick={handleSearchButton}>
               <img src={search} alt="Search" />
             </button>
           </div>
@@ -109,6 +121,101 @@ const BrowseEvent = ({ state }) => {
               }}
               wrapperClass=""
             />
+          ) : isSearch ? (
+            <>
+              {isSearch && (
+                <div
+                  className="searchforevent alert alert-success alert-dismissible fade show"
+                  role="alert"
+                >
+                  <p className="mb-0">{`Searched Events for: ${searchQuery}`}</p>
+                  <div
+                    type="button"
+                    className="searchforeventclose"
+                    data-dismiss="alert"
+                    aria-label="Close"
+                    onClick={() => setSearch(false)}
+                  >
+                    <span style={{ width: "1.5em", height: "1.5em" }}>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        width="24"
+                        height="24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                      </svg>
+                    </span>
+                  </div>
+                </div>
+              )}
+              <div className="event-blocks">
+                {filteredEvents.length === 0 ? (
+                  <p>Searched Events not available....</p>
+                ) : (
+                  <div className="row">
+                    {filteredEvents.map((event, index) => (
+                      <div key={index} className="col-4 mb-4">
+                        <div className="container">
+                          <div className="row justify-space-between py-2">
+                            <div className="col-6 mx-auto">
+                              <div className="card shadow-lg mt-4">
+                                <div className="card-body">
+                                  <h4>{event.eventName.toString()}</h4>
+                                  <p>
+                                    Price:{" "}
+                                    {ethers.utils
+                                      .formatEther(event.price)
+                                      .toString()}{" "}
+                                    ETH
+                                  </p>
+                                  <p>
+                                    Available Tickets:&nbsp;
+                                    {event.remTickets.toNumber()}
+                                  </p>
+                                  <p>Location: {event.location.toString()}</p>
+                                  <p>
+                                    Date and Time:{" "}
+                                    {event.date + ", " + formatTime(event.time)}
+                                  </p>
+                                  <div className="buttons">
+                                    <button
+                                      className="icon-move-right main-button color-white"
+                                      onClick={() => handleOpenPopup(index)}
+                                    >
+                                      View Details
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <Popup
+                          isOpen={isPopupOpen && selectedEventIndex === index}
+                          onClose={() => {
+                            setPopupOpen(false);
+                            document.body.classList.remove("popup-open");
+                            setSelectedEventIndex(null);
+                            document.querySelector(".topnav").style.background =
+                              "transparent";
+                          }}
+                          event={filteredEvents}
+                          state={state}
+                          selectedEventIndex={selectedEventIndex}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </>
           ) : (
             <div className="event-blocks">
               {events.length === 0 ? (
