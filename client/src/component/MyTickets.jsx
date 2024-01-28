@@ -6,14 +6,23 @@ import ErrorPage from "./ErrorPage";
 const MyTickets = ({ state }) => {
   const { account, events, isEventOrganizer } = useAppContext();
   const { ticketsContract } = state;
+  const [purchasedTickets, setPurchasedTickets] = useState([]);
   useEffect(() => {
     if (!ticketsContract) {
       return;
     }
     ticketsContract.on("TicketPurchased", async (eventId, ticketsBought) => {
-      console.log(events[eventId.toNumber() - 1]);
+      setPurchasedTickets((prevTickets) => [
+        ...prevTickets,
+        events[eventId.toNumber() - 1],
+      ]);
     });
-  });
+
+    return () => {
+      ticketsContract.removeListener("TicketPurchased");
+    };
+  }, [ticketsContract]);
+
   return (
     <div className="mcontainer ticketcontainer">
       {isEventOrganizer ? (
@@ -37,7 +46,21 @@ const MyTickets = ({ state }) => {
             </div>
           </div>
           <p className="mytickets">My Tickets</p>
-          <div> Other ticket logics goes here.</div>
+
+          <div className="row">
+            {purchasedTickets.map((ticket, index) => (
+              <div key={index} className="col-3 mb-4">
+                <div className="card">
+                  <div className="card-body">
+                    <h5 className="card-title">{ticket.eventName}</h5>
+                    <p className="card-text">
+                      Tickets Bought: {ticket.ticketsBought.toNumber()}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         </>
       )}
     </div>
