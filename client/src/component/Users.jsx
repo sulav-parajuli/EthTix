@@ -5,14 +5,22 @@ import { Triangle } from "react-loader-spinner";
 const Users = ({ state }) => {
   const { ticketsContract } = state;
   const [isLoading, setIsLoading] = useState(true);
-  const { isAdmin, account } = useAppContext();
+  const { isAdmin, accounts } = useAppContext();
+  const [organizers, setOrganizers] = useState([]);
+  // Exclude the first element (accounts[0]) from the users array to remove your own accounts from users state.
+  const users = accounts.slice(1);
 
-  const getOrganizers = async () => {};
-  const getUsers = async () => {};
+  const getOrganizers = async () => {
+    if (!ticketsContract) {
+      return;
+    }
+    const organizer = await ticketsContract.getAllOrganizers();
+    // console.log(organizer);
+    setOrganizers(organizer);
+  };
 
   useEffect(() => {
     try {
-      getUsers();
       if (isAdmin) {
         getOrganizers();
       }
@@ -53,50 +61,56 @@ const Users = ({ state }) => {
         <div style={{ marginRight: "5%", marginLeft: "5%" }}>
           {/* Organizers */}
           {isAdmin ? (
-            <div className="mt-4">
-              <div className="card-header">
-                <h5>Organizers</h5>
-                <hr />
+            <>
+              <div className="mt-4">
+                <div className="card-header">
+                  <h5>Admins</h5>
+                  <hr />
+                </div>
+                <ul className="list-group list-group-flush">
+                  <li className="list-group-item d-flex justify-content-between">
+                    <b>Admins</b>
+                    <span>
+                      <b>Status</b>
+                    </span>
+                  </li>
+                  <li className="list-group-item d-flex justify-content-between">
+                    {accounts[0]}
+                    <span className="text-success">Active</span>
+                  </li>
+                </ul>
               </div>
-              <ul className="list-group list-group-flush">
-                <li className="list-group-item d-flex justify-content-between">
-                  <b>Organizers</b>
-                  <span>
-                    <b>Status</b>
-                  </span>
-                </li>
-                {usersData
-                  .filter((user) => user.status === "Active")
-                  .map((user, index) => (
+              <div className="mt-4">
+                <div className="card-header">
+                  <h5>Organizers</h5>
+                  <hr />
+                </div>
+                <ul className="list-group list-group-flush">
+                  <li className="list-group-item d-flex justify-content-between">
+                    <b>Organizers</b>
+                    <span>
+                      <b>Status</b>
+                    </span>
+                  </li>
+                  {organizers.map((user, index) => (
                     <li
                       key={index}
                       className="list-group-item d-flex justify-content-between"
                     >
-                      {user.name}
-                      {/* Add more information as needed */}
-                      <span className="text-success">Active</span>
-                    </li>
-                  ))}
-                {usersData
-                  .filter((user) => user.status === "Inactive")
-                  .map((user, index) => (
-                    <li
-                      key={index}
-                      className="list-group-item d-flex justify-content-between"
-                    >
-                      {user.name}
+                      {user}
                       {/* Add more information as needed */}
                       <span className="text-danger">Inactive</span>
                     </li>
                   ))}
-              </ul>
-            </div>
+                </ul>
+              </div>
+            </>
           ) : null}
 
           {/* Other Users */}
           <div className="mt-4 mr-5 ml-5">
             <div className="card-header">
-              <h5>Other Users</h5>
+              <h5>Users</h5>
               <hr />
             </div>
             <ul className="list-group list-group-flush">
@@ -106,28 +120,15 @@ const Users = ({ state }) => {
                   <b>Status</b>
                 </span>
               </li>
-              {usersData
-                .filter((user) => user.status === "Active")
-                .map((user, index) => (
-                  <li
-                    key={index}
-                    className="list-group-item d-flex justify-content-between"
-                  >
-                    {user.name}
-                    <span className="text-success">Active</span>
-                  </li>
-                ))}
-              {usersData
-                .filter((user) => user.status === "Inactive")
-                .map((user, index) => (
-                  <li
-                    key={index}
-                    className="list-group-item d-flex justify-content-between"
-                  >
-                    {user.name}
-                    <span className="text-danger">Inactive</span>
-                  </li>
-                ))}
+              {users.map((user, index) => (
+                <li
+                  key={index}
+                  className="list-group-item d-flex justify-content-between"
+                >
+                  {user}
+                  <span className="text-success">Active</span>
+                </li>
+              ))}
             </ul>
           </div>
         </div>

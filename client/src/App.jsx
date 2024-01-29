@@ -45,6 +45,7 @@ function App() {
     ticketsContract: null,
   });
   const [account, setAccount] = useState("Not connected");
+  const [accounts, setAccounts] = useState([]); //accounts[0] will be the current account
   const [showToTopButton, setShowToTopButton] = useState(false);
   //When react app is running this will automatically fetch contract instance
   const template = async (connectWallet) => {
@@ -76,6 +77,7 @@ function App() {
         method: "eth_accounts",
       });
       if (accounts.length !== 0) {
+        setAccounts(accounts); //Add all the accounts to the accounts array
         setAccount(accounts[0]);
         if (connectWallet == true) {
           toast.success("Wallet Connected Successfully!", {
@@ -172,7 +174,12 @@ function App() {
 
   return (
     <BrowserRouter>
-      <AppProvider account={account} template={template} state={state}>
+      <AppProvider
+        account={account}
+        accounts={accounts}
+        template={template}
+        state={state}
+      >
         <div className="App">
           <Navbar state={state} />
           <Routes>
