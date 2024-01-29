@@ -131,7 +131,7 @@ const Admin = ({ state }) => {
 
     // Additional cleanup if needed
     setUserConnected(false); // Set isUserConnected to false when logging out
-    toast.success("disconnecting...", {
+    toast.info("disconnecting...", {
       position: "top-right",
       autoClose: 3000,
       hideProgressBar: false,

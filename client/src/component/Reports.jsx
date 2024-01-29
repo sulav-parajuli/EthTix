@@ -102,7 +102,7 @@ const Reports = ({ state }) => {
           setIsLoading(false); // Set loading to false once reports are fetched
         } else {
           console.error("Contract is not deployed!");
-          toast.error("Contract is not deployed!", {
+          toast.warning("Contract is not deployed!", {
             position: "top-right",
             autoClose: 5000,
             hideProgressBar: false,

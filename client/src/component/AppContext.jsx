@@ -47,7 +47,7 @@ const AppProvider = ({ children, template, account, state }) => {
     try {
       if (!ticketsContract) {
         console.error("Contract not found");
-        toast.error("Contract not found", {
+        toast.warning("Contract not found", {
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
@@ -414,7 +414,7 @@ const AppProvider = ({ children, template, account, state }) => {
     } else {
       localStorage.setItem("isOnline", isOnline);
       if (!isOnline) {
-        toast.error("Internet is not connected.Check your connection.", {
+        toast.info("Internet is not connected.Check your connection.", {
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
