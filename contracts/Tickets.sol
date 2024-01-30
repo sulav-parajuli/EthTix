@@ -32,6 +32,8 @@ contract Tickets{
     address payable public owner;
     //Array to store all organizers
     address[] public allOrganizers;
+    //Array to store Events
+    Event[] public allEvents;
     uint256 eventId;
 
     //Constructor
@@ -92,7 +94,9 @@ contract Tickets{
     creator:payable(msg.sender)
        
     }
+   
     );
+     allEvents.push(events[eventId]);
 }
     //function to check if user is owner
     function isOwner() public view returns(bool){
@@ -101,12 +105,6 @@ contract Tickets{
 
 
     function getAllEvents() public  view returns (Event[] memory) {
-    //creates a new dynamic array of type Event with a length equal to the current value of the eventId variable
-        Event[] memory allEvents = new Event[](eventId);
-
-        for (uint256 i = 0; i < eventId; i++) {
-           allEvents[i] = events[i + 1];
-        }
 
         return allEvents;
     }
