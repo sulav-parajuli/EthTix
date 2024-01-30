@@ -7,7 +7,7 @@ import contractAddresses from "../../../contractAddresses.json";
 
 const AppContext = createContext();
 
-const AppProvider = ({ children, template, account, state }) => {
+const AppProvider = ({ children, template, accounts, account, state }) => {
   const [reload, setReload] = useState(false); // sets to true when user tries to reload the page
   const [isUserConnected, setUserConnected] = useState(false);
   const [reports, setReports] = useState([]); // State to store reports
@@ -47,7 +47,7 @@ const AppProvider = ({ children, template, account, state }) => {
     try {
       if (!ticketsContract) {
         console.error("Contract not found");
-        toast.error("Contract not found", {
+        toast.warning("Contract not found", {
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
@@ -301,7 +301,8 @@ const AppProvider = ({ children, template, account, state }) => {
       for (let i = 0; i < storedCids.length; i++) {
         const ipfsCid = storedCids[i];
         const reportDetails = await retrieveFromIPFS(ipfsCid);
-        fetchedReports.push(reportDetails);
+        const combinedData = { ipfsCid, reportDetails }; // Combine ipfsCid and reportDetails
+        fetchedReports.push(combinedData);
       }
 
       return fetchedReports;
@@ -331,6 +332,7 @@ const AppProvider = ({ children, template, account, state }) => {
     setAdmin,
     formatTime,
     account,
+    accounts,
     reports,
     setReports,
     template,
@@ -413,7 +415,7 @@ const AppProvider = ({ children, template, account, state }) => {
     } else {
       localStorage.setItem("isOnline", isOnline);
       if (!isOnline) {
-        toast.error("Internet is not connected.Check your connection.", {
+        toast.info("Internet is not connected.Check your connection.", {
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,

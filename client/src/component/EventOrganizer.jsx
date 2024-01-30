@@ -43,7 +43,7 @@ const EventOrganizer = ({ state }) => {
         !organizationLocation ||
         !organizationEmail
       ) {
-        toast.error("Please fill all the fields.", {
+        toast.info("Please fill all the fields.", {
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
@@ -62,7 +62,7 @@ const EventOrganizer = ({ state }) => {
       // Check if the address is already registered as an event organizer
       if (!ticketsContract) {
         console.log("Contract not deployed");
-        toast.error(
+        toast.warning(
           "Contract not deployed. Please deploy the contract first.",
           {
             position: "top-right",

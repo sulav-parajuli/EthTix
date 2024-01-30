@@ -28,7 +28,7 @@ const BuyTicket = ({ eventIndex, event, state }) => {
   const handleBuyTicket = async () => {
     try {
       if (isEventOrganizer) {
-        toast.error("You are the event organizer. You cannot buy tickets.");
+        toast.info("You are the event organizer. You cannot buy tickets.");
         return;
       }
       // Check the structure of the event being passed

@@ -212,6 +212,17 @@ img.ticketcounter {
   border-radius: 50%;
 }
 
+.searchforevent {
+  margin-right: 5%;
+  margin-left: 5%;
+}
+
+.searchforeventclose {
+  float: right;
+  position: relative;
+  bottom: 25px;
+}
+
 .search-button img {
   width: 35px;
   cursor: pointer;

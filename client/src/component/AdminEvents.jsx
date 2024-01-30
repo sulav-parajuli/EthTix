@@ -7,15 +7,25 @@ import { Triangle } from "react-loader-spinner";
 //Import fontawesome icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronRight, faClock } from "@fortawesome/free-solid-svg-icons";
+import search from "../assets/images/search symbol.png";
 
 const AdminEvents = ({ state }) => {
-  const { formatTime, events, fetchEvents, handleEventCreated, setEvents } =
-    useAppContext();
+  const {
+    formatTime,
+    events,
+    fetchEvents,
+    handleEventCreated,
+    setEvents,
+    isAdmin,
+  } = useAppContext();
   const { ticketsContract } = state;
   const [isLoading, setIsLoading] = useState(true);
-  // const [events, setEvents] = useState([]);
+  const [isSearch, setSearch] = useState(false); // Implement search
   const [selectedEventIndex, setSelectedEventIndex] = useState(null);
-  // const { ticketsContract } = state;
+  const [selectedFilteredEventIndex, setSelectedFilteredEventIndex] =
+    useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filteredEvents, setFilteredEvents] = useState([]);
   const [EventDetail, setEventDetail] = useState(false);
 
   const handleSelectEvent = (index) => {
@@ -23,8 +33,21 @@ const AdminEvents = ({ state }) => {
     setEventDetail(true);
   };
 
+  const handleFilteredEvent = (index) => {
+    setSelectedFilteredEventIndex(index);
+    setEventDetail(true);
+  };
+
   const handleGoBack = () => {
     setEventDetail(false);
+  };
+
+  const handleSearchButton = () => {
+    setSearch(true);
+    const filterEvents = events.filter((event) =>
+      event.eventName.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    setFilteredEvents(filterEvents);
   };
 
   useEffect(() => {
@@ -97,53 +120,109 @@ const AdminEvents = ({ state }) => {
             <p>
               Event Name:{" "}
               <span style={{ color: "#008eb0" }}>
-                {events[selectedEventIndex].eventName.toString()}
+                {isSearch
+                  ? filteredEvents[
+                      selectedFilteredEventIndex
+                    ].eventName.toString()
+                  : events[selectedEventIndex].eventName.toString()}
               </span>
             </p>
-            <p>Creator: {events[selectedEventIndex].creator}</p>
+            <p>
+              Creator:{" "}
+              {isSearch
+                ? filteredEvents[selectedFilteredEventIndex].creator
+                : events[selectedEventIndex].creator}
+            </p>
             <p>
               Price:{" "}
-              {ethers.utils
-                .formatEther(events[selectedEventIndex].price)
-                .toString()}{" "}
+              {isSearch
+                ? ethers.utils
+                    .formatEther(
+                      filteredEvents[selectedFilteredEventIndex].price
+                    )
+                    .toString()
+                : ethers.utils
+                    .formatEther(events[selectedEventIndex].price)
+                    .toString()}{" "}
               ETH
             </p>
-            <p>Location: {events[selectedEventIndex].location.toString()}</p>
             <p>
-              Date:{" "}
-              {events[selectedEventIndex].date +
-                ", " +
-                formatTime(events[selectedEventIndex].time)}
+              Location:{" "}
+              {isSearch
+                ? filteredEvents[selectedFilteredEventIndex].location.toString()
+                : events[selectedEventIndex].location.toString()}
             </p>
-            <p>Date of Creation: {events[selectedEventIndex].date}</p>
+            <p>
+              Event Date:{" "}
+              {isSearch
+                ? filteredEvents[selectedFilteredEventIndex].date +
+                  ", " +
+                  formatTime(filteredEvents[selectedFilteredEventIndex].time)
+                : events[selectedEventIndex].date +
+                  ", " +
+                  formatTime(events[selectedEventIndex].time)}
+            </p>
             <p>
               Total Tickets:{" "}
-              {events[selectedEventIndex].totalTickets.toNumber()}
+              {isSearch
+                ? filteredEvents[
+                    selectedFilteredEventIndex
+                  ].totalTickets.toNumber()
+                : events[selectedEventIndex].totalTickets.toNumber()}
             </p>
             <p>
               Ticket Sold out:{" "}
-              {events[selectedEventIndex].totalTickets.toNumber() -
-                events[selectedEventIndex].remTickets.toNumber()}
+              {isSearch
+                ? filteredEvents[
+                    selectedFilteredEventIndex
+                  ].totalTickets.toNumber() -
+                  filteredEvents[
+                    selectedFilteredEventIndex
+                  ].remTickets.toNumber()
+                : events[selectedEventIndex].totalTickets.toNumber() -
+                  events[selectedEventIndex].remTickets.toNumber()}
             </p>
             <p>
               Remaining Tickets:{" "}
-              {events[selectedEventIndex].remTickets.toNumber()}
+              {isSearch
+                ? filteredEvents[
+                    selectedFilteredEventIndex
+                  ].remTickets.toNumber()
+                : events[selectedEventIndex].remTickets.toNumber()}
             </p>
             <p>
               Revenue:{" "}
-              {ethers.utils
-                .formatEther(
-                  events[selectedEventIndex].price *
-                    (events[selectedEventIndex].totalTickets.toNumber() -
-                      events[selectedEventIndex].remTickets.toNumber())
-                )
-                .toString()}{" "}
+              {isSearch
+                ? ethers.utils
+                    .formatEther(
+                      filteredEvents[selectedFilteredEventIndex].price.mul(
+                        filteredEvents[
+                          selectedFilteredEventIndex
+                        ].totalTickets.toNumber() -
+                          filteredEvents[
+                            selectedFilteredEventIndex
+                          ].remTickets.toNumber()
+                      )
+                    )
+                    .toString()
+                : ethers.utils
+                    .formatEther(
+                      events[selectedEventIndex].price.mul(
+                        events[selectedEventIndex].totalTickets.toNumber() -
+                          events[selectedEventIndex].remTickets.toNumber()
+                      )
+                    )
+                    .toString()}{" "}
               ETH
             </p>
-            <p>
-              Total fund received during event creation:{" "}
-              {events[selectedEventIndex].date}
-            </p>
+            {isAdmin ? (
+              <p>
+                Total fund received during event creation:{" "}
+                {isSearch
+                  ? filteredEvents[selectedFilteredEventIndex].date
+                  : events[selectedEventIndex].date}
+              </p>
+            ) : null}
             <div className="buttons" style={{ padding: "0px" }}>
               <button
                 className="main-button color-white"
@@ -162,55 +241,157 @@ const AdminEvents = ({ state }) => {
         </div>
       ) : (
         <>
-          <div className="event-blocks">
-            {events.length === 0 ? (
-              <p>Events not available....</p>
-            ) : (
-              <div className="row">
-                {events.map((event, index) => (
-                  <div
-                    key={index}
-                    className="col-12 mb-4 card"
-                    style={{ padding: "0px" }}
-                  >
-                    <div
-                      className="insection card-body"
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                      }}
-                      onClick={() => handleSelectEvent(index)}
+          <div>
+            {isSearch && (
+              <div
+                className="searchforevent alert alert-success alert-dismissible fade show"
+                role="alert"
+              >
+                <p className="mb-0">{`Searched Events for: ${searchQuery}`}</p>
+                <div
+                  type="button"
+                  className="searchforeventclose"
+                  data-dismiss="alert"
+                  aria-label="Close"
+                  onClick={() => setSearch(false)}
+                >
+                  <span style={{ width: "1.5em", height: "1.5em" }}>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      width="24"
+                      height="24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
                     >
-                      <div>
-                        <h4 style={{ margin: "0px" }}>
-                          {event.eventName.toString()}{" "}
-                        </h4>
-                        <div className="d-flex align-items-center">
-                          <FontAwesomeIcon
-                            icon={faClock}
-                            className="mr-2"
-                            style={{ fontSize: "70%" }}
-                          />
-                          &nbsp;
-                          <p
-                            className="text-muted mb-0"
-                            style={{ fontSize: "70%" }}
-                          >
-                            {formatTime(event.creationTime)}
-                          </p>
-                        </div>
-                      </div>
-                      <FontAwesomeIcon
-                        icon={faChevronRight}
-                        onClick={() => handleSelectEvent(index)}
-                        style={{ alignSelf: "center" }}
-                      />
-                    </div>
-                  </div>
-                ))}
+                      <line x1="18" y1="6" x2="6" y2="18"></line>
+                      <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                  </span>
+                </div>
               </div>
             )}
+            <div className="adminsearchcontainer">
+              <input
+                type="text"
+                placeholder="Search events"
+                className="search-input"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              <button className="search-button" onClick={handleSearchButton}>
+                <img src={search} alt="Search" />
+              </button>
+            </div>
           </div>
+          {isSearch ? (
+            <>
+              <div className="event-blocks">
+                {filteredEvents.length === 0 ? (
+                  <p>Searched Events not available....</p>
+                ) : (
+                  <div className="row">
+                    {filteredEvents.map((event, index) => (
+                      <div
+                        key={index}
+                        className="col-12 mb-4 card"
+                        style={{ padding: "0px" }}
+                      >
+                        <div
+                          className="insection card-body"
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                          }}
+                          onClick={() => handleFilteredEvent(index)}
+                        >
+                          <div>
+                            <h4 style={{ margin: "0px" }}>
+                              {event.eventName.toString()}{" "}
+                            </h4>
+                            <div className="d-flex align-items-center">
+                              <FontAwesomeIcon
+                                icon={faClock}
+                                className="mr-2"
+                                style={{ fontSize: "70%" }}
+                              />
+                              &nbsp;
+                              <p
+                                className="text-muted mb-0"
+                                style={{ fontSize: "70%" }}
+                              >
+                                {" "}
+                                {event.date + ", " + formatTime(event.time)}
+                              </p>
+                            </div>
+                          </div>
+                          <FontAwesomeIcon
+                            icon={faChevronRight}
+                            onClick={() => handleFilteredEvent(index)}
+                            style={{ alignSelf: "center" }}
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </>
+          ) : (
+            <div className="event-blocks">
+              {events.length === 0 ? (
+                <p>Events not available....</p>
+              ) : (
+                <div className="row">
+                  {events.map((event, index) => (
+                    <div
+                      key={index}
+                      className="col-12 mb-4 card"
+                      style={{ padding: "0px" }}
+                    >
+                      <div
+                        className="insection card-body"
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                        }}
+                        onClick={() => handleSelectEvent(index)}
+                      >
+                        <div>
+                          <h4 style={{ margin: "0px" }}>
+                            {event.eventName.toString()}{" "}
+                          </h4>
+                          <div className="d-flex align-items-center">
+                            <FontAwesomeIcon
+                              icon={faClock}
+                              className="mr-2"
+                              style={{ fontSize: "70%" }}
+                            />
+                            &nbsp;
+                            <p
+                              className="text-muted mb-0"
+                              style={{ fontSize: "70%" }}
+                            >
+                              {" "}
+                              {event.date + ", " + formatTime(event.time)}
+                            </p>
+                          </div>
+                        </div>
+                        <FontAwesomeIcon
+                          icon={faChevronRight}
+                          onClick={() => handleSelectEvent(index)}
+                          style={{ alignSelf: "center" }}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
         </>
       )}
     </div>

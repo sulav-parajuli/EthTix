@@ -190,7 +190,7 @@ const CreateEvent = ({ state }) => {
       if (!ticketsContract) {
         // alert("ticketsContract is not deployed");
         console.error("ticketsContract is not deployed");
-        toast.error("ticketsContract is not deployed", {
+        toast.warning("Contract is not deployed", {
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,

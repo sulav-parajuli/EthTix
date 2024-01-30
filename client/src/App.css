@@ -357,14 +357,3 @@ button.btn.btn-danger {
   background-color: #c1292e;
   border-radius: 50%;
 }
-
-.searchforevent {
-  margin-right: 5%;
-  margin-left: 5%;
-}
-
-.searchforeventclose {
-  float: right;
-  position: relative;
-  bottom: 25px;
-}

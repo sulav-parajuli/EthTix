@@ -30,6 +30,8 @@ contract Tickets{
     mapping(address=>bool) public organizers;
     //State variables
     address payable public owner;
+    //Array to store all organizers
+    address[] public allOrganizers;
     uint256 eventId;
 
     //Constructor
@@ -47,6 +49,7 @@ contract Tickets{
     require(bytes(_CID).length>0,"CID cannot be empty");
     organizerCID[msg.sender]=_CID; 
     organizers[msg.sender]=true;
+    allOrganizers.push(msg.sender);
     emit OrganizerRegistered(msg.sender,_CID,block.timestamp);
    }
 
@@ -106,6 +109,12 @@ contract Tickets{
         }
 
         return allEvents;
+    }
+
+    // Function to get all organizers
+    function getAllOrganizers() public view returns (address[] memory) {
+        require(isOwner(), "Only owner can view all organizers");
+        return allOrganizers;
     }
 
 
