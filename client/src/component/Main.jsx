@@ -8,14 +8,15 @@ import EventOrganizer from "./EventOrganizer";
 import { useAppContext } from "./AppContext";
 
 const Popup = ({ isOpen, onClose, state }) => {
-  const { isUserConnected, isEventOrganizer } = useAppContext();
+  const { isUserConnected, isEventOrganizer, isAdmin } = useAppContext();
   return isOpen ? (
     <div className="popup">
       <div className="popup-inner">
         <button className="close" onClick={onClose}>
           Close
         </button>
-        {isUserConnected && !isEventOrganizer ? (
+        {(isUserConnected && !isEventOrganizer) ||
+        (isUserConnected && isAdmin) ? (
           <EventOrganizer state={state} />
         ) : (
           <div className="container mt-5">
@@ -31,7 +32,7 @@ const Main = ({ state }) => {
   const [showMoreInfo, setShowMoreInfo] = useState(false);
   const [isPopupOpen, setPopupOpen] = useState(false);
   const navigate = useNavigate(); //to redirect to another page
-  const { isUserConnected, isEventOrganizer } = useAppContext();
+  const { isUserConnected, isEventOrganizer, isAdmin } = useAppContext();
 
   const handleOpenPopup = () => {
     setPopupOpen(true);
@@ -48,7 +49,7 @@ const Main = ({ state }) => {
   };
 
   const handleUser = () => {
-    if (isUserConnected && isEventOrganizer) {
+    if (isUserConnected && isEventOrganizer && !isAdmin) {
       document.body.classList.remove("popup-open"); // Allow scrolling
       navigate("/dashboard");
     } else {

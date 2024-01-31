@@ -19,6 +19,7 @@ const CreateEvent = ({ state }) => {
   const {
     isUserConnected,
     isEventOrganizer,
+    isAdmin,
     createNotification,
     savetransactionHashToLocalStorage,
   } = useAppContext();
@@ -275,7 +276,7 @@ const CreateEvent = ({ state }) => {
 
   return (
     <>
-      {isUserConnected && isEventOrganizer ? (
+      {isUserConnected && isEventOrganizer && !isAdmin ? (
         <div className="createevent">
           {isLoading ? (
             <Triangle

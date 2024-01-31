@@ -13,6 +13,7 @@ const EventOrganizer = ({ state }) => {
     account,
     createNotification,
     savetransactionHashToLocalStorage,
+    isAdmin,
   } = useAppContext();
   const [name, setName] = useState("");
   const [organizationName, setOrganizationName] = useState("");
@@ -26,6 +27,11 @@ const EventOrganizer = ({ state }) => {
   //console.log(state);
   const buttonPressed = () => {
     setNextpage(true);
+  };
+
+  const opendashboard = () => {
+    document.body.classList.remove("popup-open"); // Allow scrolling
+    navigate("/dashboard");
   };
 
   const handleEventOrganizer = async (event) => {
@@ -150,8 +156,7 @@ const EventOrganizer = ({ state }) => {
       createNotification(newToastMessage);
       //You might require local storage or session storage. It helps to set cookies.
       // localStorage.setItem("isEventOrganizer", isEventOrganizer);
-      document.body.classList.remove("popup-open"); // Allow scrolling
-      navigate("/dashboard");
+      opendashboard();
       // }
       // }
     } catch (error) {
@@ -197,89 +202,121 @@ const EventOrganizer = ({ state }) => {
         <div className="row">
           <div className="col-md-8 offset-md-2">
             {nextpage ? (
-              <div>
-                <h2 className="text-center mb-4">
-                  Enter your organization details.
-                </h2>
-                <form>
-                  <div className="mb-3">
-                    <input
-                      type="text"
-                      placeholder="Enter your Name*"
-                      className="form-control"
-                      id="name"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                    />
+              <>
+                {isAdmin ? (
+                  <>
+                    <h2 className="text-center mb-4">You are the Admin.</h2>
+                    <div className="text-justify">
+                      <p>
+                        As per our privacy policy, Admins cannot create events.
+                        If you are an event organizer and wish to create events,
+                        please proceed with a different account and register as
+                        an event organizer to unlock event creation privileges.
+                      </p>
+                      {/* Add more disclaimer content as needed */}
+                    </div>
+                    <div className="text-center mt-4">
+                      <button
+                        className="sub-button"
+                        onClick={() => {
+                          setNextpage(false);
+                        }}
+                      >
+                        Back
+                      </button>
+                      <button className="sub-button" onClick={opendashboard}>
+                        Open Dashboard
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  <div>
+                    <h2 className="text-center mb-4">
+                      Enter your organization details.
+                    </h2>
+                    <form>
+                      <div className="mb-3">
+                        <input
+                          type="text"
+                          placeholder="Enter your Name*"
+                          className="form-control"
+                          id="name"
+                          value={name}
+                          onChange={(e) => setName(e.target.value)}
+                        />
+                      </div>
+                      <div className="mb-3">
+                        <input
+                          type="text"
+                          placeholder="Enter your organization name*"
+                          className="form-control"
+                          id="organizationname"
+                          value={organizationName}
+                          onChange={(e) => setOrganizationName(e.target.value)}
+                        />
+                      </div>
+                      <div className="mb-3">
+                        <input
+                          type="text"
+                          placeholder="Type of organization*"
+                          className="form-control"
+                          id="organizationname"
+                          value={organizationType}
+                          onChange={(e) => setOrganizationType(e.target.value)}
+                        />
+                      </div>
+                      <div className="mb-3">
+                        <input
+                          type="text"
+                          placeholder="Organization location*"
+                          className="form-control"
+                          id="organization location"
+                          value={organizationLocation}
+                          onChange={(e) =>
+                            setOrganizationLocation(e.target.value)
+                          }
+                        />
+                      </div>
+                      <div className="mb-3">
+                        <input
+                          type="text"
+                          placeholder="Organization email*"
+                          className="form-control"
+                          id="organization email"
+                          value={organizationEmail}
+                          onChange={(e) => setOrganizationEmail(e.target.value)}
+                        />
+                      </div>
+                      <div className="form-check">
+                        <input
+                          className="form-check-input"
+                          type="checkbox"
+                          value={agreetermsconditions}
+                          id="flexCheckDefault"
+                          onChange={(e) =>
+                            setagreetermsconditions(e.target.checked)
+                          }
+                        />
+                        <label
+                          className="form-check-label"
+                          htmlFor="flexCheckDefault"
+                        >
+                          I agree to the terms and conditions
+                          <span className="required">*</span>
+                        </label>
+                      </div>
+                      <button
+                        type="submit"
+                        className="btn btn-danger"
+                        onClick={handleEventOrganizer}
+                        disabled={!agreetermsconditions}
+                      >
+                        Submit
+                      </button>
+                    </form>
                   </div>
-                  <div className="mb-3">
-                    <input
-                      type="text"
-                      placeholder="Enter your organization name*"
-                      className="form-control"
-                      id="organizationname"
-                      value={organizationName}
-                      onChange={(e) => setOrganizationName(e.target.value)}
-                    />
-                  </div>
-                  <div className="mb-3">
-                    <input
-                      type="text"
-                      placeholder="Type of organization*"
-                      className="form-control"
-                      id="organizationname"
-                      value={organizationType}
-                      onChange={(e) => setOrganizationType(e.target.value)}
-                    />
-                  </div>
-                  <div className="mb-3">
-                    <input
-                      type="text"
-                      placeholder="Organization location*"
-                      className="form-control"
-                      id="organization location"
-                      value={organizationLocation}
-                      onChange={(e) => setOrganizationLocation(e.target.value)}
-                    />
-                  </div>
-                  <div className="mb-3">
-                    <input
-                      type="text"
-                      placeholder="Organization email*"
-                      className="form-control"
-                      id="organization email"
-                      value={organizationEmail}
-                      onChange={(e) => setOrganizationEmail(e.target.value)}
-                    />
-                  </div>
-                  <div className="form-check">
-                    <input
-                      className="form-check-input"
-                      type="checkbox"
-                      value={agreetermsconditions}
-                      id="flexCheckDefault"
-                      onChange={(e) =>
-                        setagreetermsconditions(e.target.checked)
-                      }
-                    />
-                    <label
-                      className="form-check-label"
-                      htmlFor="flexCheckDefault"
-                    >
-                      I agree to the terms and conditions
-                      <span className="required">*</span>
-                    </label>
-                  </div>
-                  <button
-                    type="submit"
-                    className="btn btn-danger"
-                    onClick={handleEventOrganizer}
-                    disabled={!agreetermsconditions}
-                  >
-                    Submit
-                  </button>
-                </form>
-              </div>
+                )}
+              </>
             ) : (
               <>
                 <h2 className="text-center mb-4">

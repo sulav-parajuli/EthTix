@@ -241,7 +241,7 @@ const Admin = ({ state }) => {
                   </a>
                 </li>
 
-                {isEventOrganizer && isUserConnected ? (
+                {isEventOrganizer && isUserConnected && !isAdmin ? (
                   <li className="nav-item">
                     <a
                       className={`nav-link text-white ${
