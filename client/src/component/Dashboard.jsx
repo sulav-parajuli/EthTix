@@ -2,17 +2,58 @@ import React, { useState, useEffect, useRef } from "react";
 import { useAppContext } from "./AppContext";
 import { Triangle } from "react-loader-spinner";
 import { Chart } from "chart.js/auto";
+//Import fontawesome icons
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faClock, faTicket } from "@fortawesome/free-solid-svg-icons";
 
 const Dashboard = ({ state }) => {
   const { ticketsContract } = state;
   const [isLoading, setIsLoading] = useState(true);
   const chartRef = useRef(null);
+  const [eventCreated, setEventCreated] = useState(0);
+  const [organizerRegistered, setOrganizerRegistered] = useState(0);
+  const [ticketSold, setTicketSold] = useState(0);
+  const [totalTickets, setTotalTickets] = useState(0);
+  const [pendingTickets, setPendingTickets] = useState(0);
+  const { events, setEvents, fetchEvents, isAdmin, formatTime } =
+    useAppContext();
 
-  // Placeholder data for statistics
-  const eventCreated = 50;
-  const userRegistered = 200;
-  const ticketSold = 100;
-  const totalTickets = 500;
+  const getOrganizers = async () => {
+    if (!ticketsContract) {
+      return;
+    }
+    const organizer = await ticketsContract.getAllOrganizers();
+    // console.log(organizer);
+    setOrganizerRegistered(organizer.length); // Update organizerRegistered with the length of organizer
+  };
+
+  useEffect(() => {
+    try {
+      if (isAdmin) {
+        getOrganizers();
+      }
+      // Fetch initial events
+      fetchEvents().then((initialEvents) => {
+        setEvents(initialEvents);
+        setEventCreated(initialEvents.length); // Update eventCreated with the length of initialEvents
+
+        // Calculate ticketSold, pendingTickets and totalTickets
+        let rem = 0;
+        let total = 0;
+        initialEvents.forEach((event) => {
+          rem += event.remTickets.toNumber();
+          total += event.totalTickets.toNumber();
+        });
+        setTicketSold(total - rem);
+        setPendingTickets(rem);
+        setTotalTickets(total);
+      });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [ticketsContract]);
 
   useEffect(() => {
     // Ensure that the chartRef.current is available before attempting to getContext
@@ -45,16 +86,7 @@ const Dashboard = ({ state }) => {
         },
       });
     }
-  }, []);
-
-  useEffect(() => {
-    // Simulate loading delay
-    const timeout = setTimeout(() => {
-      setIsLoading(false);
-    }, 2000);
-
-    return () => clearTimeout(timeout);
-  }, []);
+  }, [chartRef]);
 
   return (
     <>
@@ -85,14 +117,25 @@ const Dashboard = ({ state }) => {
                 </div>
               </div>
             </div>
-            <div className="col-md-3">
-              <div className="card">
-                <div className="card-body">
-                  <h5 className="card-title">{userRegistered}</h5>
-                  <p className="card-text">User Registered</p>
+            {isAdmin ? (
+              <div className="col-md-3">
+                <div className="card">
+                  <div className="card-body">
+                    <h5 className="card-title">{organizerRegistered}</h5>
+                    <p className="card-text">Organizer Registered</p>
+                  </div>
                 </div>
               </div>
-            </div>
+            ) : (
+              <div className="col-md-3">
+                <div className="card">
+                  <div className="card-body">
+                    <h5 className="card-title">{pendingTickets}</h5>
+                    <p className="card-text">Pending Tickets</p>
+                  </div>
+                </div>
+              </div>
+            )}
             <div className="col-md-3">
               <div className="card">
                 <div className="card-body">
@@ -130,19 +173,78 @@ const Dashboard = ({ state }) => {
             </div>
             <div className="col-md-4">
               {/* Placeholder for Events List */}
-              <div className="card">
-                <div className="card-body">
-                  <h5 className="card-title">Events List</h5>
-                  {/* Add your events list component here */}
-                </div>
+              <h5 className="card-title">Events List</h5>
+              <div className="event-blocks">
+                {events.length === 0 ? (
+                  <p>Events not available....</p>
+                ) : (
+                  <div className="row">
+                    {events.map((event, index) => (
+                      <div
+                        key={index}
+                        className="col-12 mb-4 card"
+                        style={{ padding: "0px" }}
+                      >
+                        <div
+                          className="insection card-body"
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                          }}
+                        >
+                          <div>
+                            <h4 style={{ margin: "0px" }}>
+                              {event.eventName.toString()}{" "}
+                            </h4>
+                            <div className="d-flex align-items-center">
+                              <>
+                                <FontAwesomeIcon
+                                  icon={faClock}
+                                  className="mr-2"
+                                  style={{ fontSize: "70%" }}
+                                />
+                                &nbsp;
+                                <p
+                                  className="text-muted mb-0"
+                                  style={{ fontSize: "70%" }}
+                                >
+                                  {" "}
+                                  {event.date + ", " + formatTime(event.time)}
+                                </p>
+                              </>
+                              <div style={{ marginRight: "20px" }}></div>
+                              <>
+                                <FontAwesomeIcon
+                                  icon={faTicket}
+                                  className="mr-2"
+                                  style={{
+                                    fontSize: "70%",
+                                    marginLeft: "30px",
+                                  }}
+                                />
+                                &nbsp;
+                                <p
+                                  className="text-muted mb-0"
+                                  style={{
+                                    fontSize: "70%",
+                                    // marginLeft: "20px",
+                                  }}
+                                >
+                                  {" "}
+                                  Ticket Sold:{" "}
+                                  {event.totalTickets.toNumber() -
+                                    event.remTickets.toNumber()}
+                                </p>
+                              </>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
-              {/* Placeholder for Ticket Sold Data */}
-              <div className="card mt-4">
-                <div className="card-body">
-                  <h5 className="card-title">Ticket Sold Data</h5>
-                  {/* Add your ticket sold data component here */}
-                </div>
-              </div>
+              {/* Add your events list component here */}
             </div>
           </div>
 
