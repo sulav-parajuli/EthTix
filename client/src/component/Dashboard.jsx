@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useAppContext } from "./AppContext";
 import { Triangle } from "react-loader-spinner";
-import { Chart } from "chart.js/auto";
+
 //Import fontawesome icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClock, faTicket } from "@fortawesome/free-solid-svg-icons";
@@ -9,11 +9,12 @@ import { faClock, faTicket } from "@fortawesome/free-solid-svg-icons";
 const Dashboard = ({ state }) => {
   const { ticketsContract } = state;
   const [isLoading, setIsLoading] = useState(true);
-  const chartRef = useRef(null);
   const [eventCreated, setEventCreated] = useState(0);
   const [organizerRegistered, setOrganizerRegistered] = useState(0);
   const [ticketSold, setTicketSold] = useState(0);
   const [totalTickets, setTotalTickets] = useState(0);
+  const [currencyFrom, setCurrencyFrom] = useState("");
+  const [currencyTo, setCurrencyTo] = useState("");
   const [pendingTickets, setPendingTickets] = useState(0);
   const { events, setEvents, fetchEvents, isAdmin, formatTime } =
     useAppContext();
@@ -55,38 +56,37 @@ const Dashboard = ({ state }) => {
     }
   }, [ticketsContract]);
 
-  useEffect(() => {
-    // Ensure that the chartRef.current is available before attempting to getContext
-    if (chartRef.current) {
-      const ctx = chartRef.current.getContext("2d");
-      new Chart(ctx, {
-        type: "line",
-        data: {
-          labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
-          datasets: [
-            {
-              label: "Ticket Sales",
-              data: [12, 19, 3, 5, 2, 3],
-              borderColor: "rgba(75, 192, 192, 1)",
-              borderWidth: 2,
-              fill: false,
-            },
-          ],
-        },
-        options: {
-          scales: {
-            x: {
-              type: "linear",
-              position: "bottom",
-            },
-            y: {
-              min: 0,
-            },
-          },
-        },
-      });
+  //Currency Converter
+  const handleConversion = () => {
+    // Ensure required values are set
+    if (!currencyFrom || !currencyTo) return;
+
+    // Include api for currency change
+    fetch(`https://api.exchangerate-api.com/v4/latest/${currencyFrom}`)
+      .then((response) => response.json())
+      .then((data) => {
+        const fromRate = data.rates[currencyFrom];
+        const toRate = data.rates[currencyTo];
+        const inputValue = parseFloat(
+          document.getElementById("fromAmount").value
+        );
+        const convertedValue = ((toRate / fromRate) * inputValue).toFixed(2);
+        setFinalValue(convertedValue);
+      })
+      .catch((error) => console.error("Error:", error));
+  };
+
+  const setFinalValue = (value) => {
+    const finalValueElement = document.querySelector(".finalValue");
+    if (finalValueElement) {
+      finalValueElement.textContent = "Converted Value: " + value;
     }
-  }, [chartRef]);
+  };
+  // When user click on reset button
+  // function clearVal() {
+  // 	window.location.reload();
+  // 	document.getElementsByClassName("finalValue").innerHTML = "";
+  // };
 
   return (
     <>
@@ -103,7 +103,7 @@ const Dashboard = ({ state }) => {
             alignItems: "center",
             height: "100vh",
           }}
-          wrapperClass=""
+          wrapperClassNclassName=""
         />
       ) : (
         <>
@@ -154,20 +154,164 @@ const Dashboard = ({ state }) => {
             </div>
           </div>
 
-          {/* Analytics Section */}
+          {/* Converter Section */}
           <div className="row mt-4">
             <div className="col-md-8">
-              {/* Placeholder for Analytics Carousel */}
+              {/* Placeholder for Price Converter */}
               <div className="card">
                 <div className="card-body">
-                  <h5 className="card-title">Analytics</h5>
-                  <canvas
-                    id="ticketSalesChart"
-                    width="400"
-                    height="200"
-                    ref={chartRef}
-                  ></canvas>
-                  {/* Add your carousel component here */}
+                  <h5 className="card-title">Currency Converter</h5>
+                  {/* <div className="form-row align-items-center"> */}
+                  <div className="col-auto">
+                    <input
+                      type="number"
+                      className="form-control mb-2"
+                      id="fromAmount"
+                      placeholder="Enter amount to convert"
+                    />
+                  </div>
+                  <div className="row">
+                    <div className="col-sm-6">
+                      <div className="input-group mb-3">
+                        <div className="input-group-prepend">
+                          <span className="input-group-text">From</span>
+                        </div>
+                        <select
+                          className="form-control from"
+                          id="sel1"
+                          onChange={(e) => setCurrencyFrom(e.target.value)}
+                        >
+                          <option value="">Select One</option>
+                          <option value="USD">USD</option>
+                          <option value="AED">AED</option>
+                          <option value="ARS">ARS</option>
+                          <option value="AUD">AUD</option>
+                          <option value="BGN">BGN</option>
+                          <option value="BRL">BRL</option>
+                          <option value="BSD">BSD</option>
+                          <option value="CAD">CAD</option>
+                          <option value="CHF">CHF</option>
+                          <option value="CLP">CLP</option>
+                          <option value="CNY">CNY</option>
+                          <option value="COP">COP</option>
+                          <option value="CZK">CZK</option>
+                          <option value="DKK">DKK</option>
+                          <option value="DOP">DOP</option>
+                          <option value="EGP">EGP</option>
+                          <option value="EUR">EUR</option>
+                          <option value="FJD">FJD</option>
+                          <option value="GBP">GBP</option>
+                          <option value="GTQ">GTQ</option>
+                          <option value="HKD">HKD</option>
+                          <option value="HRK">HRK</option>
+                          <option value="HUF">HUF</option>
+                          <option value="IDR">IDR</option>
+                          <option value="ILS">ILS</option>
+                          <option value="INR">INR</option>
+                          <option value="ISK">ISK</option>
+                          <option value="JPY">JPY</option>
+                          <option value="KRW">KRW</option>
+                          <option value="KZT">KZT</option>
+                          <option value="MVR">MVR</option>
+                          <option value="MXN">MXN</option>
+                          <option value="MYR">MYR</option>
+                          <option value="NOK">NOK</option>
+                          <option value="NZD">NZD</option>
+                          <option value="PAB">PAB</option>
+                          <option value="PEN">PEN</option>
+                          <option value="PHP">PHP</option>
+                          <option value="PKR">PKR</option>
+                          <option value="PLN">PLN</option>
+                          <option value="PYG">PYG</option>
+                          <option value="RON">RON</option>
+                          <option value="RUB">RUB</option>
+                          <option value="SAR">SAR</option>
+                          <option value="SEK">SEK</option>
+                          <option value="SGD">SGD</option>
+                          <option value="THB">THB</option>
+                          <option value="TRY">TRY</option>
+                          <option value="TWD">TWD</option>
+                          <option value="UAH">UAH</option>
+                          <option value="UYU">UYU</option>
+                          <option value="ZAR">ZAR</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div className="col-sm-6">
+                      <div className="input-group mb-3">
+                        <div className="input-group-prepend">
+                          <span className="input-group-text">To</span>
+                        </div>
+                        <select
+                          className="form-control to"
+                          id="sel2"
+                          onChange={(e) => setCurrencyTo(e.target.value)}
+                        >
+                          <option value="">Select One</option>
+                          <option value="USD">USD</option>
+                          <option value="AED">AED</option>
+                          <option value="ARS">ARS</option>
+                          <option value="AUD">AUD</option>
+                          <option value="BGN">BGN</option>
+                          <option value="BRL">BRL</option>
+                          <option value="BSD">BSD</option>
+                          <option value="CAD">CAD</option>
+                          <option value="CHF">CHF</option>
+                          <option value="CLP">CLP</option>
+                          <option value="CNY">CNY</option>
+                          <option value="COP">COP</option>
+                          <option value="CZK">CZK</option>
+                          <option value="DKK">DKK</option>
+                          <option value="DOP">DOP</option>
+                          <option value="EGP">EGP</option>
+                          <option value="EUR">EUR</option>
+                          <option value="FJD">FJD</option>
+                          <option value="GBP">GBP</option>
+                          <option value="GTQ">GTQ</option>
+                          <option value="HKD">HKD</option>
+                          <option value="HRK">HRK</option>
+                          <option value="HUF">HUF</option>
+                          <option value="IDR">IDR</option>
+                          <option value="ILS">ILS</option>
+                          <option value="INR">INR</option>
+                          <option value="ISK">ISK</option>
+                          <option value="JPY">JPY</option>
+                          <option value="KRW">KRW</option>
+                          <option value="KZT">KZT</option>
+                          <option value="MVR">MVR</option>
+                          <option value="MXN">MXN</option>
+                          <option value="MYR">MYR</option>
+                          <option value="NOK">NOK</option>
+                          <option value="NZD">NZD</option>
+                          <option value="PAB">PAB</option>
+                          <option value="PEN">PEN</option>
+                          <option value="PHP">PHP</option>
+                          <option value="PKR">PKR</option>
+                          <option value="PLN">PLN</option>
+                          <option value="PYG">PYG</option>
+                          <option value="RON">RON</option>
+                          <option value="RUB">RUB</option>
+                          <option value="SAR">SAR</option>
+                          <option value="SEK">SEK</option>
+                          <option value="SGD">SGD</option>
+                          <option value="THB">THB</option>
+                          <option value="TRY">TRY</option>
+                          <option value="TWD">TWD</option>
+                          <option value="UAH">UAH</option>
+                          <option value="UYU">UYU</option>
+                          <option value="ZAR">ZAR</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col-auto">
+                    <button className="main-button" onClick={handleConversion}>
+                      Convert
+                    </button>
+                  </div>
+                  {/* </div> */}
+                  <p className="finalValue"> </p>
                 </div>
               </div>
             </div>
@@ -245,19 +389,6 @@ const Dashboard = ({ state }) => {
                 )}
               </div>
               {/* Add your events list component here */}
-            </div>
-          </div>
-
-          {/* Currency Converter Section */}
-          <div className="row mt-4">
-            <div className="col-md-6">
-              {/* Placeholder for Currency Converter */}
-              <div className="card">
-                <div className="card-body">
-                  <h5 className="card-title">Currency Converter</h5>
-                  {/* Add your currency converter component here */}
-                </div>
-              </div>
             </div>
           </div>
         </>
