@@ -59,27 +59,38 @@ const Dashboard = ({ state }) => {
   //Currency Converter
   const handleConversion = () => {
     // Ensure required values are set
-    if (!currencyFrom || !currencyTo) return;
+    if (!currencyFrom || !currencyTo) {
+      document.querySelector(
+        ".finalValue"
+      ).textContent = `Please select both currency fields "From" and "To"`;
+    } else {
+      const apiKey = "CBJWw1G1zzeKtZXrzjb01HdvVwFNJCak";
+      const apiUrl = `https://api.apilayer.com/fixer/latest?symbols=${currencyTo}&base=${currencyFrom}&apikey=${apiKey}`; //fixer api
+      // const apiUrl =`https://free.currconv.com/api/v7/convert?q=${currencyFrom}_${currencyTo}&compact=ultra&apiKey=fca_live_HbIzxvWGgIYwNZXtP7Z0pdCoMVBlJDqSs2QVqm7N`
+      // const apiUrl = `https://api.exchangerate-api.com/v4/latest/${currencyFrom}`
 
-    // Include api for currency change
-    fetch(`https://api.exchangerate-api.com/v4/latest/${currencyFrom}`)
-      .then((response) => response.json())
-      .then((data) => {
-        const fromRate = data.rates[currencyFrom];
-        const toRate = data.rates[currencyTo];
-        const inputValue = parseFloat(
-          document.getElementById("fromAmount").value
-        );
-        const convertedValue = ((toRate / fromRate) * inputValue).toFixed(2);
-        setFinalValue(convertedValue);
-      })
-      .catch((error) => console.error("Error:", error));
+      fetch(apiUrl)
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.success) {
+            const convertedValue = data.rates[currencyTo];
+            const inputValue = parseFloat(
+              document.getElementById("fromAmount").value
+            );
+            const finalValue = (inputValue * convertedValue).toFixed(2);
+            setFinalValue(finalValue);
+          } else {
+            console.error("Error in fetching data from Fixer API");
+          }
+        })
+        .catch((error) => console.error("Error:", error));
+    }
   };
 
   const setFinalValue = (value) => {
     const finalValueElement = document.querySelector(".finalValue");
     if (finalValueElement) {
-      finalValueElement.textContent = "Converted Value: " + value;
+      finalValueElement.textContent = `Converted Currency: ${value} ${currencyTo}`;
     }
   };
   // When user click on reset button
@@ -184,6 +195,7 @@ const Dashboard = ({ state }) => {
                           <option value="">Select One</option>
                           <option value="USD">USD</option>
                           <option value="AED">AED</option>
+                          <option value="AFN">AFN</option>
                           <option value="ARS">ARS</option>
                           <option value="AUD">AUD</option>
                           <option value="BGN">BGN</option>
@@ -198,6 +210,7 @@ const Dashboard = ({ state }) => {
                           <option value="DKK">DKK</option>
                           <option value="DOP">DOP</option>
                           <option value="EGP">EGP</option>
+                          <option value="EUR">ETH</option>
                           <option value="EUR">EUR</option>
                           <option value="FJD">FJD</option>
                           <option value="GBP">GBP</option>
@@ -216,6 +229,7 @@ const Dashboard = ({ state }) => {
                           <option value="MXN">MXN</option>
                           <option value="MYR">MYR</option>
                           <option value="NOK">NOK</option>
+                          <option value="NPR">NPR</option>
                           <option value="NZD">NZD</option>
                           <option value="PAB">PAB</option>
                           <option value="PEN">PEN</option>
@@ -251,6 +265,7 @@ const Dashboard = ({ state }) => {
                           <option value="">Select One</option>
                           <option value="USD">USD</option>
                           <option value="AED">AED</option>
+                          <option value="AFN">AFN</option>
                           <option value="ARS">ARS</option>
                           <option value="AUD">AUD</option>
                           <option value="BGN">BGN</option>
@@ -265,6 +280,7 @@ const Dashboard = ({ state }) => {
                           <option value="DKK">DKK</option>
                           <option value="DOP">DOP</option>
                           <option value="EGP">EGP</option>
+                          <option value="EUR">ETH</option>
                           <option value="EUR">EUR</option>
                           <option value="FJD">FJD</option>
                           <option value="GBP">GBP</option>
@@ -283,6 +299,7 @@ const Dashboard = ({ state }) => {
                           <option value="MXN">MXN</option>
                           <option value="MYR">MYR</option>
                           <option value="NOK">NOK</option>
+                          <option value="NPR">NPR</option>
                           <option value="NZD">NZD</option>
                           <option value="PAB">PAB</option>
                           <option value="PEN">PEN</option>
