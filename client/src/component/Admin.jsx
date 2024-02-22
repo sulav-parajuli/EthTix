@@ -12,7 +12,7 @@ import {
   faGauge,
   faCalendarPlus,
   faScrewdriverWrench,
-  faBook,
+  // faBook,
   faBell,
   faRightFromBracket,
   faUsers,
@@ -20,6 +20,7 @@ import {
   faChartLine,
   faGear,
 } from "@fortawesome/free-solid-svg-icons";
+import report from "../assets/images/reports.png";
 //Import Other Components
 import { useAppContext } from "./AppContext";
 import { toast } from "react-toastify";
@@ -301,7 +302,11 @@ const Admin = ({ state }) => {
                     onClick={() => handleSelectItem("reports")}
                   >
                     <div className="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                      <FontAwesomeIcon icon={faBook} />
+                      {/* <FontAwesomeIcon icon={faBook} /> */}
+                      <img
+                        src={report}
+                        style={{ height: "1.3em", alignSelf: "center" }}
+                      />
                     </div>
 
                     <span className="nav-link-text ms-1">Reports</span>
@@ -397,7 +402,11 @@ const Admin = ({ state }) => {
                         </>
                       ) : isSelected === "reports" ? (
                         <>
-                          <FontAwesomeIcon icon={faBook} />
+                          {/* <FontAwesomeIcon icon={faBook} /> */}
+                          <img
+                            src={report}
+                            style={{ height: "1.3em", alignSelf: "center" }}
+                          />
                           &nbsp; Reports
                         </>
                       ) : isSelected === "notification" ? (

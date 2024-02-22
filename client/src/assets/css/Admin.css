@@ -3326,3 +3326,38 @@ hr.horizontal.light {
   width: 25px;
   cursor: pointer;
 }
+
+.dashboardevent {
+  max-height: 280px;
+  overflow-y: auto;
+}
+
+.statisticssection .card {
+  margin-bottom: 20px; /* Add margin between cards */
+}
+
+.statisticscard {
+  display: flex;
+  justify-content: space-around;
+}
+
+.statisticscard .svg-inline--fa {
+  height: 1.5em;
+  align-self: center;
+}
+
+.cardtitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0px;
+  text-align: justify;
+}
+
+@media (max-width: 768px) {
+  .col-sm-6 {
+    width: 100% !important;
+  }
+}
+.col-sm-6 {
+  width: 50%;
+}

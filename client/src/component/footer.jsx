@@ -52,7 +52,7 @@ const Footer = () => {
                   <a href="/#faq">FAQs</a>
                 </li>
                 <li>
-                  <a href="#">Why EthTix</a>
+                  <a href="/#whyethtix">Why EthTix</a>
                 </li>
                 <li>
                   <a href="#">Help & Support</a>
@@ -67,7 +67,7 @@ const Footer = () => {
                   <a href="/privacy">Privacy Policy</a>
                 </li>
                 <li>
-                  <a href="#">Security</a>
+                  <a href="/#howtouse">How to use</a>
                 </li>
               </ol>
             </ul>

@@ -19,18 +19,30 @@ import {
 const About = () => {
   return (
     <div className="mcontainer">
-      <div className="container my-5">
+      <div className="container aboutsection my-5">
         <div className="row justify-content-center">
-          <div className="col-lg-8 col-md-10">
+          <div className="col-md-10">
             <div className="text-center">
               <h2 className="display-6" id="ethtix">
                 About EthTix
               </h2>
               <p className="lead">
-                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Et nam
-                quo nihil quis necessitatibus cupiditate quaerat mollitia
-                deserunt architecto debitis voluptates rerum odit similique,
-                optio temporibus dignissimos itaque dolor doloremque.
+                EthTix is a decentralized application (dApp) that allows event
+                organizers to create, manage, and sell event tickets on the
+                Ethereum blockchain. EthTix leverages the Ethereum blockchain to
+                provide a secure, transparent, and trustless platform for event
+                ticketing. The Ethereum blockchain ensures that event tickets
+                are secure, cannot be counterfeited, and are easily
+                transferable. EthTix also provides a user-friendly interface for
+                event organizers to create and manage events, and for event
+                attendees to purchase and transfer tickets.
+                <br />
+                EthTix is a fully decentralized application (dApp) that is built
+                on the Ethereum blockchain. Lorem ipsum, dolor sit amet
+                consectetur adipisicing elit. Recusandae ipsam tenetur eius?
+                Maiores a corrupti quaerat vel dignissimos velit facere,
+                assumenda fuga laudantium beatae blanditiis error, fugit
+                quibusdam dolor! Ipsum?
               </p>
             </div>
           </div>
