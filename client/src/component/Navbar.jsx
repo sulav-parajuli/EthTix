@@ -65,7 +65,7 @@ const Navbar = ({ state }) => {
             {/* <div className="ethtix">EthTix</div> */}
           </Link>
           <button
-            className="navbar-toggler"
+            className="navbar-toggler navbarmenu"
             type="button"
             data-bs-toggle="collapse"
             data-bs-target="#navbarSupportedContent"
@@ -97,7 +97,9 @@ const Navbar = ({ state }) => {
             )}
           </button>
           <div
-            className={`collapse navbar-collapse ${isNavbarOpen ? "show" : ""}`}
+            className={`collapse navbar-collapse navbaritems ${
+              isNavbarOpen ? "show" : ""
+            }`}
             id="navbarSupportedContent"
           >
             <ul className="navbar-nav item me-auto mb-lg-0">

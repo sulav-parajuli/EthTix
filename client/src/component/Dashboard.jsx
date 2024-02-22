@@ -1,10 +1,17 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { useAppContext } from "./AppContext";
 import { Triangle } from "react-loader-spinner";
 
 //Import fontawesome icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faClock, faTicket } from "@fortawesome/free-solid-svg-icons";
+import {
+  faClock,
+  faTicket,
+  faCalendarCheck,
+} from "@fortawesome/free-solid-svg-icons";
+import line from "../assets/images/line.png";
+import pendingticket from "../assets/images/pendingticket.png";
+import ticketsold from "../assets/images/ticketsold.png";
 
 const Dashboard = ({ state }) => {
   const { ticketsContract } = state;
@@ -16,8 +23,68 @@ const Dashboard = ({ state }) => {
   const [currencyFrom, setCurrencyFrom] = useState("");
   const [currencyTo, setCurrencyTo] = useState("");
   const [pendingTickets, setPendingTickets] = useState(0);
+  // Define state variables for date and time
+  const [currentTime, setCurrentTime] = useState(new Date());
   const { events, setEvents, fetchEvents, isAdmin, formatTime } =
     useAppContext();
+  // Array of currency options
+  const currencyOptions = [
+    "ETH",
+    "USD",
+    "AED",
+    "AFN",
+    "ARS",
+    "AUD",
+    "BGN",
+    "BRL",
+    "BSD",
+    "CAD",
+    "CHF",
+    "CLP",
+    "CNY",
+    "COP",
+    "CZK",
+    "DKK",
+    "DOP",
+    "EGP",
+    "EUR",
+    "FJD",
+    "GBP",
+    "GTQ",
+    "HKD",
+    "HRK",
+    "HUF",
+    "IDR",
+    "ILS",
+    "INR",
+    "ISK",
+    "JPY",
+    "KRW",
+    "KZT",
+    "MVR",
+    "MXN",
+    "MYR",
+    "NOK",
+    "NPR",
+    "NZD",
+    "PAB",
+    "PEN",
+    "PHP",
+    "PKR",
+    "PLN",
+    "PYG",
+    "RON",
+    "RUB",
+    "SAR",
+    "SEK",
+    "SGD",
+    "THB",
+    "TRY",
+    "TWD",
+    "UAH",
+    "UYU",
+    "ZAR",
+  ];
 
   const getOrganizers = async () => {
     if (!ticketsContract) {
@@ -30,6 +97,10 @@ const Dashboard = ({ state }) => {
 
   useEffect(() => {
     try {
+      const timer = setInterval(() => {
+        setCurrentTime(new Date());
+      }, 1000);
+
       if (isAdmin) {
         getOrganizers();
       }
@@ -49,6 +120,9 @@ const Dashboard = ({ state }) => {
         setPendingTickets(rem);
         setTotalTickets(total);
       });
+
+      // Clean up the timer on component unmount
+      return () => clearInterval(timer);
     } catch (error) {
       console.log(error);
     } finally {
@@ -56,34 +130,103 @@ const Dashboard = ({ state }) => {
     }
   }, [ticketsContract]);
 
+  // // Update current time every second
+  // useEffect(() => {}, []); // Run only once on component mount
+
   //Currency Converter
+  const handleNormalConversion = (currFrom, currTo, inputValue) => {
+    const apiKey = "CBJWw1G1zzeKtZXrzjb01HdvVwFNJCak";
+    const apiUrl = `https://api.apilayer.com/fixer/latest?symbols=${currTo}&base=${currFrom}&apikey=${apiKey}`; //fixer api
+    // const apiUrl =`https://free.currconv.com/api/v7/convert?q=${currFrom}_${currTo}&compact=ultra&apiKey=fca_live_HbIzxvWGgIYwNZXtP7Z0pdCoMVBlJDqSs2QVqm7N`
+    // const apiUrl = `https://api.exchangerate-api.com/v4/latest/${currFrom}`; //exchangerate-api
+
+    fetch(apiUrl)
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          const convertedValue = data.rates[currTo];
+          const finalValue = (inputValue * convertedValue).toFixed(2);
+          setFinalValue(finalValue);
+        } else {
+          console.error("Error in fetching data from Fixer API");
+        }
+      })
+      .catch((error) => console.error("Error:", error));
+  };
+
   const handleConversion = () => {
     // Ensure required values are set
     if (!currencyFrom || !currencyTo) {
       document.querySelector(
         ".finalValue"
       ).textContent = `Please select both currency fields "From" and "To"`;
-    } else {
-      const apiKey = "CBJWw1G1zzeKtZXrzjb01HdvVwFNJCak";
-      const apiUrl = `https://api.apilayer.com/fixer/latest?symbols=${currencyTo}&base=${currencyFrom}&apikey=${apiKey}`; //fixer api
-      // const apiUrl =`https://free.currconv.com/api/v7/convert?q=${currencyFrom}_${currencyTo}&compact=ultra&apiKey=fca_live_HbIzxvWGgIYwNZXtP7Z0pdCoMVBlJDqSs2QVqm7N`
-      // const apiUrl = `https://api.exchangerate-api.com/v4/latest/${currencyFrom}`
+      return;
+    }
 
-      fetch(apiUrl)
+    const inputValue = parseFloat(document.getElementById("fromAmount").value);
+
+    // Check if either currencyFrom or currencyTo is "ETH"
+    if (currencyFrom === "ETH" || currencyTo === "ETH") {
+      // Fetch conversion rate between USD and ETH from CoinCap API
+      fetch("https://api.coincap.io/v2/rates/ethereum")
         .then((response) => response.json())
         .then((data) => {
-          if (data.success) {
-            const convertedValue = data.rates[currencyTo];
-            const inputValue = parseFloat(
-              document.getElementById("fromAmount").value
-            );
-            const finalValue = (inputValue * convertedValue).toFixed(2);
-            setFinalValue(finalValue);
+          const ethToUsd = data.data.rateUsd;
+          // If currencyFrom is "ETH", convert from ETH to USD
+          const ethValue =
+            currencyFrom === "ETH" ? inputValue : inputValue / ethToUsd;
+          // If currencyTo is "ETH", convert from USD to ETH
+          const finalValue =
+            currencyTo === "ETH" ? ethValue : inputValue * ethToUsd;
+
+          if (
+            (currencyTo === "USD" && currencyFrom === "ETH") ||
+            (currencyTo === "ETH" && currencyFrom === "ETH") ||
+            (currencyTo === "ETH" && currencyFrom === "USD")
+          ) {
+            setFinalValue(finalValue.toFixed(6));
           } else {
-            console.error("Error in fetching data from Fixer API");
+            // Two cases: 1) currencyTo is "ETH" and currencyFrom is not "USD"  2) currencyTo is not "USD" and currencyFrom is "ETH"
+            let currTo = currencyTo;
+            let currFrom = currencyFrom;
+            if (currencyTo === "ETH" && currencyFrom !== "USD") {
+              currTo = "USD";
+              currFrom = currencyFrom;
+            } else {
+              currTo = currencyTo;
+              currFrom = "USD";
+            }
+            // Use the final ETH value to perform conversion with selected currency using Fixer API
+            const apiKey = "CBJWw1G1zzeKtZXrzjb01HdvVwFNJCak";
+            const apiUrl = `https://api.apilayer.com/fixer/latest?symbols=${currTo}&base=${currFrom}&apikey=${apiKey}`; //fixer api
+            // const apiUrl =`https://free.currconv.com/api/v7/convert?q=${currFrom}_${currTo}&compact=ultra&apiKey=fca_live_HbIzxvWGgIYwNZXtP7Z0pdCoMVBlJDqSs2QVqm7N`
+            // const apiUrl = `https://api.exchangerate-api.com/v4/latest/${currFrom}`; //exchangerate-api
+
+            fetch(apiUrl)
+              .then((response) => response.json())
+              .then((data) => {
+                if (data.success) {
+                  const convertedValue = data.rates[currTo];
+                  if (currencyTo === "ETH" && currencyFrom !== "USD") {
+                    const finalValue =
+                      (inputValue * convertedValue).toFixed(2) / ethToUsd;
+                    setFinalValue(finalValue);
+                  } else {
+                    setFinalValue((convertedValue * finalValue).toFixed(2));
+                  }
+                } else {
+                  console.error("Error in fetching data from Fixer API");
+                }
+              })
+              .catch((error) => console.error("Error:", error));
           }
         })
-        .catch((error) => console.error("Error:", error));
+        .catch((error) =>
+          console.error("Error fetching ETH to USD conversion rate:", error)
+        );
+    } else {
+      // If neither currencyFrom nor currencyTo is "ETH", use Fixer API directly
+      handleNormalConversion(currencyFrom, currencyTo, inputValue);
     }
   };
 
@@ -119,47 +262,88 @@ const Dashboard = ({ state }) => {
       ) : (
         <>
           {/* Statistics Row */}
-          <div className="row">
+          <div className="row statisticssection">
             <div className="col-md-3">
               <div className="card">
-                <div className="card-body">
-                  <h5 className="card-title">{eventCreated}</h5>
-                  <p className="card-text">Events Created</p>
+                <div className="card-body statisticscard">
+                  <FontAwesomeIcon icon={faCalendarCheck} />
+                  <img
+                    src={line}
+                    style={{ height: "1.5em", alignSelf: "center" }}
+                  />
+                  <div>
+                    <h5 className="cardtitle">{eventCreated}</h5>
+                    <p className="card-text">Events Created</p>
+                  </div>
                 </div>
               </div>
             </div>
             {isAdmin ? (
               <div className="col-md-3">
                 <div className="card">
-                  <div className="card-body">
-                    <h5 className="card-title">{organizerRegistered}</h5>
-                    <p className="card-text">Organizer Registered</p>
+                  <div className="card-body statisticscard">
+                    <FontAwesomeIcon icon={faCalendarCheck} />
+                    <img
+                      src={line}
+                      style={{ height: "1.5em", alignSelf: "center" }}
+                    />
+                    <div>
+                      <h5 className="cardtitle">{organizerRegistered}</h5>
+                      <p className="card-text">Organizer Registered</p>
+                    </div>
                   </div>
                 </div>
               </div>
             ) : (
               <div className="col-md-3">
                 <div className="card">
-                  <div className="card-body">
-                    <h5 className="card-title">{pendingTickets}</h5>
-                    <p className="card-text">Pending Tickets</p>
+                  <div className="card-body statisticscard">
+                    <img
+                      src={pendingticket}
+                      style={{ height: "2em", alignSelf: "center" }}
+                    />
+                    <img
+                      src={line}
+                      style={{ height: "1.5em", alignSelf: "center" }}
+                    />
+                    <div>
+                      <h5 className="cardtitle">{pendingTickets}</h5>
+                      <p className="card-text">Pending Tickets</p>
+                    </div>
                   </div>
                 </div>
               </div>
             )}
             <div className="col-md-3">
               <div className="card">
-                <div className="card-body">
-                  <h5 className="card-title">{ticketSold}</h5>
-                  <p className="card-text">Ticket Sold</p>
+                <div className="card-body statisticscard">
+                  <img
+                    src={ticketsold}
+                    style={{ height: "2em", alignSelf: "center" }}
+                  />
+                  <img
+                    src={line}
+                    style={{ height: "1.5em", alignSelf: "center" }}
+                  />
+                  <div>
+                    <h5 className="cardtitle">{ticketSold}</h5>
+                    <p className="card-text">Tickets Sold</p>
+                  </div>
                 </div>
               </div>
             </div>
             <div className="col-md-3">
               <div className="card">
-                <div className="card-body">
-                  <h5 className="card-title">{totalTickets}</h5>
-                  <p className="card-text">Total Tickets</p>
+                <div className="card-body statisticscard">
+                  <FontAwesomeIcon icon={faTicket} />
+                  <img
+                    src={line}
+                    style={{ height: "1.5em", alignSelf: "center" }}
+                  />
+                  <div>
+                    <h5 className="cardtitle">{totalTickets}</h5>
+                    <p className="card-text">Total Tickets</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -167,7 +351,7 @@ const Dashboard = ({ state }) => {
 
           {/* Converter Section */}
           <div className="row mt-4">
-            <div className="col-md-8">
+            <div className="col-md-8 mb-5">
               {/* Placeholder for Price Converter */}
               <div className="card">
                 <div className="card-body">
@@ -193,61 +377,12 @@ const Dashboard = ({ state }) => {
                           onChange={(e) => setCurrencyFrom(e.target.value)}
                         >
                           <option value="">Select One</option>
-                          <option value="USD">USD</option>
-                          <option value="AED">AED</option>
-                          <option value="AFN">AFN</option>
-                          <option value="ARS">ARS</option>
-                          <option value="AUD">AUD</option>
-                          <option value="BGN">BGN</option>
-                          <option value="BRL">BRL</option>
-                          <option value="BSD">BSD</option>
-                          <option value="CAD">CAD</option>
-                          <option value="CHF">CHF</option>
-                          <option value="CLP">CLP</option>
-                          <option value="CNY">CNY</option>
-                          <option value="COP">COP</option>
-                          <option value="CZK">CZK</option>
-                          <option value="DKK">DKK</option>
-                          <option value="DOP">DOP</option>
-                          <option value="EGP">EGP</option>
-                          <option value="EUR">ETH</option>
-                          <option value="EUR">EUR</option>
-                          <option value="FJD">FJD</option>
-                          <option value="GBP">GBP</option>
-                          <option value="GTQ">GTQ</option>
-                          <option value="HKD">HKD</option>
-                          <option value="HRK">HRK</option>
-                          <option value="HUF">HUF</option>
-                          <option value="IDR">IDR</option>
-                          <option value="ILS">ILS</option>
-                          <option value="INR">INR</option>
-                          <option value="ISK">ISK</option>
-                          <option value="JPY">JPY</option>
-                          <option value="KRW">KRW</option>
-                          <option value="KZT">KZT</option>
-                          <option value="MVR">MVR</option>
-                          <option value="MXN">MXN</option>
-                          <option value="MYR">MYR</option>
-                          <option value="NOK">NOK</option>
-                          <option value="NPR">NPR</option>
-                          <option value="NZD">NZD</option>
-                          <option value="PAB">PAB</option>
-                          <option value="PEN">PEN</option>
-                          <option value="PHP">PHP</option>
-                          <option value="PKR">PKR</option>
-                          <option value="PLN">PLN</option>
-                          <option value="PYG">PYG</option>
-                          <option value="RON">RON</option>
-                          <option value="RUB">RUB</option>
-                          <option value="SAR">SAR</option>
-                          <option value="SEK">SEK</option>
-                          <option value="SGD">SGD</option>
-                          <option value="THB">THB</option>
-                          <option value="TRY">TRY</option>
-                          <option value="TWD">TWD</option>
-                          <option value="UAH">UAH</option>
-                          <option value="UYU">UYU</option>
-                          <option value="ZAR">ZAR</option>
+                          {/* Map over currencyOptions array */}
+                          {currencyOptions.map((option, index) => (
+                            <option key={index} value={option}>
+                              {option}
+                            </option>
+                          ))}
                         </select>
                       </div>
                     </div>
@@ -263,61 +398,12 @@ const Dashboard = ({ state }) => {
                           onChange={(e) => setCurrencyTo(e.target.value)}
                         >
                           <option value="">Select One</option>
-                          <option value="USD">USD</option>
-                          <option value="AED">AED</option>
-                          <option value="AFN">AFN</option>
-                          <option value="ARS">ARS</option>
-                          <option value="AUD">AUD</option>
-                          <option value="BGN">BGN</option>
-                          <option value="BRL">BRL</option>
-                          <option value="BSD">BSD</option>
-                          <option value="CAD">CAD</option>
-                          <option value="CHF">CHF</option>
-                          <option value="CLP">CLP</option>
-                          <option value="CNY">CNY</option>
-                          <option value="COP">COP</option>
-                          <option value="CZK">CZK</option>
-                          <option value="DKK">DKK</option>
-                          <option value="DOP">DOP</option>
-                          <option value="EGP">EGP</option>
-                          <option value="EUR">ETH</option>
-                          <option value="EUR">EUR</option>
-                          <option value="FJD">FJD</option>
-                          <option value="GBP">GBP</option>
-                          <option value="GTQ">GTQ</option>
-                          <option value="HKD">HKD</option>
-                          <option value="HRK">HRK</option>
-                          <option value="HUF">HUF</option>
-                          <option value="IDR">IDR</option>
-                          <option value="ILS">ILS</option>
-                          <option value="INR">INR</option>
-                          <option value="ISK">ISK</option>
-                          <option value="JPY">JPY</option>
-                          <option value="KRW">KRW</option>
-                          <option value="KZT">KZT</option>
-                          <option value="MVR">MVR</option>
-                          <option value="MXN">MXN</option>
-                          <option value="MYR">MYR</option>
-                          <option value="NOK">NOK</option>
-                          <option value="NPR">NPR</option>
-                          <option value="NZD">NZD</option>
-                          <option value="PAB">PAB</option>
-                          <option value="PEN">PEN</option>
-                          <option value="PHP">PHP</option>
-                          <option value="PKR">PKR</option>
-                          <option value="PLN">PLN</option>
-                          <option value="PYG">PYG</option>
-                          <option value="RON">RON</option>
-                          <option value="RUB">RUB</option>
-                          <option value="SAR">SAR</option>
-                          <option value="SEK">SEK</option>
-                          <option value="SGD">SGD</option>
-                          <option value="THB">THB</option>
-                          <option value="TRY">TRY</option>
-                          <option value="TWD">TWD</option>
-                          <option value="UAH">UAH</option>
-                          <option value="UYU">UYU</option>
-                          <option value="ZAR">ZAR</option>
+                          {/* Map over currencyOptions array */}
+                          {currencyOptions.map((option, index) => (
+                            <option key={index} value={option}>
+                              {option}
+                            </option>
+                          ))}
                         </select>
                       </div>
                     </div>
@@ -332,9 +418,9 @@ const Dashboard = ({ state }) => {
                 </div>
               </div>
             </div>
-            <div className="col-md-4">
+            <div className="col-md-4 mb-5 dashboardevent">
               {/* Placeholder for Events List */}
-              <h5 className="card-title">Events List</h5>
+              <h5>Events List</h5>
               <div className="event-blocks">
                 {events.length === 0 ? (
                   <p>Events not available....</p>
@@ -406,6 +492,26 @@ const Dashboard = ({ state }) => {
                 )}
               </div>
               {/* Add your events list component here */}
+            </div>
+          </div>
+          {/* Date and time section */}
+          <div className="row mt-4">
+            <div className="card">
+              <div
+                className="card-body d-flex"
+                style={{ justifyContent: "space-around" }}
+              >
+                <div className="col-md-6 text-left">
+                  <p className="text-muted mb-0">
+                    Date: {currentTime.toLocaleDateString()}
+                  </p>
+                </div>
+                <div className="col-md-6 text-right">
+                  <p className="text-muted mb-0">
+                    Time: {currentTime.toLocaleTimeString()}
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </>
