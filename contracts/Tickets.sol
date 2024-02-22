@@ -143,10 +143,16 @@ contract Tickets{
     // Update the remaining tickets
     events[_eventId].remTickets -= _totalTicketsToBuy;
 
+    
+
     // Update the ticket holders mapping
     TicketHolder[] storage userTickets = ticketHolders[msg.sender];
     userTickets.push(TicketHolder(msg.sender, events[_eventId].eventCID, _eventId, _totalTicketsToBuy));
     emit TicketPurchased(_eventId, _totalTicketsToBuy, msg.sender, block.timestamp);
 }
+   //function to return ticket of particular user
+    function getTicket(address _userAddress)public view returns(TicketHolder[] memory){
+    return ticketHolders[_userAddress];
 
     }
+}

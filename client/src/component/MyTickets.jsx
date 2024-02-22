@@ -2,22 +2,40 @@ import React, { useEffect, useState } from "react";
 import { useAppContext } from "./AppContext";
 import logo from "../assets/images/logo/etherTixLogo.png";
 import ErrorPage from "./ErrorPage";
+import { retrieveFromIPFS } from "../utils/ipfsUtils";
 
 const MyTickets = ({ state }) => {
   const { account, events, isEventOrganizer } = useAppContext();
   const { ticketsContract } = state;
   const [purchasedTickets, setPurchasedTickets] = useState([]);
+
+  const TotalTicketsBought = async () => {
+    if (!ticketsContract || !account) {
+      return;
+    }
+    try {
+      const userTickets = await ticketsContract.getTicket(account);
+
+      // Assuming eventName is stored in the "eventName" property
+      const ticketsInfo = await Promise.all(
+        userTickets.map(async (ticket) => {
+          const eventName = await retrieveFromIPFS(ticket.eventName);
+          return { ...ticket, eventName };
+        })
+      );
+
+      console.log("Tickets Info:", ticketsInfo);
+
+      setPurchasedTickets(ticketsInfo);
+    } catch (e) {
+      console.log(e);
+    }
+  };
   useEffect(() => {
     if (!ticketsContract) {
       return;
     }
-    ticketsContract.on("TicketPurchased", async (eventId, ticketsBought) => {
-      setPurchasedTickets((prevTickets) => [
-        ...prevTickets,
-        events[eventId.toNumber() - 1],
-      ]);
-    });
-
+    ticketsContract.on("TicketPurchased", TotalTicketsBought);
     return () => {
       ticketsContract.removeListener("TicketPurchased");
     };
@@ -54,7 +72,7 @@ const MyTickets = ({ state }) => {
                   <div className="card-body">
                     <h5 className="card-title">{ticket.eventName}</h5>
                     <p className="card-text">
-                      Tickets Bought: {ticket.ticketsBought.toNumber()}
+                      Tickets Bought: {ticket.ticketsOwned.toNumber()}
                     </p>
                   </div>
                 </div>
