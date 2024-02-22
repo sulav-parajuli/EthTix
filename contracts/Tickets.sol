@@ -34,6 +34,8 @@ contract Tickets{
     address[] public allOrganizers;
     //Array to store Events
     Event[] public allEvents;
+    //Array of organizer cid
+    string[] public allOrganizerCid;
     uint256 eventId;
 
     //Constructor
@@ -52,6 +54,7 @@ contract Tickets{
     organizerCID[msg.sender]=_CID; 
     organizers[msg.sender]=true;
     allOrganizers.push(msg.sender);
+    allOrganizerCid.push(_CID);
     emit OrganizerRegistered(msg.sender,_CID,block.timestamp);
    }
 
@@ -113,6 +116,10 @@ contract Tickets{
     function getAllOrganizers() public view returns (address[] memory) {
         require(isOwner(), "Only owner can view all organizers");
         return allOrganizers;
+    }
+    function getAllOrganizerCID()public view returns(string[]memory)
+    {
+        return allOrganizerCid;
     }
 
 
