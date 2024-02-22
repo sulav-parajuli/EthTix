@@ -7,7 +7,7 @@ import { toast } from "react-toastify"; // Import toastify for displaying notifi
 const BuyTicket = ({ eventIndex, event, state }) => {
   const { ticketsContract, signer } = state;
   const [quantity, setQuantity] = useState(1);
-  const { savetransactionHashToLocalStorage, isEventOrganizer } =
+  const { savetransactionHashToLocalStorage, isEventOrganizer, isAdmin } =
     useAppContext();
   const navigate = useNavigate();
 
@@ -29,6 +29,10 @@ const BuyTicket = ({ eventIndex, event, state }) => {
     try {
       if (isEventOrganizer) {
         toast.info("You are the event organizer. You cannot buy tickets.");
+        return;
+      }
+      if (isAdmin) {
+        toast.info("You are the owner. You cannot buy tickets.");
         return;
       }
       // Check the structure of the event being passed

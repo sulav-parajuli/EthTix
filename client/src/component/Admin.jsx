@@ -241,7 +241,7 @@ const Admin = ({ state }) => {
                   </a>
                 </li>
 
-                {isEventOrganizer && isUserConnected ? (
+                {isEventOrganizer && isUserConnected && !isAdmin ? (
                   <li className="nav-item">
                     <a
                       className={`nav-link text-white ${
@@ -272,21 +272,6 @@ const Admin = ({ state }) => {
                   </a>
                 </li> */}
 
-                <li className="nav-item">
-                  <a
-                    className={`nav-link text-white ${
-                      isSelected === "reports" ? "active" : ""
-                    }`}
-                    onClick={() => handleSelectItem("reports")}
-                  >
-                    <div className="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                      <FontAwesomeIcon icon={faBook} />
-                    </div>
-
-                    <span className="nav-link-text ms-1">Reports</span>
-                  </a>
-                </li>
-
                 {/* <li className="nav-item">
                   <a
                     className={`nav-link text-white ${
@@ -311,6 +296,21 @@ const Admin = ({ state }) => {
                 <li className="nav-item">
                   <a
                     className={`nav-link text-white ${
+                      isSelected === "reports" ? "active" : ""
+                    }`}
+                    onClick={() => handleSelectItem("reports")}
+                  >
+                    <div className="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                      <FontAwesomeIcon icon={faBook} />
+                    </div>
+
+                    <span className="nav-link-text ms-1">Reports</span>
+                  </a>
+                </li>
+
+                {/* <li className="nav-item">
+                  <a
+                    className={`nav-link text-white ${
                       isSelected === "analytics" ? "active" : ""
                     }`}
                     onClick={() => handleSelectItem("analytics")}
@@ -321,7 +321,7 @@ const Admin = ({ state }) => {
 
                     <span className="nav-link-text ms-1">Analytics</span>
                   </a>
-                </li>
+                </li> */}
 
                 <li className="nav-item">
                   <a

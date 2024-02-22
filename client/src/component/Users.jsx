@@ -92,16 +92,22 @@ const Users = ({ state }) => {
                       <b>Status</b>
                     </span>
                   </li>
-                  {organizers.map((user, index) => (
-                    <li
-                      key={index}
-                      className="list-group-item d-flex justify-content-between"
-                    >
-                      {user}
-                      {/* Add more information as needed */}
-                      <span className="text-danger">Inactive</span>
-                    </li>
-                  ))}
+                  {organizers.length === 0 ? (
+                    <p>No Organizers found....</p>
+                  ) : (
+                    <>
+                      {organizers.map((user, index) => (
+                        <li
+                          key={index}
+                          className="list-group-item d-flex justify-content-between"
+                        >
+                          {user}
+                          {/* Add more information as needed */}
+                          <span className="text-danger">Inactive</span>
+                        </li>
+                      ))}
+                    </>
+                  )}
                 </ul>
               </div>
             </>
@@ -120,15 +126,21 @@ const Users = ({ state }) => {
                   <b>Status</b>
                 </span>
               </li>
-              {users.map((user, index) => (
-                <li
-                  key={index}
-                  className="list-group-item d-flex justify-content-between"
-                >
-                  {user}
-                  <span className="text-success">Active</span>
-                </li>
-              ))}
+              {users.length === 0 ? (
+                <p>No Users found....</p>
+              ) : (
+                <>
+                  {users.map((user, index) => (
+                    <li
+                      key={index}
+                      className="list-group-item d-flex justify-content-between"
+                    >
+                      {user}
+                      <span className="text-success">Active</span>
+                    </li>
+                  ))}
+                </>
+              )}
             </ul>
           </div>
         </div>
