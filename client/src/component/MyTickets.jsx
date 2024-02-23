@@ -15,6 +15,7 @@ const MyTickets = ({ state }) => {
     }
     try {
       const userTickets = await ticketsContract.getTicket(account);
+      console.log("User Tickets:", userTickets);
 
       // Assuming eventName is stored in the "eventName" property
       const ticketsInfo = await Promise.all(
@@ -32,15 +33,47 @@ const MyTickets = ({ state }) => {
     }
   };
   useEffect(() => {
-    if (!ticketsContract) {
-      return;
-    }
-    ticketsContract.on("TicketPurchased", TotalTicketsBought);
-    return () => {
-      ticketsContract.removeListener("TicketPurchased");
+    const handleTicketPurchased = async () => {
+      // When "TicketPurchased" event occurs, fetch the updated tickets
+      await TotalTicketsBought();
     };
-  }, [ticketsContract]);
 
+    if (ticketsContract) {
+      // Register the event listener
+      ticketsContract.on("TicketPurchased", handleTicketPurchased);
+    }
+
+    return () => {
+      // Unregister the event listener when the component is unmounted
+      if (ticketsContract) {
+        ticketsContract.removeListener(
+          "TicketPurchased",
+          handleTicketPurchased
+        );
+      }
+    };
+  }, [ticketsContract, TotalTicketsBought]);
+  useEffect(() => {
+    const handleTicketPurchased = async () => {
+      // When "TicketPurchased" event occurs, fetch the updated tickets
+      await TotalTicketsBought();
+    };
+
+    if (ticketsContract) {
+      // Register the event listener
+      ticketsContract.on("TicketPurchased", handleTicketPurchased);
+    }
+
+    return () => {
+      // Unregister the event listener when the component is unmounted
+      if (ticketsContract) {
+        ticketsContract.removeListener(
+          "TicketPurchased",
+          handleTicketPurchased
+        );
+      }
+    };
+  }, [ticketsContract, TotalTicketsBought]);
   return (
     <div className="mcontainer ticketcontainer">
       {isEventOrganizer ? (

@@ -143,7 +143,8 @@ contract Tickets{
     // Update the remaining tickets
     events[_eventId].remTickets -= _totalTicketsToBuy;
 
-    
+    //update allEvents array
+    allEvents[_eventId-1].remTickets=events[_eventId].remTickets;
 
     // Update the ticket holders mapping
     TicketHolder[] storage userTickets = ticketHolders[msg.sender];
