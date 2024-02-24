@@ -73,6 +73,8 @@ const BuyTicket = ({ eventIndex, event, state }) => {
       // Handle success or show a confirmation message
       console.log("Ticket purchase successful!");
       navigate("/mytickets");
+      document.body.classList.remove("popup-open"); // Remove the class that is added to the body when the popup is open
+      document.querySelector(".topnav").style.background = "transparent"; // Change the background color of the topnav
     } catch (error) {
       console.error("Error buying ticket:", error.message);
       // Handle errors or display an error message
