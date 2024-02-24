@@ -1,4 +1,4 @@
-import { React, useState } from "react";
+import { React, useState, useEffect } from "react";
 import { useAppContext } from "./AppContext";
 import { Triangle } from "react-loader-spinner";
 import { useNavigate } from "react-router-dom";
@@ -23,11 +23,20 @@ const EventOrganizer = ({ state }) => {
   const [organizationEmail, setOrganizationEmail] = useState("");
   const { signer, ticketsContract } = state;
   const [agreetermsconditions, setagreetermsconditions] = useState(false);
+  // Define state variables for date and time
+  const [currentTime, setCurrentTime] = useState(new Date());
   const navigate = useNavigate(); //to redirect to another page
   //console.log(state);
   const buttonPressed = () => {
     setNextpage(true);
   };
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [ticketsContract]);
 
   const opendashboard = () => {
     document.body.classList.remove("popup-open"); // Allow scrolling
@@ -116,10 +125,12 @@ const EventOrganizer = ({ state }) => {
       }
       const eventOrganizerData = {
         name,
+        organizerAddress: account,
         organizationName,
         organizationType,
         organizationLocation,
         organizationEmail,
+        currentTime,
       };
       // console.log(eventOrganizerData);
       //signdata

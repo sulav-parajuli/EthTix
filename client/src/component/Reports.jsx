@@ -63,9 +63,7 @@ const Reports = ({ state }) => {
   const handleSearchButton = () => {
     setSearch(true);
     const filterReports = reports.filter((report) =>
-      report.reportDetails.reportName
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase())
+      report.reportName.toLowerCase().includes(searchQuery.toLowerCase())
     );
     setFilteredReports(filterReports);
   };
@@ -98,6 +96,7 @@ const Reports = ({ state }) => {
           });
           // Fetch initial reports using the fetchReports function
           const initialReports = await fetchReports();
+          console.log("Initial Reports:", initialReports);
           setReports(initialReports);
           setIsLoading(false); // Set loading to false once reports are fetched
         } else {
@@ -185,60 +184,50 @@ const Reports = ({ state }) => {
             <p>
               Event Type:{" "}
               <span style={{ color: "#008eb0" }}>
-                {reports[selectedReportIndex].reportDetails.eventType}
+                {reports[selectedReportIndex].eventType}
               </span>
             </p>
-            <p>
-              Report Name:{" "}
-              {reports[selectedReportIndex].reportDetails.reportName}
-            </p>
+            <p>Report Name: {reports[selectedReportIndex].reportName}</p>
             {/* date and time to know when was the event being subscribed. */}
             <p>
               Created Time:{" "}
-              {reports[selectedReportIndex].reportDetails.creationTime}
+              {new Date(
+                reports[selectedReportIndex].reportDetails.currentTime
+              ).toLocaleString()}
             </p>
-            {reports[selectedReportIndex].reportDetails.eventType ===
-              "TicketPurchased" ||
-            reports[selectedReportIndex].reportDetails.eventType ===
-              "EventCreated" ? (
+            {/* {reports[selectedReportIndex].eventType === "TicketPurchased" ||
+            reports[selectedReportIndex].eventType === "EventCreated" ? (
               <p>
                 Event ID:{" "}
-                {parseInt(
-                  reports[selectedReportIndex].reportDetails.eventId.hex
-                )}
+                {parseInt(reports[selectedReportIndex].reportDetails.eventId)}
               </p>
-            ) : null}
-            {reports[selectedReportIndex].reportDetails.eventType ===
-            "EventCreated" ? (
+            ) : null} */}
+            {reports[selectedReportIndex].eventType === "EventCreated" ? (
               <>
                 <p>
-                  Creater:{" "}
-                  {reports[selectedReportIndex].reportDetails.organizer}
+                  Creater: {reports[selectedReportIndex].reportDetails.creator}
                 </p>
                 <p>
                   Event Name:{" "}
                   {reports[
                     selectedReportIndex
-                  ].reportDetails.details.eventName.toString()}
+                  ].reportDetails.eventName.toString()}
                 </p>
                 <p>
                   Event Date:{" "}
-                  {reports[selectedReportIndex].reportDetails.details.date +
+                  {reports[selectedReportIndex].reportDetails.date +
                     ", " +
-                    formatTime(
-                      reports[selectedReportIndex].reportDetails.details.time
-                    )}
+                    formatTime(reports[selectedReportIndex].reportDetails.time)}
                 </p>
                 <p>
                   Location:{" "}
                   {reports[
                     selectedReportIndex
-                  ].reportDetails.details.location.toString()}
+                  ].reportDetails.location.toString()}
                 </p>
               </>
             ) : null}
-            {reports[selectedReportIndex].reportDetails.eventType ===
-            "TicketPurchased" ? (
+            {reports[selectedReportIndex].eventType === "TicketPurchased" ? (
               <>
                 <p>
                   Event Name:{" "}
@@ -277,7 +266,7 @@ const Reports = ({ state }) => {
                 </p>
               </>
             ) : null}
-            {reports[selectedReportIndex].reportDetails.eventType ===
+            {reports[selectedReportIndex].eventType ===
             "OrganizerRegistered" ? (
               <>
                 <p>
@@ -286,33 +275,31 @@ const Reports = ({ state }) => {
                 </p>
                 <p>
                   Organizer Name:{" "}
-                  {reports[
-                    selectedReportIndex
-                  ].reportDetails.details.name.toString()}
+                  {reports[selectedReportIndex].reportDetails.name.toString()}
                 </p>
                 <p>
                   Organization Name:{" "}
                   {reports[
                     selectedReportIndex
-                  ].reportDetails.details.organizationName.toString()}
+                  ].reportDetails.organizationName.toString()}
                 </p>
                 <p>
                   Organization Type:{" "}
                   {reports[
                     selectedReportIndex
-                  ].reportDetails.details.organizationType.toString()}
+                  ].reportDetails.organizationType.toString()}
                 </p>
                 <p>
                   Organization Location:{" "}
                   {reports[
                     selectedReportIndex
-                  ].reportDetails.details.organizationLocation.toString()}
+                  ].reportDetails.organizationLocation.toString()}
                 </p>
                 <p>
                   Organization Email:{" "}
                   {reports[
                     selectedReportIndex
-                  ].reportDetails.details.organizationEmail.toString()}
+                  ].reportDetails.organizationEmail.toString()}
                 </p>
               </>
             ) : null}
@@ -400,7 +387,7 @@ const Reports = ({ state }) => {
                         >
                           <div>
                             <h4 style={{ margin: "0px" }}>
-                              {report.reportDetails.reportName}
+                              {report.reportName}
                             </h4>
                             <div className="d-flex align-items-center">
                               <FontAwesomeIcon
@@ -413,7 +400,9 @@ const Reports = ({ state }) => {
                                 className="text-muted mb-0"
                                 style={{ fontSize: "70%" }}
                               >
-                                {report.reportDetails.creationTime}
+                                {new Date(
+                                  report.reportDetails.currentTime
+                                ).toLocaleString()}
                               </p>
                             </div>
                           </div>
@@ -447,9 +436,7 @@ const Reports = ({ state }) => {
                         style={{ padding: "10px" }}
                       >
                         <div>
-                          <h4 style={{ margin: "0px" }}>
-                            {report.reportDetails.reportName}
-                          </h4>
+                          <h4 style={{ margin: "0px" }}>{report.reportName}</h4>
                           <div className="d-flex align-items-center">
                             <FontAwesomeIcon
                               icon={faClock}
@@ -461,7 +448,9 @@ const Reports = ({ state }) => {
                               className="text-muted mb-0"
                               style={{ fontSize: "70%" }}
                             >
-                              {report.reportDetails.creationTime}
+                              {new Date(
+                                report.reportDetails.currentTime
+                              ).toLocaleString()}
                             </p>
                           </div>
                         </div>

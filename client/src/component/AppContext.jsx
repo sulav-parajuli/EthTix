@@ -108,77 +108,77 @@ const AppProvider = ({ children, template, accounts, account, state }) => {
   const createReports = async () => {
     try {
       // Subscribe to the "OrganizerRegistered" event
-      ticketsContract.on(
-        "OrganizerRegistered",
-        async (organizerAddress, CID, registerTime) => {
-          // console.log(
-          //   "OrganizerRegistered event triggered:",
-          //   organizerAddress,
-          //   CID,
-          //   registerTime
-          // );
-          const details = await retrieveFromIPFS(CID);
-          // console.log(registerTime);
-          const time = convertUnixTimestampToDateTime(registerTime); // Convert Unix time to Date and Time
-          // console.log(time);
-          // console.log(details);
-          // Create a new report for OrganizerRegistered event
-          const newReport = {
-            eventType: "OrganizerRegistered",
-            reportName: "Register Event Organizer",
-            details,
-            organizerAddress,
-            CID,
-            creationTime: time,
-          };
+      // ticketsContract.on(
+      //   "OrganizerRegistered",
+      //   async (organizerAddress, CID, registerTime) => {
+      //     // console.log(
+      //     //   "OrganizerRegistered event triggered:",
+      //     //   organizerAddress,
+      //     //   CID,
+      //     //   registerTime
+      //     // );
+      //     const details = await retrieveFromIPFS(CID);
+      //     // console.log(registerTime);
+      //     const time = convertUnixTimestampToDateTime(registerTime); // Convert Unix time to Date and Time
+      //     // console.log(time);
+      //     // console.log(details);
+      //     // Create a new report for OrganizerRegistered event
+      //     const newReport = {
+      //       eventType: "OrganizerRegistered",
+      //       reportName: "Register Event Organizer",
+      //       details,
+      //       organizerAddress,
+      //       CID,
+      //       creationTime: time,
+      //     };
 
-          const data = JSON.stringify(newReport);
-          //upload report to IPFS
-          const { ipfsCid } = await uploadToIPFS(data);
-          // console.log("IPFS CID:", ipfsCid);
-          saveIpfsCidToLocalStorage(ipfsCid);
-          // console.log("Report Created");
-          // Fetch updated reports
-          // const updatedReports = await fetchReports();
-          // // Update the reports state
-          // setReports(updatedReports);
-        }
-      );
+      //     const data = JSON.stringify(newReport);
+      //     //upload report to IPFS
+      //     const { ipfsCid } = await uploadToIPFS(data);
+      //     // console.log("IPFS CID:", ipfsCid);
+      //     saveIpfsCidToLocalStorage(ipfsCid);
+      //     // console.log("Report Created");
+      //     // Fetch updated reports
+      //     // const updatedReports = await fetchReports();
+      //     // // Update the reports state
+      //     // setReports(updatedReports);
+      //   }
+      // );
 
-      // Subscribe to the "EventCreated" event
-      ticketsContract.on(
-        "EventCreated",
-        async (eventId, organizer, eventCid, creationTime) => {
-          // console.log("EventCreated event triggered:", eventId.toString(), organizer, eventCid, creationTime);
+      // // Subscribe to the "EventCreated" event
+      // ticketsContract.on(
+      //   "EventCreated",
+      //   async (eventId, organizer, eventCid, creationTime) => {
+      //     // console.log("EventCreated event triggered:", eventId.toString(), organizer, eventCid, creationTime);
 
-          const details = await retrieveFromIPFS(eventCid);
-          // console.log(creationTime);
-          const time = convertUnixTimestampToDateTime(creationTime); // Convert Unix time to Date and Time
-          // console.log(time);
-          // console.log(details);
-          // Create a new report for EventCreated event
-          const newReport = {
-            eventType: "EventCreated",
-            reportName: "Event Created",
-            eventId,
-            organizer,
-            details,
-            eventCid,
-            creationTime: time,
-          };
+      //     const details = await retrieveFromIPFS(eventCid);
+      //     // console.log(creationTime);
+      //     const time = convertUnixTimestampToDateTime(creationTime); // Convert Unix time to Date and Time
+      //     // console.log(time);
+      //     // console.log(details);
+      //     // Create a new report for EventCreated event
+      //     const newReport = {
+      //       eventType: "EventCreated",
+      //       reportName: "Event Created",
+      //       eventId,
+      //       organizer,
+      //       details,
+      //       eventCid,
+      //       creationTime: time,
+      //     };
 
-          const data = JSON.stringify(newReport);
-          //upload report to IPFS
-          const { ipfsCid } = await uploadToIPFS(data);
-          // console.log("IPFS CID:", ipfsCid);
-          saveIpfsCidToLocalStorage(ipfsCid);
-          // console.log("Report Created");
-          // Fetch updated reports
-          // const updatedReports = await fetchReports();
-          // // Update the reports state
-          // setReports(updatedReports);
-        }
-      );
+      //     const data = JSON.stringify(newReport);
+      //     //upload report to IPFS
+      //     const { ipfsCid } = await uploadToIPFS(data);
+      //     // console.log("IPFS CID:", ipfsCid);
+      //     saveIpfsCidToLocalStorage(ipfsCid);
+      //     // console.log("Report Created");
+      //     // Fetch updated reports
+      //     // const updatedReports = await fetchReports();
+      //     // // Update the reports state
+      //     // setReports(updatedReports);
+      //   }
+      // );
 
       // Subscribe to the "TicketPurchased" event
       ticketsContract.on(
@@ -196,12 +196,12 @@ const AppProvider = ({ children, template, accounts, account, state }) => {
           // console.log(time);
           // Create a new report for TicketPurchased event
           const newReport = {
-            eventType: "TicketPurchased",
-            reportName: "Ticket Purchased",
+            // eventType: "TicketPurchased",
+            // reportName: "Ticket Purchased",
             eventId,
             ticketsBought,
             buyer,
-            creationTime: time,
+            currentTime: time,
           };
 
           const data = JSON.stringify(newReport);
@@ -294,14 +294,43 @@ const AppProvider = ({ children, template, accounts, account, state }) => {
     try {
       const fetchedReports = [];
 
-      const storedCids = retrieveAllIpfsCidsFromLocalStorage();
-      // console.log(storedCids);
+      //For Event Created
+      await fetchEvents().then((initialEvents) => {
+        setEvents(initialEvents);
+      });
 
-      // Iterate over the array length of storedCids
+      // Iterate over the array length of events
+      for (let i = 0; i < events.length; i++) {
+        const eventType = "EventCreated";
+        const reportName = "Event Created";
+        const reportDetails = events[i];
+        const combinedData = { eventType, reportName, reportDetails }; // Combine data
+        fetchedReports.push(combinedData);
+      }
+
+      //For Ticket Purchased
+      const storedCids = retrieveAllIpfsCidsFromLocalStorage();
       for (let i = 0; i < storedCids.length; i++) {
         const ipfsCid = storedCids[i];
         const reportDetails = await retrieveFromIPFS(ipfsCid);
-        const combinedData = { ipfsCid, reportDetails }; // Combine ipfsCid and reportDetails
+        const eventType = "TicketPurchased";
+        const reportName = "Ticket Purchased";
+        const combinedData = { ipfsCid, eventType, reportName, reportDetails }; // Combine data
+        fetchedReports.push(combinedData);
+      }
+
+      // For Organizer Registered
+      // retrieve all the organizer CID from the smart contract and store it in organizerCids
+      const organizerCids = await ticketsContract.getAllOrganizerCID();
+      // console.log(storedCids);
+
+      // Iterate over the array length of organizer storedCids
+      for (let i = 0; i < organizerCids.length; i++) {
+        const ipfsCid = organizerCids[i];
+        const reportDetails = await retrieveFromIPFS(ipfsCid);
+        const eventType = "OrganizerRegistered";
+        const reportName = "Register Event Organizer";
+        const combinedData = { ipfsCid, eventType, reportName, reportDetails }; // Combine data
         fetchedReports.push(combinedData);
       }
 

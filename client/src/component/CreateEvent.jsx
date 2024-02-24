@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import { useAppContext } from "./AppContext";
 import { Triangle } from "react-loader-spinner";
@@ -16,6 +16,8 @@ const CreateEvent = ({ state }) => {
   const [totalTickets, setTotalTickets] = useState("");
   const [location, setLocation] = useState("");
   const [allvalueverified, setAllvalueverified] = useState(false);
+  // Define state variables for date and time
+  const [currentTime, setCurrentTime] = useState(new Date());
   const {
     isUserConnected,
     isEventOrganizer,
@@ -27,6 +29,14 @@ const CreateEvent = ({ state }) => {
   const [description, setDescription] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate(); //to redirect to another page
+  const { ticketsContract } = state;
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [ticketsContract]);
 
   const handleEventNameChange = (event) => {
     setEventName(event.target.value);
@@ -212,6 +222,7 @@ const CreateEvent = ({ state }) => {
         time,
         description,
         location,
+        currentTime,
       };
       //sign Data
       const { data, signature } = await signData(
