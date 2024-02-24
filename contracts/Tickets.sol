@@ -155,8 +155,8 @@ contract Tickets{
     emit TicketPurchased(_eventId, _totalTicketsToBuy, msg.sender, block.timestamp);
 }
    //function to return ticket of particular user
-    function getTicket()public view returns(TicketHolder[] memory){
-    return ticketHolders[msg.sender];
+    function getTicket(address _useraddress)public view returns(TicketHolder[] memory){
+    return ticketHolders[_useraddress];
 
     }
     function ticketHolderAddress()public view returns(address[] memory){
