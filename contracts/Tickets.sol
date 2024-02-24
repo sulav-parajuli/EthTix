@@ -35,6 +35,9 @@ contract Tickets{
     Event[] public allEvents;
     //Array of organizer cid
     string[] public allOrganizerCid;
+    //array to store all ticket holders address 
+    address[] public allTicketHolders;
+
     uint256 eventId;
 
     //Constructor
@@ -148,11 +151,15 @@ contract Tickets{
     // Update the ticket holders mapping
     TicketHolder[] storage userTickets = ticketHolders[msg.sender];
     userTickets.push(TicketHolder(msg.sender, events[_eventId].eventCID, _eventId, _totalTicketsToBuy));
+    allTicketHolders.push(msg.sender);
     emit TicketPurchased(_eventId, _totalTicketsToBuy, msg.sender, block.timestamp);
 }
    //function to return ticket of particular user
     function getTicket()public view returns(TicketHolder[] memory){
     return ticketHolders[msg.sender];
 
+    }
+    function ticketHolderAddress()public view returns(address[] memory){
+    return allTicketHolders;
     }
 }
