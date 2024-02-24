@@ -3,116 +3,81 @@ import { useAppContext } from "./AppContext";
 import logo from "../assets/images/logo/etherTixLogo.png";
 import ErrorPage from "./ErrorPage";
 import { retrieveFromIPFS } from "../utils/ipfsUtils";
+import QRCode from "react-qr-code";
+import "../assets/css/MyTickets.css";
 
 const MyTickets = ({ state }) => {
-  const { account, events, isEventOrganizer } = useAppContext();
+  const { account, isEventOrganizer } = useAppContext();
   const { ticketsContract } = state;
   const [purchasedTickets, setPurchasedTickets] = useState([]);
-
-  const TotalTicketsBought = async () => {
-    if (!ticketsContract || !account) {
-      return;
-    }
-    try {
-      const userTickets = await ticketsContract.getTicket(account);
-      console.log("User Tickets:", userTickets);
-
-      // Assuming eventName is stored in the "eventName" property
-      const ticketsInfo = await Promise.all(
-        userTickets.map(async (ticket) => {
-          const eventName = await retrieveFromIPFS(ticket.eventName);
-          return { ...ticket, eventName };
-        })
-      );
-
-      console.log("Tickets Info:", ticketsInfo);
-
-      setPurchasedTickets(ticketsInfo);
-    } catch (e) {
-      console.log(e);
-    }
+  const TicketHandle = async () => {
+    const userTickets = await ticketsContract.getTicket();
+    console.log("userTickets", userTickets);
+    const ticketDetails = await Promise.all(
+      userTickets.map(async (ticket) => {
+        const detail = await retrieveFromIPFS(ticket.eventName);
+        return {
+          ...ticket,
+          eventName: detail,
+        };
+      })
+    );
+    setPurchasedTickets(ticketDetails);
+    console.log("purchasedTickets", purchasedTickets);
+    console.log("ticketDetails", ticketDetails);
   };
   useEffect(() => {
-    const handleTicketPurchased = async () => {
-      // When "TicketPurchased" event occurs, fetch the updated tickets
-      await TotalTicketsBought();
-    };
-
-    if (ticketsContract) {
-      // Register the event listener
-      ticketsContract.on("TicketPurchased", handleTicketPurchased);
-    }
-
-    return () => {
-      // Unregister the event listener when the component is unmounted
-      if (ticketsContract) {
-        ticketsContract.removeListener(
-          "TicketPurchased",
-          handleTicketPurchased
-        );
-      }
-    };
-  }, [ticketsContract, TotalTicketsBought]);
-  useEffect(() => {
-    const handleTicketPurchased = async () => {
-      // When "TicketPurchased" event occurs, fetch the updated tickets
-      await TotalTicketsBought();
-    };
-
-    if (ticketsContract) {
-      // Register the event listener
-      ticketsContract.on("TicketPurchased", handleTicketPurchased);
-    }
-
-    return () => {
-      // Unregister the event listener when the component is unmounted
-      if (ticketsContract) {
-        ticketsContract.removeListener(
-          "TicketPurchased",
-          handleTicketPurchased
-        );
-      }
-    };
-  }, [ticketsContract, TotalTicketsBought]);
+    if (!ticketsContract) return;
+    TicketHandle();
+  }, [ticketsContract]);
   return (
-    <div className="mcontainer ticketcontainer">
+    <div className="mcontainer">
       {isEventOrganizer ? (
         <ErrorPage />
       ) : (
-        <>
-          <div className="myprofile">
-            <p>My Profile</p>
-            <hr />
-          </div>
-          <div className="profile">
-            <img src={logo} className="img-fluid profile-image" width="70" />
-            <div className="ml-3">
-              <input
-                type="text"
-                placeholder="Input your name"
-                className="name"
-              />
-              <p className="useraddress">{account}</p>
-              <hr />
+        <div className="container">
+          <div className="profile-container">
+            <div>
+              <div>
+                <img
+                  src={logo}
+                  className="img-fluid profile-image"
+                  width="70"
+                />
+
+                <p>{account}</p>
+              </div>
             </div>
           </div>
-          <p className="mytickets">My Tickets</p>
 
-          <div className="row">
-            {purchasedTickets.map((ticket, index) => (
-              <div key={index} className="col-3 mb-4">
-                <div className="card">
-                  <div className="card-body">
-                    <h5 className="card-title">{ticket.eventName}</h5>
-                    <p className="card-text">
-                      Tickets Bought: {ticket.ticketsOwned.toNumber()}
-                    </p>
+          <ul className="list-group">
+            <li className="list-group-item">
+              {purchasedTickets.map((ticket, index) => (
+                <div key={index} className="col-3 mb-4">
+                  <div className="card">
+                    <div className="card-body">
+                      <h5 className="card-title">
+                        {ticket.eventName.eventName}
+                      </h5>
+                      <div>
+                        <QRCode
+                          value={`Event: ${JSON.stringify(
+                            ticket.eventName
+                          )}, Tickets: ${ticket.ticketsOwned.toNumber()}`}
+                          className="image-fluid "
+                        />
+                      </div>
+
+                      <p className="card-text">
+                        Tickets Bought: {ticket.ticketsOwned.toNumber()}
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        </>
+              ))}
+            </li>
+          </ul>
+        </div>
       )}
     </div>
   );

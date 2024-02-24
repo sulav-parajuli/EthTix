@@ -21,8 +21,7 @@ contract Tickets{
     mapping(uint256 => Event) public events;
     //Mapping to store ticket holders
     mapping(address => TicketHolder[]) public ticketHolders;
-    //Mapping to store events created by organizer
-    mapping(address => uint256[]) public eventsCreated;
+   
      //mapping to store organizer CID
     mapping(address=>string) public organizerCID;
 
@@ -152,8 +151,8 @@ contract Tickets{
     emit TicketPurchased(_eventId, _totalTicketsToBuy, msg.sender, block.timestamp);
 }
    //function to return ticket of particular user
-    function getTicket(address _userAddress)public view returns(TicketHolder[] memory){
-    return ticketHolders[_userAddress];
+    function getTicket()public view returns(TicketHolder[] memory){
+    return ticketHolders[msg.sender];
 
     }
 }
