@@ -29,6 +29,7 @@ const CreateEvent = ({ state }) => {
   const [description, setDescription] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate(); //to redirect to another page
+  const { ticketsContract } = state;
 
   useEffect(() => {
     const timer = setInterval(() => {
