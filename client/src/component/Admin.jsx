@@ -497,7 +497,7 @@ const Admin = ({ state }) => {
                             </div>
                             {isDropdownOpen && (
                               <div className="userdropdown">
-                                {!isEventOrganizer ? (
+                                {isEventOrganizer || isAdmin ? null : (
                                   <div
                                     className="nav-item"
                                     onClick={() =>
@@ -506,7 +506,7 @@ const Admin = ({ state }) => {
                                   >
                                     My Tickets
                                   </div>
-                                ) : null}
+                                )}
                                 <div
                                   className="nav-item"
                                   onClick={() => {

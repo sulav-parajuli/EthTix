@@ -62,7 +62,7 @@ const UserIcon = () => {
       ) : null}
       {isDropdownOpen && (
         <div className={"user-dropdown"}>
-          {isEventOrganizer ? null : (
+          {isEventOrganizer || isAdmin ? null : (
             <Link to="/mytickets" className="nav-item">
               My Tickets
             </Link>
