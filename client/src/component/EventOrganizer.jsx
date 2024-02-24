@@ -8,6 +8,7 @@ import { signData, uploadToIPFS } from "../utils/ipfsUtils";
 
 const EventOrganizer = ({ state }) => {
   const [nextpage, setNextpage] = useState(false);
+
   const {
     setEventOrganizer,
     account,
@@ -331,16 +332,20 @@ const EventOrganizer = ({ state }) => {
             ) : (
               <>
                 <h2 className="text-center mb-4">
-                  Are you an Event Organizer?
+                  Are you ready to proceed with event organization on this
+                  platform?
                 </h2>
                 <div className="text-justify">
                   <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Nulla nec purus feugiat, quam vitae aliquet orci.
+                    Before you take the next step, we highly recommend carefully
+                    reading our <strong>Terms and Conditions</strong> .
+                    Understanding these guidelines is crucial for a smooth event
+                    organization process.
                   </p>
                   <p>
-                    Vestibulum ac diam sit amet quam vehicula elementum sed sit
-                    amet dui. Proin eget tortor risus.
+                    Should you encounter any questions or face challenges, don't
+                    hesitate to reach out to our support team. We're here to
+                    assist you every step of the way.
                   </p>
                   {/* Add more disclaimer content as needed */}
                 </div>
