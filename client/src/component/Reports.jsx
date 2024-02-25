@@ -179,16 +179,13 @@ const Reports = ({ state }) => {
                 reports[selectedReportIndex].reportDetails.currentTime
               ).toLocaleString()}
             </p>
-            {/* {reports[selectedReportIndex].eventType === "TicketPurchased" ||
+            {reports[selectedReportIndex].eventType === "TicketPurchased" ||
             reports[selectedReportIndex].eventType === "EventCreated" ? (
               <p>
                 Event ID:{" "}
-                {parseInt(
-                  reports[selectedReportIndex].reportDetails.eventId,
-                  16
-                )}
+                {parseInt(reports[selectedReportIndex].reportDetails.eventId)}
               </p>
-            ) : null} */}
+            ) : null}
             {reports[selectedReportIndex].eventType === "EventCreated" ? (
               <>
                 <p>
@@ -224,7 +221,10 @@ const Reports = ({ state }) => {
               <>
                 <p>
                   Event Name:{" "}
-                  {reports[selectedReportIndex].reportDetails.eventName}
+                  {
+                    reports[selectedReportIndex]?.reportDetails?.details
+                      ?.eventName
+                  }
                 </p>
                 <p>
                   Ticket Bought:{" "}
