@@ -54,7 +54,7 @@ const Feature = () => {
                 <div className="feature-box d-flex align-items-center">
                   <FontAwesomeIcon icon={faCheck} />
                   &nbsp;
-                  <h3>Currency Conversion Tools</h3>
+                  <h3>Currency & Unix Time Conversion Tools</h3>
                 </div>
               </div>
 
