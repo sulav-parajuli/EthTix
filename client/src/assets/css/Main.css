@@ -180,6 +180,51 @@ img.ticketcounter {
   border-radius: 15%;
 }
 
+.main-event.text-container {
+  padding-left: 0px;
+}
+
+@media screen and (max-width: 1000px) {
+  img.ticketcounter {
+    width: 80%;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  img.ticketcounter {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .maine.image-container {
+    display: none;
+  }
+  .main-event.text-container,
+  .maine.text-block,
+  .maine.buttons {
+    padding-left: 5%;
+  }
+  .browseevent {
+    padding-top: 15% !important;
+  }
+}
+
+@media screen and (max-width: 685px) {
+  .browseevent .image-container {
+    display: none;
+  }
+  .browseevent {
+    padding-top: 10% !important;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .browseevent {
+    padding-top: 20% !important;
+  }
+}
+
 .ticketevent {
   width: 100%;
   height: auto;

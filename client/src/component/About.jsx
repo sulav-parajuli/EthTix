@@ -26,7 +26,7 @@ const About = () => {
               <h2 className="display-6" id="ethtix">
                 About EthTix
               </h2>
-              <p className="lead">
+              <p className="lead px-3 px-md-0">
                 EthTix is a decentralized application (dApp) that allows event
                 organizers to create, manage, and sell event tickets on the
                 Ethereum blockchain. EthTix leverages the Ethereum blockchain to
@@ -36,7 +36,7 @@ const About = () => {
                 transferable. EthTix also provides a user-friendly interface for
                 event organizers to create and manage events, and for event
                 attendees to purchase and transfer tickets.
-                <br />
+                <br class="d-md-block" />
                 EthTix is a fully decentralized application (dApp) that is built
                 on the Ethereum blockchain. Lorem ipsum, dolor sit amet
                 consectetur adipisicing elit. Recusandae ipsam tenetur eius?
@@ -66,37 +66,42 @@ const About = () => {
               name: "Aakriti Bhusal",
               role: "Full Stack Developer",
               imgSrc: aakriti,
-              phone: "tel:1234567890",
-              email: "mailto:example@example.com",
-              facebook: "",
-              twitter: "",
-              instagram: "",
-              linkedin: "",
-              website: "",
+              phone: "tel:9819193208",
+              email: "mailto:aakritibhusal234@gmail.com",
+              facebook:
+                "https://www.facebook.com/profile.php?id=100088076535127",
+              twitter: "https://twitter.com/aak_ritie",
+              instagram: "https://www.instagram.com/aak_ritie/",
+              linkedin: "https://www.linkedin.com/in/aakriti-bhusal-39b8912a4/",
+              website: "aakritibhusal.com.np",
             },
             {
               name: "Karuna Acharya",
               role: "Full Stack Developer",
               imgSrc: karuna,
-              phone: "tel:1234567890",
-              email: "mailto:example@example.com",
-              facebook: "",
-              twitter: "",
-              instagram: "",
-              linkedin: "",
+              phone: "tel:9805851061",
+              email: "mailto:acharyakaru2000@gmail.com",
+              facebook:
+                "https://www.facebook.com/profile.php?id=100069974996059&mibextid=ZbWKwL",
+              twitter:
+                "https://twitter.com/KarunaAcharya20?fbclid=IwAR2pvk3s2-dNWPFXDoalcucrbslX3q7axkz4j4aVg-8SDubUhDbqpMC3v4c",
+              instagram:
+                "https://www.instagram.com/karu_ach?igsh=Yjk4cHQyenlpcXhl&fbclid=IwAR2sbFJXPjOL3GnFGj3GhO5ctwAw34ssjhZYMR_H1--9n1jYRqI6DVDzkis",
+              linkedin:
+                "https://www.linkedin.com/in/karuna-acharya-2b8686288/?fbclid=IwAR0OIg-eo1U3D_V-7ZtKF7pODd8XvwuI7qcdaHOMuB4zuNMLVEMrFZaguy0",
               website: "",
             },
             {
               name: "Sulav Parajuli",
               role: "Full Stack Developer",
               imgSrc: sulav,
-              phone: "tel:1234567890",
-              email: "mailto:example@example.com",
-              facebook: "",
-              twitter: "",
-              instagram: "",
-              linkedin: "",
-              website: "",
+              phone: "tel:9816106956",
+              email: "mailto:sulavparajuli82@gmail.com",
+              facebook: "https://www.facebook.com/sulav.parajuli.5/",
+              twitter: "https://twitter.com/SulavParajul1",
+              instagram: "https://www.instagram.com/_sulav_parajuli/",
+              linkedin: "https://www.linkedin.com/in/sulavparajuli/",
+              website: "https://sulav-parajuli.com.np/",
             },
           ].map((member, index) => (
             <div key={index} className="col-md-4 mb-4">
