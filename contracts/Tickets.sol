@@ -1,6 +1,5 @@
 //SPDX-License-Identifier:MIT
 pragma solidity ^0.8.19;
-
 contract Tickets{
     struct Event{
         string eventCID;
@@ -13,9 +12,12 @@ contract Tickets{
     }
     struct TicketHolder{
         address userAddress;
+       
         string eventName;
         uint eventId;
         uint ticketsOwned;
+         uint256 purchaseTime;
+         uint256 price;
     }
     //Mapping to store events
     mapping(uint256 => Event) public events;
@@ -150,7 +152,7 @@ contract Tickets{
 
     // Update the ticket holders mapping
     TicketHolder[] storage userTickets = ticketHolders[msg.sender];
-    userTickets.push(TicketHolder(msg.sender, events[_eventId].eventCID, _eventId, _totalTicketsToBuy));
+    userTickets.push(TicketHolder(msg.sender, events[_eventId].eventCID, _eventId, _totalTicketsToBuy, block.timestamp, totalPrice));
     allTicketHolders.push(msg.sender);
     emit TicketPurchased(_eventId, _totalTicketsToBuy, msg.sender, block.timestamp);
 }

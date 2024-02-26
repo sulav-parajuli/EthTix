@@ -3,13 +3,39 @@ import { useAppContext } from "./AppContext";
 import logo from "../assets/images/logo/etherTixLogo.png";
 import ErrorPage from "./ErrorPage";
 import { retrieveFromIPFS } from "../utils/ipfsUtils";
-import QRCode from "react-qr-code";
+
 import "../assets/css/MyTickets.css";
+import TicketPopup from "./TicketPopup";
+
+const Popup = ({ isOpen, onClose, ticket }) => {
+  return isOpen ? (
+    <div className="popup popuptop">
+      <div className="popup_inner">
+        <button className="close" onClick={onClose}>
+          Close
+        </button>
+        <TicketPopup ticket={ticket} />
+      </div>
+    </div>
+  ) : null;
+};
 
 const MyTickets = ({ state }) => {
   const { account, isEventOrganizer } = useAppContext();
   const { ticketsContract } = state;
   const [purchasedTickets, setPurchasedTickets] = useState([]);
+  const [selectedTicket, setSelectedTicket] = useState(null);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const OpenPopupHandler = (ticket) => {
+    setSelectedTicket(ticket);
+    setIsPopupOpen(true);
+  };
+
+  const closePopupHandler = () => {
+    setSelectedTicket(null);
+    setIsPopupOpen(false);
+  };
+
   const TicketHandle = async () => {
     const userTickets = await ticketsContract.getTicket();
     console.log("userTickets", userTickets);
@@ -36,7 +62,7 @@ const MyTickets = ({ state }) => {
         <ErrorPage />
       ) : (
         <div className="container">
-          <div className="profile-container">
+          <div className="card">
             <div>
               <div>
                 <img
@@ -54,17 +80,22 @@ const MyTickets = ({ state }) => {
             <li className="list-group-item">
               {purchasedTickets.map((ticket, index) => (
                 <div key={index} className="col-3 mb-4">
-                  <div className="card">
+                  <div>
                     <div className="card-body">
                       <h5 className="card-title">
                         {ticket.eventName.eventName}
                       </h5>
                       <div>
-                        <QRCode
-                          value={`Event: ${JSON.stringify(
-                            ticket.eventName
-                          )}, Tickets: ${ticket.ticketsOwned.toNumber()}`}
-                          className="image-fluid "
+                        <button
+                          onClick={() => OpenPopupHandler(ticket)}
+                          className="btn btn-primary"
+                        >
+                          View Ticket Details
+                        </button>
+                        <Popup
+                          isOpen={isPopupOpen}
+                          onClose={closePopupHandler}
+                          ticket={selectedTicket}
                         />
                       </div>
 
