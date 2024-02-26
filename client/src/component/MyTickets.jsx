@@ -37,7 +37,7 @@ const MyTickets = ({ state }) => {
   };
 
   const TicketHandle = async () => {
-    const userTickets = await ticketsContract.getTicket();
+    const userTickets = await ticketsContract.getTicket(account);
     console.log("userTickets", userTickets);
     const ticketDetails = await Promise.all(
       userTickets.map(async (ticket) => {

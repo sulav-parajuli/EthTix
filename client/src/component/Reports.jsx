@@ -20,7 +20,6 @@ const Reports = ({ state }) => {
     fetchReports,
     fetchEvents,
     setEvents,
-    createReports,
     retrieveAllTransactionsFromLocalStorage,
     getTransactionDetails,
     viewTransactionOnEtherscan,
@@ -89,7 +88,6 @@ const Reports = ({ state }) => {
     try {
       const initialize = async () => {
         if (ticketsContract) {
-          createReports();
           // Fetch initial events
           await fetchEvents().then((initialEvents) => {
             setEvents(initialEvents);
@@ -118,20 +116,6 @@ const Reports = ({ state }) => {
       };
 
       initialize();
-
-      return () => {
-        if (ticketsContract) {
-          try {
-            //unsubscribe when component unmounts.
-            ticketsContract.removeAllListeners("OrganizerRegistered");
-            ticketsContract.removeAllListeners("EventCreated");
-            ticketsContract.removeAllListeners("TicketPurchased");
-            // Remove other event listeners as needed...
-          } catch (error) {
-            console.error("Error unsubscribing from events:", error);
-          }
-        }
-      };
     } catch (error) {
       console.error("Error in useEffect:", error);
     }
@@ -195,13 +179,13 @@ const Reports = ({ state }) => {
                 reports[selectedReportIndex].reportDetails.currentTime
               ).toLocaleString()}
             </p>
-            {/* {reports[selectedReportIndex].eventType === "TicketPurchased" ||
+            {reports[selectedReportIndex].eventType === "TicketPurchased" ||
             reports[selectedReportIndex].eventType === "EventCreated" ? (
               <p>
                 Event ID:{" "}
                 {parseInt(reports[selectedReportIndex].reportDetails.eventId)}
               </p>
-            ) : null} */}
+            ) : null}
             {reports[selectedReportIndex].eventType === "EventCreated" ? (
               <>
                 <p>
@@ -225,45 +209,41 @@ const Reports = ({ state }) => {
                     selectedReportIndex
                   ].reportDetails.location.toString()}
                 </p>
+                <p>
+                  Description:{" "}
+                  {reports[
+                    selectedReportIndex
+                  ].reportDetails.description.toString()}
+                </p>
               </>
             ) : null}
             {reports[selectedReportIndex].eventType === "TicketPurchased" ? (
               <>
                 <p>
                   Event Name:{" "}
-                  {events[
-                    parseInt(
-                      reports[selectedReportIndex].reportDetails.eventId.hex
-                    ) - 1
-                  ].eventName.toString()}
+                  {
+                    reports[selectedReportIndex]?.reportDetails?.details
+                      ?.eventName
+                  }
                 </p>
                 <p>
                   Ticket Bought:{" "}
-                  {parseInt(
-                    reports[selectedReportIndex].reportDetails.ticketsBought.hex
-                  )}
+                  {reports[selectedReportIndex].reportDetails.ticketsOwned}
                 </p>
-                <p>
-                  {" "}
-                  Buyer: {reports[selectedReportIndex].reportDetails.buyer}
-                </p>
-                <p>
+                <p> Buyer: {reports[selectedReportIndex].ticketHolder}</p>
+                {/* <p> Buyer: {reports[selectedReportIndex].reportDetails[0].userAddress}</p> */}
+                {/* <p>
                   Price Paid:&nbsp;
-                  {parseInt(
-                    reports[selectedReportIndex].reportDetails.ticketsBought.hex
-                  ) *
+                  {reports[
+                    selectedReportIndex
+                  ].reportDetails.ticketsOwned.toNumber() *
                     ethers.utils
                       .formatEther(
-                        events[
-                          parseInt(
-                            reports[selectedReportIndex].reportDetails.eventId
-                              .hex
-                          ) - 1
-                        ].price
+                        reports[selectedReportIndex].reportDetails.details.price
                       )
                       .toString()}
                   &nbsp;ETH
-                </p>
+                </p> */}
               </>
             ) : null}
             {reports[selectedReportIndex].eventType ===

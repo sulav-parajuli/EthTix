@@ -77,7 +77,10 @@ const BrowseEvent = ({ state }) => {
 
   return (
     <>
-      <div className="mcontainer main-event" style={{ paddingTop: "5%" }}>
+      <div
+        className="mcontainer main-event browseevent"
+        style={{ paddingTop: "5%" }}
+      >
         <div className="text-container" style={{ padding: "5%" }}>
           <div className="text-block">
             <p className="main-text">

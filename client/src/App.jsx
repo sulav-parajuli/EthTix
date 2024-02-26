@@ -36,6 +36,7 @@ import ErrorPage from "./component/ErrorPage.jsx";
 import { AppProvider } from "./component/AppContext.jsx"; // Import AppProvider
 import PrivacyPolicy from "./component/PrivacyPolicy.jsx";
 import TermsAndConditions from "./component/TermsAndConditions.jsx";
+import OrganizerTerms from "./component/OrganizerTerms.jsx";
 
 function App() {
   const [state, setState] = useState({
@@ -191,6 +192,7 @@ function App() {
               <Route path="about" element={<About />} />
               <Route path="privacy" element={<PrivacyPolicy />} />
               <Route path="terms" element={<TermsAndConditions />} />
+              <Route path="organizerterms" element={<OrganizerTerms />} />
               {/* Catch-all other routes for displaying an error page */}
               <Route path="*" element={<ErrorPage />} />
             </>

@@ -163,6 +163,14 @@ const AdminEvents = ({ state }) => {
                   formatTime(events[selectedEventIndex].time)}
             </p>
             <p>
+              Description:{" "}
+              {isSearch
+                ? filteredEvents[
+                    selectedFilteredEventIndex
+                  ].description.toString()
+                : events[selectedEventIndex].description.toString()}
+            </p>
+            <p>
               Total Tickets:{" "}
               {isSearch
                 ? filteredEvents[

@@ -365,3 +365,15 @@ button.btn.btn-danger {
   background-color: #c1292e;
   border-radius: 50%;
 }
+
+@media screen and (max-width: 768px) {
+  .notification-dot {
+    right: 35px;
+  }
+}
+
+@media screen and (max-width: 685px) {
+  .topnav .logo {
+    margin-left: 20px !important;
+  }
+}

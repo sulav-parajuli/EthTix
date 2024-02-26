@@ -1,10 +1,10 @@
 import React from "react";
-import value1 from "../assets/images/whyethtix/values-1.png";
-import value2 from "../assets/images/whyethtix/values-2.png";
-import value3 from "../assets/images/whyethtix/values-3.png";
-// import value4 from "../assets/images/whyethtix/values-4.png";
-// import value5 from "../assets/images/whyethtix/values-5.png";
-// import value6 from "../assets/images/whyethtix/values-6.png";
+import value1 from "../assets/images/whyethtix/Authentication.gif";
+import value2 from "../assets/images/whyethtix/Audit-pana.png";
+import value3 from "../assets/images/whyethtix/network.png";
+import value4 from "../assets/images/whyethtix/Security On-bro.png";
+import value5 from "../assets/images/whyethtix/transfer.png";
+import value6 from "../assets/images/whyethtix/support.gif";
 
 const WhyEthTix = () => {
   return (
@@ -60,11 +60,7 @@ const WhyEthTix = () => {
 
           <div className="col-lg-4 mt-4 mt-lg-0">
             <div className="box">
-              {/* <img
-                src={value4}
-                className="img-fluid"
-                alt=""
-              /> */}
+              <img src={value4} className="img-fluid" alt="" />
               <h3>Enhanced Security</h3>
               <p>
                 Blockchain technology used by EthTix offers enhanced security
@@ -75,11 +71,7 @@ const WhyEthTix = () => {
           </div>
           <div className="col-lg-4 mt-4 mt-lg-0">
             <div className="box">
-              {/* <img
-                src={value5}
-                className="img-fluid"
-                alt=""
-              /> */}
+              <img src={value5} className="img-fluid" alt="" />
               <h3>Seamless Ticket Transfer</h3>
               <p>
                 EthTix facilitates seamless ticket transfers between users,
@@ -91,11 +83,7 @@ const WhyEthTix = () => {
           </div>
           <div className="col-lg-4 mt-4 mt-lg-0">
             <div className="box">
-              {/* <img
-                src={value6}
-                className="img-fluid"
-                alt=""
-              /> */}
+              <img src={value6} className="img-fluid" alt="" />
               <h3>Support for Event Organizers</h3>
               <p>
                 EthTix provides comprehensive support for event organizers,

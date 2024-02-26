@@ -33,6 +33,9 @@ const Footer = () => {
                 <li>
                   <a href="/events">Events</a>
                 </li>
+                <li>
+                  <a href="/mytickets">My Tickets</a>
+                </li>
               </ol>
               <ol>
                 Services
@@ -45,6 +48,9 @@ const Footer = () => {
                 <li>
                   <a href="/dashboard">Tools</a>
                 </li>
+                <li>
+                  <a href="/#features">Features</a>
+                </li>
               </ol>
               <ol>
                 Learn
@@ -53,6 +59,9 @@ const Footer = () => {
                 </li>
                 <li>
                   <a href="/#whyethtix">Why EthTix</a>
+                </li>
+                <li>
+                  <a href="/about/#meettheteam">Our Teams</a>
                 </li>
                 <li>
                   <a href="#">Help & Support</a>
@@ -68,6 +77,9 @@ const Footer = () => {
                 </li>
                 <li>
                   <a href="/#howtouse">How to use</a>
+                </li>
+                <li>
+                  <a href="/organizerterms">Organizers Terms</a>
                 </li>
               </ol>
             </ul>

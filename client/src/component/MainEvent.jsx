@@ -8,10 +8,7 @@ const MainEvent = () => {
       <div className="maine image-container">
         <img src={ticketcounter} className="ticketcounter" />
       </div>
-      <div
-        className="text-container"
-        style={{ justifyContent: "center", paddingLeft: "0px" }}
-      >
+      <div className="text-container" style={{ justifyContent: "center" }}>
         <div className="maine text-block">
           <p className="main-text">Smart Ticket Solutions</p>
           <p className="sub-text">

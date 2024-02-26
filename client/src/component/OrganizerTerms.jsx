@@ -71,9 +71,9 @@ const TermsAndConditions = () => {
             continue with the registration process.
           </p>
 
-          <button className="btn btn-primary" onClick={handleAcceptTerms}>
+          {/* <button className="btn btn-primary" onClick={handleAcceptTerms}>
             Next
-          </button>
+          </button> */}
         </div>
       </div>
     </div>

@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { toast } from "react-toastify"; // Import toastify for displaying notifications
-import { retrieveFromIPFS, uploadToIPFS } from "../utils/ipfsUtils";
+import { retrieveFromIPFS } from "../utils/ipfsUtils";
 import { ethers } from "ethers"; // Import ethers
 // Import the contract addresses from the JSON file
 import contractAddresses from "../../../contractAddresses.json";
@@ -105,122 +105,6 @@ const AppProvider = ({ children, template, accounts, account, state }) => {
   // const formattedDateTime = convertUnixTimestampToDateTime(unixTimestamp);
   // console.log("Formatted Date and Time:", formattedDateTime);
 
-  const createReports = async () => {
-    try {
-      // Subscribe to the "OrganizerRegistered" event
-      // ticketsContract.on(
-      //   "OrganizerRegistered",
-      //   async (organizerAddress, CID, registerTime) => {
-      //     // console.log(
-      //     //   "OrganizerRegistered event triggered:",
-      //     //   organizerAddress,
-      //     //   CID,
-      //     //   registerTime
-      //     // );
-      //     const details = await retrieveFromIPFS(CID);
-      //     // console.log(registerTime);
-      //     const time = convertUnixTimestampToDateTime(registerTime); // Convert Unix time to Date and Time
-      //     // console.log(time);
-      //     // console.log(details);
-      //     // Create a new report for OrganizerRegistered event
-      //     const newReport = {
-      //       eventType: "OrganizerRegistered",
-      //       reportName: "Register Event Organizer",
-      //       details,
-      //       organizerAddress,
-      //       CID,
-      //       creationTime: time,
-      //     };
-
-      //     const data = JSON.stringify(newReport);
-      //     //upload report to IPFS
-      //     const { ipfsCid } = await uploadToIPFS(data);
-      //     // console.log("IPFS CID:", ipfsCid);
-      //     saveIpfsCidToLocalStorage(ipfsCid);
-      //     // console.log("Report Created");
-      //     // Fetch updated reports
-      //     // const updatedReports = await fetchReports();
-      //     // // Update the reports state
-      //     // setReports(updatedReports);
-      //   }
-      // );
-
-      // // Subscribe to the "EventCreated" event
-      // ticketsContract.on(
-      //   "EventCreated",
-      //   async (eventId, organizer, eventCid, creationTime) => {
-      //     // console.log("EventCreated event triggered:", eventId.toString(), organizer, eventCid, creationTime);
-
-      //     const details = await retrieveFromIPFS(eventCid);
-      //     // console.log(creationTime);
-      //     const time = convertUnixTimestampToDateTime(creationTime); // Convert Unix time to Date and Time
-      //     // console.log(time);
-      //     // console.log(details);
-      //     // Create a new report for EventCreated event
-      //     const newReport = {
-      //       eventType: "EventCreated",
-      //       reportName: "Event Created",
-      //       eventId,
-      //       organizer,
-      //       details,
-      //       eventCid,
-      //       creationTime: time,
-      //     };
-
-      //     const data = JSON.stringify(newReport);
-      //     //upload report to IPFS
-      //     const { ipfsCid } = await uploadToIPFS(data);
-      //     // console.log("IPFS CID:", ipfsCid);
-      //     saveIpfsCidToLocalStorage(ipfsCid);
-      //     // console.log("Report Created");
-      //     // Fetch updated reports
-      //     // const updatedReports = await fetchReports();
-      //     // // Update the reports state
-      //     // setReports(updatedReports);
-      //   }
-      // );
-
-      // Subscribe to the "TicketPurchased" event
-      ticketsContract.on(
-        "TicketPurchased",
-        async (eventId, ticketsBought, buyer, purchaseTime) => {
-          // console.log(
-          //   "TicketPurchased event triggered:",
-          //   eventId,
-          //   ticketsBought,
-          //   buyer,
-          //   purchaseTime
-          // );
-
-          const time = convertUnixTimestampToDateTime(purchaseTime); // Convert Unix time to Date and Time
-          // console.log(time);
-          // Create a new report for TicketPurchased event
-          const newReport = {
-            // eventType: "TicketPurchased",
-            // reportName: "Ticket Purchased",
-            eventId,
-            ticketsBought,
-            buyer,
-            currentTime: time,
-          };
-
-          const data = JSON.stringify(newReport);
-          //upload report to IPFS
-          const { ipfsCid } = await uploadToIPFS(data);
-          // console.log("IPFS CID:", ipfsCid);
-          saveIpfsCidToLocalStorage(ipfsCid);
-          // console.log("Report Created");
-          // // Fetch updated reports
-          // const updatedReports = await fetchReports();
-          // // Update the reports state
-          // setReports(updatedReports);
-        }
-      );
-    } catch (error) {
-      console.error("Error subscribing to events and creating reports:", error);
-    }
-  };
-
   // Function to get the transaction details
   const getTransactionDetails = async (transactionHash) => {
     try {
@@ -262,34 +146,14 @@ const AppProvider = ({ children, template, accounts, account, state }) => {
     }
   };
 
-  // Function to save IPFS CIDs to localStorage without duplicacy
-  const saveIpfsCidToLocalStorage = (ipfsCid) => {
-    let storedCids = JSON.parse(localStorage.getItem("ipfsCids")) || [];
-
-    // Check if ipfsCid already exists in the array
-    if (!storedCids.includes(ipfsCid)) {
-      // Add ipfsCid to top of the array
-      storedCids = [ipfsCid, ...storedCids];
-
-      // Update localStorage
-      localStorage.setItem("ipfsCids", JSON.stringify(storedCids));
-    }
-  };
-
-  // Function to retrieve all IPFS CIDs from localStorage
-  const retrieveAllIpfsCidsFromLocalStorage = () => {
-    const storedCids = JSON.parse(localStorage.getItem("ipfsCids")) || {};
-    return storedCids;
-  };
-
-  // Function to retrieve all IPFS CIDs from localStorage
+  // Function to retrieve all transactions hash from localStorage
   const retrieveAllTransactionsFromLocalStorage = () => {
     const storedTransactions =
       JSON.parse(localStorage.getItem("transactions")) || {};
     return storedTransactions;
   };
 
-  // Function to fetch reports using IPFS CIDs from localStorage
+  // Function to fetch reports using the data from the smart contract and IPFS
   const fetchReports = async () => {
     try {
       const fetchedReports = [];
@@ -309,13 +173,32 @@ const AppProvider = ({ children, template, accounts, account, state }) => {
       }
 
       //For Ticket Purchased
-      const storedCids = retrieveAllIpfsCidsFromLocalStorage();
-      for (let i = 0; i < storedCids.length; i++) {
-        const ipfsCid = storedCids[i];
-        const reportDetails = await retrieveFromIPFS(ipfsCid);
+      // const storedCids = retrieveAllIpfsCidsFromLocalStorage();
+      const ticketHolderAddress = await ticketsContract.ticketHolderAddress();
+      for (let i = 0; i < ticketHolderAddress.length; i++) {
+        const ticketDetails = await ticketsContract.getTicket(
+          ticketHolderAddress[i]
+        );
+        const reportDetails = await Promise.all(
+          ticketDetails.map(async (ticket) => {
+            const detail = await retrieveFromIPFS(ticket.eventName);
+            return {
+              ...ticket,
+              details: detail,
+            };
+          })
+        );
+        console.log(reportDetails);
+        // console.log(ticketDetails);
+        const ticketHolder = ticketHolderAddress[i];
         const eventType = "TicketPurchased";
         const reportName = "Ticket Purchased";
-        const combinedData = { ipfsCid, eventType, reportName, reportDetails }; // Combine data
+        const combinedData = {
+          eventType,
+          reportName,
+          reportDetails,
+          ticketHolder,
+        }; // Combine data
         fetchedReports.push(combinedData);
       }
 
@@ -369,7 +252,6 @@ const AppProvider = ({ children, template, accounts, account, state }) => {
     setEvents,
     fetchEvents,
     handleEventCreated,
-    createReports,
     fetchReports,
     isSelected,
     setIsSelected,
@@ -382,6 +264,7 @@ const AppProvider = ({ children, template, accounts, account, state }) => {
     viewTransactionOnEtherscan,
     savetransactionHashToLocalStorage,
     retrieveAllTransactionsFromLocalStorage,
+    convertUnixTimestampToDateTime,
   };
 
   const ticketContractAddress = contractAddresses.tickets;
@@ -392,12 +275,9 @@ const AppProvider = ({ children, template, accounts, account, state }) => {
         if ((await account) !== "Not connected") {
           //console.log(account);
           setUserConnected(true);
-          // Listen to every events emitted by the smart contract and create it's reports.
-          createReports();
           if (contractadd !== ticketContractAddress) {
             localStorage.setItem("contractAddress", ticketContractAddress);
             // console.log("contractAddress:", ticketContractAddress);
-            localStorage.removeItem("ipfsCids");
             localStorage.removeItem("notifications");
             localStorage.removeItem("transactions");
           }
