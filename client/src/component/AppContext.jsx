@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { toast } from "react-toastify"; // Import toastify for displaying notifications
-import { retrieveFromIPFS, uploadToIPFS } from "../utils/ipfsUtils";
+import { retrieveFromIPFS } from "../utils/ipfsUtils";
 import { ethers } from "ethers"; // Import ethers
 // Import the contract addresses from the JSON file
 import contractAddresses from "../../../contractAddresses.json";
@@ -146,34 +146,14 @@ const AppProvider = ({ children, template, accounts, account, state }) => {
     }
   };
 
-  // Function to save IPFS CIDs to localStorage without duplicacy
-  // const saveIpfsCidToLocalStorage = (ipfsCid) => {
-  //   let storedCids = JSON.parse(localStorage.getItem("ipfsCids")) || [];
-
-  //   // Check if ipfsCid already exists in the array
-  //   if (!storedCids.includes(ipfsCid)) {
-  //     // Add ipfsCid to top of the array
-  //     storedCids = [ipfsCid, ...storedCids];
-
-  //     // Update localStorage
-  //     localStorage.setItem("ipfsCids", JSON.stringify(storedCids));
-  //   }
-  // };
-
-  // Function to retrieve all IPFS CIDs from localStorage
-  // const retrieveAllIpfsCidsFromLocalStorage = () => {
-  //   const storedCids = JSON.parse(localStorage.getItem("ipfsCids")) || {};
-  //   return storedCids;
-  // };
-
-  // Function to retrieve all IPFS CIDs from localStorage
+  // Function to retrieve all transactions hash from localStorage
   const retrieveAllTransactionsFromLocalStorage = () => {
     const storedTransactions =
       JSON.parse(localStorage.getItem("transactions")) || {};
     return storedTransactions;
   };
 
-  // Function to fetch reports using IPFS CIDs from localStorage
+  // Function to fetch reports using the data from the smart contract and IPFS
   const fetchReports = async () => {
     try {
       const fetchedReports = [];
@@ -298,7 +278,6 @@ const AppProvider = ({ children, template, accounts, account, state }) => {
           if (contractadd !== ticketContractAddress) {
             localStorage.setItem("contractAddress", ticketContractAddress);
             // console.log("contractAddress:", ticketContractAddress);
-            localStorage.removeItem("ipfsCids");
             localStorage.removeItem("notifications");
             localStorage.removeItem("transactions");
           }

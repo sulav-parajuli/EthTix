@@ -73,7 +73,7 @@ const About = () => {
               twitter: "https://twitter.com/aak_ritie",
               instagram: "https://www.instagram.com/aak_ritie/",
               linkedin: "https://www.linkedin.com/in/aakriti-bhusal-39b8912a4/",
-              website: "aakritibhusal.com.np",
+              website: "https://aakritibhusal.com.np",
             },
             {
               name: "Karuna Acharya",
@@ -89,7 +89,7 @@ const About = () => {
                 "https://www.instagram.com/karu_ach?igsh=Yjk4cHQyenlpcXhl&fbclid=IwAR2sbFJXPjOL3GnFGj3GhO5ctwAw34ssjhZYMR_H1--9n1jYRqI6DVDzkis",
               linkedin:
                 "https://www.linkedin.com/in/karuna-acharya-2b8686288/?fbclid=IwAR0OIg-eo1U3D_V-7ZtKF7pODd8XvwuI7qcdaHOMuB4zuNMLVEMrFZaguy0",
-              website: "",
+              website: "https://karunaacharya.com.np/",
             },
             {
               name: "Sulav Parajuli",
