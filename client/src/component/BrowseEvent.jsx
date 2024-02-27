@@ -9,7 +9,7 @@ import { Triangle } from "react-loader-spinner";
 
 const Popup = ({ isOpen, onClose, event, state, selectedEventIndex }) => {
   return isOpen ? (
-    <div className="popup">
+    <div className="popup popuptop">
       <div className="popup-inner">
         <button className="close" onClick={onClose}>
           Close

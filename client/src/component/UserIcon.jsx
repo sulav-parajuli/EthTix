@@ -46,7 +46,11 @@ const UserIcon = () => {
   }, []);
 
   useEffect(() => {
-    setDropdownOpen(true);
+    if (isSmallScreen) {
+      setDropdownOpen(true);
+    } else {
+      setDropdownOpen(false);
+    }
   }, [isSmallScreen]);
 
   return (

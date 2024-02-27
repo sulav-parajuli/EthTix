@@ -15,3 +15,12 @@
 .popuptop {
   z-index: 4000;
 }
+
+@media screen and (max-width: 768px) {
+  .col-sm-5 {
+    width: 100%;
+  }
+  .col-7 {
+    width: 100%;
+  }
+}

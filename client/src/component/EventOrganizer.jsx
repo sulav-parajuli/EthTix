@@ -44,6 +44,12 @@ const EventOrganizer = ({ state }) => {
     navigate("/dashboard");
   };
 
+  function NavigateOrganizerTerms() {
+    document.body.classList.remove("popup-open"); // Allow scrolling
+    document.querySelector(".topnav").style.background = "transparent";
+    navigate("/organizerterms");
+  }
+
   const handleEventOrganizer = async (event) => {
     event.preventDefault();
     try {
@@ -338,9 +344,12 @@ const EventOrganizer = ({ state }) => {
                 <div className="text-justify">
                   <p>
                     Before you take the next step, we highly recommend carefully
-                    reading our <strong>Terms and Conditions</strong> .
-                    Understanding these guidelines is crucial for a smooth event
-                    organization process.
+                    reading our{" "}
+                    <strong onClick={NavigateOrganizerTerms}>
+                      Terms and Conditions
+                    </strong>{" "}
+                    . Understanding these guidelines is crucial for a smooth
+                    event organization process.
                   </p>
                   <p>
                     Should you encounter any questions or face challenges, don't

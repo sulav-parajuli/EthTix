@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { ethers } from "ethers";
 import { useAppContext } from "./AppContext";
 import { useNavigate } from "react-router-dom";
@@ -10,15 +10,6 @@ const BuyTicket = ({ eventIndex, event, state }) => {
   const { savetransactionHashToLocalStorage, isEventOrganizer, isAdmin } =
     useAppContext();
   const navigate = useNavigate();
-  // Define state variables for date and time of ticket purchased
-  const [currentTime, setCurrentTime] = useState(new Date());
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentTime(new Date());
-    }, 1000);
-    return () => clearInterval(timer);
-  }, [ticketsContract]);
 
   const handlequantityChange = (event) => {
     const inputValue = event.target.value;
@@ -64,18 +55,6 @@ const BuyTicket = ({ eventIndex, event, state }) => {
       // Calculate total price
       const totalPrice = event.price.mul(quantity);
 
-      const ticketData = {
-        //other data
-        currentTime, // Don't forget to add the current time to the ipfs
-      };
-      //sign Data
-      // const { data, signature } = await signData(
-      //   signer,
-      //   JSON.stringify(ticketData)
-      // );
-      //upload to ipfs
-      // const { ipfsCid } = await uploadToIPFS(data, signature);
-
       // Call the buyTicket function from the smart contract
       const transaction = await ticketsContract.buyTicket(
         eventIndex + 1,
@@ -107,7 +86,7 @@ const BuyTicket = ({ eventIndex, event, state }) => {
       <div className="row py-2">
         {/* Display Ticket Purchase Form */}
         <div className="col-lg-6">
-          <h2>Buy Ticket</h2>
+          <h2 style={{ textAlign: "justify", padding: "0px" }}>Buy Ticket</h2>
           {event ? (
             <>
               <p>
