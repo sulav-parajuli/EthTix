@@ -1,3 +1,17 @@
+.button {
+  background-color: #00a9b8;
+  color: white;
+  border: none;
+  padding: 10px 15px; /* Adjusted padding */
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px; /* Adjusted font-size */
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
 .popuptop {
-  z-index: 100;
+  z-index: 4000;
 }

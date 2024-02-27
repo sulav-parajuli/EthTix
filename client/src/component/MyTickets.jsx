@@ -10,10 +10,11 @@ import TicketPopup from "./TicketPopup";
 const Popup = ({ isOpen, onClose, ticket }) => {
   return isOpen ? (
     <div className="popup popuptop">
-      <div className="popup_inner">
-        <button className="close" onClick={onClose}>
-          Close
-        </button>
+      <div className="card position-relative mb-5">
+        <button
+          className="btn-close position-absolute top-0 end-0 m-3"
+          onClick={onClose}
+        ></button>
         <TicketPopup ticket={ticket} />
       </div>
     </div>
@@ -57,57 +58,56 @@ const MyTickets = ({ state }) => {
     TicketHandle();
   }, [ticketsContract]);
   return (
-    <div className="mcontainer">
+    <div className="mcontainer mb-5">
       {isEventOrganizer ? (
         <ErrorPage />
       ) : (
-        <div className="container">
-          <div className="card">
-            <div>
-              <div>
-                <img
-                  src={logo}
-                  className="img-fluid profile-image"
-                  width="70"
-                />
-
-                <p>{account}</p>
+        <div className="container mt-5">
+          <div className="row">
+            {/* Left div */}
+            <div className="col-sm-5">
+              <div className="card">
+                <div>
+                  <img
+                    src={logo}
+                    className="img-fluid profile-image"
+                    width="70"
+                  />
+                  <p>{account}</p>
+                </div>
               </div>
             </div>
-          </div>
 
-          <ul className="list-group">
-            <li className="list-group-item">
-              {purchasedTickets.map((ticket, index) => (
-                <div key={index} className="col-3 mb-4">
-                  <div>
-                    <div className="card-body">
-                      <h5 className="card-title">
-                        {ticket.eventName.eventName}
-                      </h5>
-                      <div>
-                        <button
-                          onClick={() => OpenPopupHandler(ticket)}
-                          className="btn btn-primary"
-                        >
-                          View Ticket Details
-                        </button>
-                        <Popup
-                          isOpen={isPopupOpen}
-                          onClose={closePopupHandler}
-                          ticket={selectedTicket}
-                        />
+            {/* Right div */}
+            <div className="col-7">
+              <ul className="list-group">
+                {purchasedTickets.map((ticket, index) => (
+                  <li key={index} className="list-group-item">
+                    <div className="col-3 mb-4">
+                      <div className=" d-flex justify-content-between align-items-center">
+                        <h5 className="card-title">
+                          {ticket.eventName.eventName}
+                        </h5>
+                        <div>
+                          <button
+                            onClick={() => OpenPopupHandler(ticket)}
+                            className="button justify-content-end"
+                          >
+                            Ticket Details
+                          </button>
+                          <Popup
+                            isOpen={isPopupOpen}
+                            onClose={closePopupHandler}
+                            ticket={selectedTicket}
+                          />
+                        </div>
                       </div>
-
-                      <p className="card-text">
-                        Tickets Bought: {ticket.ticketsOwned.toNumber()}
-                      </p>
                     </div>
-                  </div>
-                </div>
-              ))}
-            </li>
-          </ul>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
         </div>
       )}
     </div>

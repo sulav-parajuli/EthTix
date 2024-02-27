@@ -7,8 +7,8 @@ const TicketPopup = ({ ticket }) => {
   const eventLocation = JSON.stringify(ticket.eventName.location);
   const description = JSON.stringify(ticket.eventName.description);
   return (
-    <div className="card w-75 mb-3 mt-4">
-      <div className=" card-body">
+    <div className="mb-5">
+      <div>
         <h3>{eventName.replace(/"/g, "")}</h3>
         <div className="text-justify">
           <p>{`Date: ${eventDate.replace(/"/g, "")}`}</p>
@@ -17,7 +17,7 @@ const TicketPopup = ({ ticket }) => {
           {ticket.eventName.description ? (
             <p>{`Description: ${description.replace(/"/g, "")}`}</p>
           ) : (
-            <p>{`Description: No description provided`}</p>
+            <p>{`Description: No description `}</p>
           )}
           <QRCode
             value={`Event: ${JSON.stringify(
