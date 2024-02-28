@@ -9,7 +9,7 @@ import UserIcon from "./UserIcon"; // Import your user icon component
 
 const Popup = ({ isOpen, onClose, state }) => {
   return isOpen ? (
-    <div className="popup">
+    <div className="popup popuptop">
       <div className="popup-inner">
         <button className="close" onClick={onClose}>
           Close
@@ -130,16 +130,12 @@ const Navbar = ({ state }) => {
                   Connect
                 </button>
               )}
-              <Popup
-                isOpen={isPopupOpen}
-                onClose={handleClosePopup}
-                state={state}
-              />
             </div>
           </div>
         </div>
         {isNavbarOpen ? <div className="Menuitem"></div> : null}
       </nav>
+      <Popup isOpen={isPopupOpen} onClose={handleClosePopup} state={state} />
     </>
   );
 };

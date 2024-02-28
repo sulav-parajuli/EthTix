@@ -10,7 +10,7 @@ import { useAppContext } from "./AppContext";
 const Popup = ({ isOpen, onClose, state }) => {
   const { isUserConnected, isEventOrganizer, isAdmin } = useAppContext();
   return isOpen ? (
-    <div className="popup">
+    <div className="popup popuptop">
       <div className="popup-inner">
         <button className="close" onClick={onClose}>
           Close
@@ -20,7 +20,7 @@ const Popup = ({ isOpen, onClose, state }) => {
           <EventOrganizer state={state} />
         ) : (
           <div className="container mt-5">
-            <p>Sign in to create event</p>
+            <p>Connect your wallet to create event</p>
           </div>
         )}
       </div>
