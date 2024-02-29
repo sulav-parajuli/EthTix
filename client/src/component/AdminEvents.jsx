@@ -16,7 +16,9 @@ const AdminEvents = ({ state }) => {
     fetchEvents,
     handleEventCreated,
     setEvents,
+    isEventOrganizer,
     isAdmin,
+    account,
   } = useAppContext();
   const { ticketsContract } = state;
   const [isLoading, setIsLoading] = useState(true);
@@ -24,6 +26,7 @@ const AdminEvents = ({ state }) => {
   const [selectedEventIndex, setSelectedEventIndex] = useState(null);
   const [selectedFilteredEventIndex, setSelectedFilteredEventIndex] =
     useState(null);
+  const [organizerevents, setOrganizerEvents] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [EventDetail, setEventDetail] = useState(false);
@@ -44,10 +47,23 @@ const AdminEvents = ({ state }) => {
 
   const handleSearchButton = () => {
     setSearch(true);
-    const filterEvents = events.filter((event) =>
-      event.eventName.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-    setFilteredEvents(filterEvents);
+    if (isAdmin) {
+      const filterEvents = events.filter((event) =>
+        event.eventName.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setFilteredEvents(filterEvents);
+    } else {
+      const filterEvents = organizerevents.filter((event) =>
+        event.eventName.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setFilteredEvents(filterEvents);
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleSearchButton();
+    }
   };
 
   useEffect(() => {
@@ -58,6 +74,19 @@ const AdminEvents = ({ state }) => {
     // Fetch initial events
     fetchEvents().then((initialEvents) => {
       setEvents(initialEvents);
+
+      // Initialize organizer events array
+      const organizerEvents = [];
+
+      // Loop through the events and check if the creator matches the current account
+      initialEvents.forEach((event) => {
+        if (event.creator.toLowerCase() === account) {
+          organizerEvents.push(event);
+        }
+      });
+
+      // Set organizer events
+      setOrganizerEvents(organizerEvents);
       setIsLoading(false); // Set loading to false once events are fetched
     });
 
@@ -124,14 +153,18 @@ const AdminEvents = ({ state }) => {
                   ? filteredEvents[
                       selectedFilteredEventIndex
                     ].eventName.toString()
-                  : events[selectedEventIndex].eventName.toString()}
+                  : isAdmin
+                  ? events[selectedEventIndex].eventName.toString()
+                  : organizerevents[selectedEventIndex].eventName.toString()}
               </span>
             </p>
             <p>
               Creator:{" "}
               {isSearch
                 ? filteredEvents[selectedFilteredEventIndex].creator
-                : events[selectedEventIndex].creator}
+                : isAdmin
+                ? events[selectedEventIndex].creator
+                : organizerevents[selectedEventIndex].creator}
             </p>
             <p>
               Price:{" "}
@@ -141,16 +174,22 @@ const AdminEvents = ({ state }) => {
                       filteredEvents[selectedFilteredEventIndex].price
                     )
                     .toString()
-                : ethers.utils
+                : isAdmin
+                ? ethers.utils
                     .formatEther(events[selectedEventIndex].price)
-                    .toString()}{" "}
+                    .toString()
+                : ethers.utils.formatEther(
+                    organizerevents[selectedEventIndex].price.toString()
+                  )}{" "}
               ETH
             </p>
             <p>
               Location:{" "}
               {isSearch
                 ? filteredEvents[selectedFilteredEventIndex].location.toString()
-                : events[selectedEventIndex].location.toString()}
+                : isAdmin
+                ? events[selectedEventIndex].location.toString()
+                : organizerevents[selectedEventIndex].location.toString()}
             </p>
             <p>
               Event Date:{" "}
@@ -158,9 +197,13 @@ const AdminEvents = ({ state }) => {
                 ? filteredEvents[selectedFilteredEventIndex].date +
                   ", " +
                   formatTime(filteredEvents[selectedFilteredEventIndex].time)
-                : events[selectedEventIndex].date +
+                : isAdmin
+                ? events[selectedEventIndex].date +
                   ", " +
-                  formatTime(events[selectedEventIndex].time)}
+                  formatTime(events[selectedEventIndex].time)
+                : organizerevents[selectedEventIndex].date +
+                  ", " +
+                  formatTime(organizerevents[selectedEventIndex].time)}
             </p>
             <p>
               Description:{" "}
@@ -168,7 +211,9 @@ const AdminEvents = ({ state }) => {
                 ? filteredEvents[
                     selectedFilteredEventIndex
                   ].description.toString()
-                : events[selectedEventIndex].description.toString()}
+                : isAdmin
+                ? events[selectedEventIndex].description.toString()
+                : organizerevents[selectedEventIndex].description.toString()}
             </p>
             <p>
               Total Tickets:{" "}
@@ -176,7 +221,9 @@ const AdminEvents = ({ state }) => {
                 ? filteredEvents[
                     selectedFilteredEventIndex
                   ].totalTickets.toNumber()
-                : events[selectedEventIndex].totalTickets.toNumber()}
+                : isAdmin
+                ? events[selectedEventIndex].totalTickets.toNumber()
+                : organizerevents[selectedEventIndex].totalTickets.toNumber()}
             </p>
             <p>
               Ticket Sold out:{" "}
@@ -187,8 +234,11 @@ const AdminEvents = ({ state }) => {
                   filteredEvents[
                     selectedFilteredEventIndex
                   ].remTickets.toNumber()
-                : events[selectedEventIndex].totalTickets.toNumber() -
-                  events[selectedEventIndex].remTickets.toNumber()}
+                : isAdmin
+                ? events[selectedEventIndex].totalTickets.toNumber() -
+                  events[selectedEventIndex].remTickets.toNumber()
+                : organizerevents[selectedEventIndex].totalTickets.toNumber() -
+                  organizerevents[selectedEventIndex].remTickets.toNumber()}
             </p>
             <p>
               Remaining Tickets:{" "}
@@ -196,39 +246,54 @@ const AdminEvents = ({ state }) => {
                 ? filteredEvents[
                     selectedFilteredEventIndex
                   ].remTickets.toNumber()
-                : events[selectedEventIndex].remTickets.toNumber()}
+                : isAdmin
+                ? events[selectedEventIndex].remTickets.toNumber()
+                : organizerevents[selectedEventIndex].remTickets.toNumber()}
             </p>
-            <p>
-              Revenue:{" "}
-              {isSearch
-                ? ethers.utils
-                    .formatEther(
-                      filteredEvents[selectedFilteredEventIndex].price.mul(
-                        filteredEvents[
-                          selectedFilteredEventIndex
-                        ].totalTickets.toNumber() -
+            {isEventOrganizer ? (
+              <p>
+                Revenue:{" "}
+                {isSearch
+                  ? ethers.utils
+                      .formatEther(
+                        filteredEvents[selectedFilteredEventIndex].price.mul(
                           filteredEvents[
                             selectedFilteredEventIndex
-                          ].remTickets.toNumber()
+                          ].totalTickets.toNumber() -
+                            filteredEvents[
+                              selectedFilteredEventIndex
+                            ].remTickets.toNumber()
+                        )
                       )
-                    )
-                    .toString()
-                : ethers.utils
-                    .formatEther(
-                      events[selectedEventIndex].price.mul(
-                        events[selectedEventIndex].totalTickets.toNumber() -
-                          events[selectedEventIndex].remTickets.toNumber()
+                      .toString()
+                  : ethers.utils
+                      .formatEther(
+                        organizerevents[selectedEventIndex].price.mul(
+                          organizerevents[
+                            selectedEventIndex
+                          ].totalTickets.toNumber() -
+                            organizerevents[
+                              selectedEventIndex
+                            ].remTickets.toNumber()
+                        )
                       )
-                    )
-                    .toString()}{" "}
-              ETH
-            </p>
+                      .toString()}{" "}
+                ETH
+              </p>
+            ) : null}
             {isAdmin ? (
               <p>
                 Total fund received during event creation:{" "}
                 {isSearch
-                  ? filteredEvents[selectedFilteredEventIndex].date
-                  : events[selectedEventIndex].date}
+                  ? ethers.utils.formatEther(
+                      filteredEvents[
+                        selectedFilteredEventIndex
+                      ].creationFee.toNumber()
+                    )
+                  : ethers.utils.formatEther(
+                      events[selectedEventIndex].creationFee.toNumber()
+                    )}{" "}
+                ETH
               </p>
             ) : null}
             <div className="buttons" style={{ padding: "0px" }}>
@@ -289,6 +354,7 @@ const AdminEvents = ({ state }) => {
                 className="search-input"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={handleKeyDown}
               />
               <button className="search-button" onClick={handleSearchButton}>
                 <img src={search} alt="Search" />
@@ -350,11 +416,60 @@ const AdminEvents = ({ state }) => {
             </>
           ) : (
             <div className="event-blocks">
-              {events.length === 0 ? (
-                <p>Events not available....</p>
+              {isAdmin ? (
+                events.length === 0 ? (
+                  <p>Events not available....</p>
+                ) : (
+                  <div className="row">
+                    {events.map((event, index) => (
+                      <div
+                        key={index}
+                        className="col-12 mb-4 card"
+                        style={{ padding: "0px" }}
+                      >
+                        <div
+                          className="insection card-body"
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                          }}
+                          onClick={() => handleSelectEvent(index)}
+                        >
+                          <div>
+                            <h4 style={{ margin: "0px" }}>
+                              {event.eventName.toString()}{" "}
+                            </h4>
+                            <div className="d-flex align-items-center">
+                              <FontAwesomeIcon
+                                icon={faClock}
+                                className="mr-2"
+                                style={{ fontSize: "70%" }}
+                              />
+                              &nbsp;
+                              <p
+                                className="text-muted mb-0"
+                                style={{ fontSize: "70%" }}
+                              >
+                                {" "}
+                                {event.date + ", " + formatTime(event.time)}
+                              </p>
+                            </div>
+                          </div>
+                          <FontAwesomeIcon
+                            icon={faChevronRight}
+                            onClick={() => handleSelectEvent(index)}
+                            style={{ alignSelf: "center" }}
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )
+              ) : organizerevents.length === 0 ? (
+                <p>You haven't created any events yet....</p>
               ) : (
                 <div className="row">
-                  {events.map((event, index) => (
+                  {organizerevents.map((event, index) => (
                     <div
                       key={index}
                       className="col-12 mb-4 card"

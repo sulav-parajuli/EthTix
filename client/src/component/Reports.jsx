@@ -17,11 +17,12 @@ const Reports = ({ state }) => {
     reports,
     setReports,
     fetchReports,
-    fetchEvents,
-    setEvents,
     retrieveAllTransactionsFromLocalStorage,
     getTransactionDetails,
     viewTransactionOnEtherscan,
+    isEventOrganizer,
+    account,
+    isAdmin,
   } = useAppContext();
   const { ticketsContract } = state;
   const [isLoading, setIsLoading] = useState(true);
@@ -31,6 +32,7 @@ const Reports = ({ state }) => {
   const [selectedIndex, setSelectedIndex] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredReports, setFilteredReports] = useState([]);
+  const [organizerreports, setOrganizerReports] = useState([]);
 
   const handleSelectReport = (index) => {
     setSelectedReportIndex(index);
@@ -58,12 +60,25 @@ const Reports = ({ state }) => {
     setReportDetail(false);
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleSearchButton();
+    }
+  };
+
   const handleSearchButton = () => {
     setSearch(true);
-    const filterReports = reports.filter((report) =>
-      report.reportName.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-    setFilteredReports(filterReports);
+    if (isAdmin) {
+      const filterReports = reports.filter((report) =>
+        report.reportName.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setFilteredReports(filterReports);
+    } else {
+      const filterReports = organizerreports.filter((report) =>
+        report.reportName.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setFilteredReports(filterReports);
+    }
   };
 
   const handletransactionDetails = () => {
@@ -87,14 +102,40 @@ const Reports = ({ state }) => {
     try {
       const initialize = async () => {
         if (ticketsContract) {
-          // Fetch initial events
-          await fetchEvents().then((initialEvents) => {
-            setEvents(initialEvents);
-          });
           // Fetch initial reports using the fetchReports function
           const initialReports = await fetchReports();
           console.log("Initial Reports:", initialReports);
           setReports(initialReports);
+
+          if (isEventOrganizer) {
+            // Initialize organizer reports array
+            const organizerReports = [];
+
+            // Loop through the events and check if the creator matches the current account
+            await initialReports.forEach((report) => {
+              if (report.eventType === "EventCreated") {
+                if (report.reportDetails.creator.toLowerCase() === account) {
+                  organizerReports.push(report);
+                }
+              } else if (report.eventType === "OrganizerRegistered") {
+                if (
+                  report.reportDetails.organizerAddress.toLowerCase() ===
+                  account
+                ) {
+                  organizerReports.push(report);
+                }
+              } else {
+                // Verify if the report type is "Ticket Purchased" and if the creator of the event, for which the ticket was purchased, matches the current account.
+                if (
+                  report.details[0].detail.creator.toLowerCase() === account
+                ) {
+                  organizerReports.push(report);
+                }
+              }
+            });
+
+            setOrganizerReports(organizerReports);
+          }
           setIsLoading(false); // Set loading to false once reports are fetched
         } else {
           console.error("Contract is not deployed!");
@@ -167,17 +208,41 @@ const Reports = ({ state }) => {
             <p>
               Event Type:{" "}
               <span style={{ color: "#008eb0" }}>
-                {reports[selectedReportIndex].eventType}
+                {isAdmin
+                  ? reports[selectedReportIndex].eventType
+                  : organizerreports[selectedReportIndex].eventType}
               </span>
             </p>
-            <p>Report Name: {reports[selectedReportIndex].reportName}</p>
+            <p>
+              Report Name:{" "}
+              {isAdmin
+                ? reports[selectedReportIndex].reportName
+                : organizerreports[selectedReportIndex].reportName}
+            </p>
             {/* date and time to know when was the event being subscribed. */}
-            {reports[selectedReportIndex].eventType === "EventCreated" ||
-            reports[selectedReportIndex].eventType === "OrganizerRegistered" ? (
+            {(isAdmin &&
+              reports[selectedReportIndex].eventType === "EventCreated") ||
+            (isAdmin &&
+              reports[selectedReportIndex].eventType ===
+                "OrganizerRegistered") ? (
               <p>
                 Created Time:{" "}
                 {new Date(
                   reports[selectedReportIndex].reportDetails.currentTime
+                ).toLocaleString()}
+              </p>
+            ) : (isEventOrganizer &&
+                organizerreports[selectedReportIndex].eventType ===
+                  "EventCreated") ||
+              (isEventOrganizer &&
+                organizerreports[selectedReportIndex].eventType ===
+                  "OrganizerRegistered") ? (
+              <p>
+                Created Time:{" "}
+                {new Date(
+                  organizerreports[
+                    selectedReportIndex
+                  ].reportDetails.currentTime
                 ).toLocaleString()}
               </p>
             ) : null}
@@ -188,96 +253,176 @@ const Reports = ({ state }) => {
                 {parseInt(reports[selectedReportIndex].reportDetails.eventId)}
               </p>
             ) : null} */}
-            {reports[selectedReportIndex].eventType === "EventCreated" ? (
+            {(isAdmin &&
+              reports[selectedReportIndex].eventType === "EventCreated") ||
+            (isEventOrganizer &&
+              organizerreports[selectedReportIndex].eventType ===
+                "EventCreated") ? (
               <>
                 <p>
-                  Creater: {reports[selectedReportIndex].reportDetails.creator}
+                  Creater:{" "}
+                  {isAdmin
+                    ? reports[selectedReportIndex].reportDetails.creator
+                    : organizerreports[selectedReportIndex].reportDetails
+                        .creator}
                 </p>
                 <p>
                   Event Name:{" "}
-                  {reports[
-                    selectedReportIndex
-                  ].reportDetails.eventName.toString()}
+                  {isAdmin
+                    ? reports[
+                        selectedReportIndex
+                      ].reportDetails.eventName.toString()
+                    : organizerreports[
+                        selectedReportIndex
+                      ].reportDetails.eventName.toString()}
                 </p>
                 <p>
                   Event Date:{" "}
-                  {reports[selectedReportIndex].reportDetails.date +
-                    ", " +
-                    formatTime(reports[selectedReportIndex].reportDetails.time)}
+                  {isAdmin
+                    ? reports[selectedReportIndex].reportDetails.date +
+                      ", " +
+                      formatTime(
+                        reports[selectedReportIndex].reportDetails.time
+                      )
+                    : organizerreports[selectedReportIndex].reportDetails.date +
+                      ", " +
+                      formatTime(
+                        organizerreports[selectedReportIndex].reportDetails.time
+                      )}
                 </p>
                 <p>
                   Location:{" "}
-                  {reports[
-                    selectedReportIndex
-                  ].reportDetails.location.toString()}
+                  {isAdmin
+                    ? reports[
+                        selectedReportIndex
+                      ].reportDetails.location.toString()
+                    : organizerreports[
+                        selectedReportIndex
+                      ].reportDetails.location.toString()}
                 </p>
                 <p>
                   Description:{" "}
-                  {reports[
-                    selectedReportIndex
-                  ].reportDetails.description.toString()}
+                  {isAdmin
+                    ? reports[
+                        selectedReportIndex
+                      ].reportDetails.description.toString()
+                    : organizerreports[
+                        selectedReportIndex
+                      ].reportDetails.description.toString()}
                 </p>
               </>
             ) : null}
-            {reports[selectedReportIndex].eventType === "TicketPurchased" ? (
+            {(isAdmin &&
+              reports[selectedReportIndex].eventType === "TicketPurchased") ||
+            (isEventOrganizer &&
+              organizerreports[selectedReportIndex].eventType ===
+                "TicketPurchased") ? (
               <>
                 <p>
                   Created Time:{" "}
-                  {reports[selectedReportIndex].reportDetails[0].purchaseTime}
+                  {isAdmin
+                    ? reports[selectedReportIndex].reportDetails[0].purchaseTime
+                    : organizerreports[selectedReportIndex].reportDetails[0]
+                        .purchaseTime}
                 </p>
                 <p>
                   Event Name:{" "}
-                  {reports[selectedReportIndex].details[0].detail.eventName}
+                  {isAdmin
+                    ? reports[selectedReportIndex].details[0].detail.eventName
+                    : organizerreports[selectedReportIndex].details[0].detail
+                        .eventName}
                 </p>
                 <p>
                   Ticket Bought:{" "}
-                  {reports[selectedReportIndex].reportDetails[0].ticketsOwned}
+                  {isAdmin
+                    ? reports[selectedReportIndex].reportDetails[0].ticketsOwned
+                    : organizerreports[selectedReportIndex].reportDetails[0]
+                        .ticketsOwned}
                 </p>
-                <p> Buyer: {reports[selectedReportIndex].ticketHolder}</p>
-                {/* <p> Buyer: {reports[selectedReportIndex].reportDetails[0].userAddress}</p> */}
+                <p>
+                  {" "}
+                  Buyer:{" "}
+                  {isAdmin
+                    ? reports[selectedReportIndex].ticketHolder
+                    : organizerreports[selectedReportIndex].ticketHolder}
+                </p>
+                {/* <p> Buyer: {isAdmin? reports[selectedReportIndex].reportDetails[0].userAddress : organizerreports[selectedReportIndex].reportDetails[0].userAddress}</p> */}
                 <p>
                   Price Paid: &nbsp;{" "}
-                  {ethers.utils.formatEther(
-                    reports[selectedReportIndex].reportDetails[0].price
-                  )}
+                  {isAdmin
+                    ? ethers.utils.formatEther(
+                        reports[selectedReportIndex].reportDetails[0].price
+                      )
+                    : ethers.utils.formatEther(
+                        organizerreports[selectedReportIndex].reportDetails[0]
+                          .price
+                      )}
                   &nbsp;ETH
                 </p>
               </>
             ) : null}
-            {reports[selectedReportIndex].eventType ===
-            "OrganizerRegistered" ? (
+            {(isAdmin &&
+              reports[selectedReportIndex].eventType ===
+                "OrganizerRegistered") ||
+            (isEventOrganizer &&
+              organizerreports[selectedReportIndex].eventType ===
+                "OrganizerRegistered") ? (
               <>
                 <p>
                   Organizer Address:{" "}
-                  {reports[selectedReportIndex].reportDetails.organizerAddress}
+                  {isAdmin
+                    ? reports[selectedReportIndex].reportDetails
+                        .organizerAddress
+                    : organizerreports[selectedReportIndex].reportDetails
+                        .organizerAddress}
                 </p>
                 <p>
                   Organizer Name:{" "}
-                  {reports[selectedReportIndex].reportDetails.name.toString()}
+                  {isAdmin
+                    ? reports[selectedReportIndex].reportDetails.name.toString()
+                    : organizerreports[
+                        selectedReportIndex
+                      ].reportDetails.name.toString()}
                 </p>
                 <p>
                   Organization Name:{" "}
-                  {reports[
-                    selectedReportIndex
-                  ].reportDetails.organizationName.toString()}
+                  {isAdmin
+                    ? reports[
+                        selectedReportIndex
+                      ].reportDetails.organizationName.toString()
+                    : organizerreports[
+                        selectedReportIndex
+                      ].reportDetails.organizationName.toString()}
                 </p>
                 <p>
                   Organization Type:{" "}
-                  {reports[
-                    selectedReportIndex
-                  ].reportDetails.organizationType.toString()}
+                  {isAdmin
+                    ? reports[
+                        selectedReportIndex
+                      ].reportDetails.organizationType.toString()
+                    : organizerreports[
+                        selectedReportIndex
+                      ].reportDetails.organizationType.toString()}
                 </p>
                 <p>
                   Organization Location:{" "}
-                  {reports[
-                    selectedReportIndex
-                  ].reportDetails.organizationLocation.toString()}
+                  {isAdmin
+                    ? reports[
+                        selectedReportIndex
+                      ].reportDetails.organizationLocation.toString()
+                    : organizerreports[
+                        selectedReportIndex
+                      ].reportDetails.organizationLocation.toString()}
                 </p>
                 <p>
                   Organization Email:{" "}
-                  {reports[
-                    selectedReportIndex
-                  ].reportDetails.organizationEmail.toString()}
+                  {isAdmin
+                    ? reports[
+                        selectedReportIndex
+                      ].reportDetails.organizationEmail.toString()
+                    : organizerreports[
+                        selectedReportIndex
+                      ].reportDetails.organizationEmail.toString()}
                 </p>
               </>
             ) : null}
@@ -339,6 +484,7 @@ const Reports = ({ state }) => {
                 className="search-input"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={handleKeyDown}
               />
               <button className="search-button" onClick={handleSearchButton}>
                 <img src={search} alt="Search" />
@@ -407,11 +553,67 @@ const Reports = ({ state }) => {
             </>
           ) : (
             <div className="event-blocks">
-              {reports.length === 0 ? (
+              {isAdmin ? (
+                reports.length === 0 ? (
+                  <p>No any reports found..</p>
+                ) : (
+                  <div className="row">
+                    {reports.map((report, index) => (
+                      <div
+                        key={index}
+                        className="col-12 mb-4 card"
+                        style={{ padding: "0px" }}
+                      >
+                        <div
+                          className="insection card-body d-flex justify-content-between align-items-center"
+                          onClick={() => handleSelectReport(index)}
+                          style={{ padding: "10px" }}
+                        >
+                          <div>
+                            <h4 style={{ margin: "0px" }}>
+                              {report.reportName}
+                            </h4>
+                            <div className="d-flex align-items-center">
+                              <FontAwesomeIcon
+                                icon={faClock}
+                                className="mr-2"
+                                style={{ fontSize: "70%" }}
+                              />
+                              &nbsp;
+                              {report.eventType === "TicketPurchased" ? (
+                                <p
+                                  className="text-muted mb-0"
+                                  style={{ fontSize: "70%" }}
+                                >
+                                  {report.reportDetails[0].purchaseTime}
+                                </p>
+                              ) : (
+                                <p
+                                  className="text-muted mb-0"
+                                  style={{ fontSize: "70%" }}
+                                >
+                                  {new Date(
+                                    report.reportDetails.currentTime
+                                  ).toLocaleString()}
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                          <FontAwesomeIcon
+                            icon={faChevronRight}
+                            onClick={() => handleSelectReport(index)}
+                            style={{ alignSelf: "center" }}
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )
+              ) : organizerreports.length === 0 ? (
                 <p>No any reports found..</p>
               ) : (
                 <div className="row">
-                  {reports.map((report, index) => (
+                  {organizerreports.map((report, index) => (
                     <div
                       key={index}
                       className="col-12 mb-4 card"
