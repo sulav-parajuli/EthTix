@@ -30,11 +30,16 @@ const MyTickets = ({ state }) => {
   const OpenPopupHandler = (ticket) => {
     setSelectedTicket(ticket);
     setIsPopupOpen(true);
+    document.body.classList.add("popup-open"); // Prevent scrolling
+    document.querySelector(".topnav").style.background =
+      "rgba(255,255,255,0.9)";
   };
 
   const closePopupHandler = () => {
     setSelectedTicket(null);
     setIsPopupOpen(false);
+    document.body.classList.remove("popup-open"); // Make scrollable again
+    document.querySelector(".topnav").style.background = "transparent";
   };
 
   const TicketHandle = async () => {
@@ -65,7 +70,7 @@ const MyTickets = ({ state }) => {
         <div className="container mt-5">
           <div className="row">
             {/* Left div */}
-            <div className="col-sm-5">
+            <div className="col-sm-5 pb-4">
               <div className="card">
                 <div>
                   <img
@@ -79,11 +84,11 @@ const MyTickets = ({ state }) => {
             </div>
 
             {/* Right div */}
-            <div className="col-7">
+            <div className="col-7 pb-3">
               <ul className="list-group">
                 {purchasedTickets.map((ticket, index) => (
                   <li key={index} className="list-group-item">
-                    <div className="col-3 mb-4">
+                    <div className="mb-4">
                       <div className=" d-flex justify-content-between align-items-center">
                         <h5 className="card-title">
                           {ticket.eventName.eventName}

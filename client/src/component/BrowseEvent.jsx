@@ -9,7 +9,7 @@ import { Triangle } from "react-loader-spinner";
 
 const Popup = ({ isOpen, onClose, event, state, selectedEventIndex }) => {
   return isOpen ? (
-    <div className="popup">
+    <div className="popup popuptop">
       <div className="popup-inner">
         <button className="close" onClick={onClose}>
           Close
@@ -25,8 +25,14 @@ const Popup = ({ isOpen, onClose, event, state, selectedEventIndex }) => {
 };
 
 const BrowseEvent = ({ state }) => {
-  const { formatTime, events, setEvents, fetchEvents, handleEventCreated } =
-    useAppContext();
+  const {
+    formatTime,
+    events,
+    setEvents,
+    fetchEvents,
+    handleEventCreated,
+    account,
+  } = useAppContext();
   const [isLoading, setIsLoading] = useState(true);
   const [selectedEventIndex, setSelectedEventIndex] = useState(null);
   const { ticketsContract } = state;
@@ -222,7 +228,11 @@ const BrowseEvent = ({ state }) => {
           ) : (
             <div className="event-blocks">
               {events.length === 0 ? (
-                <p>Events not available....</p>
+                account !== "Not connected" ? (
+                  <p>Events not available....</p>
+                ) : (
+                  <p>Connect your wallet to see events....</p>
+                )
               ) : (
                 <div className="row">
                   {events.map((event, index) => (

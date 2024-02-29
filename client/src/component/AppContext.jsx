@@ -173,23 +173,31 @@ const AppProvider = ({ children, template, accounts, account, state }) => {
       }
 
       //For Ticket Purchased
-      // const storedCids = retrieveAllIpfsCidsFromLocalStorage();
       const ticketHolderAddress = await ticketsContract.ticketHolderAddress();
       for (let i = 0; i < ticketHolderAddress.length; i++) {
         const ticketDetails = await ticketsContract.getTicket(
           ticketHolderAddress[i]
         );
-        const reportDetails = await Promise.all(
+
+        const reportDetails = ticketDetails.map((ticket) => ({
+          userAddress: ticket.userAddress,
+          eventCID: ticket.eventName,
+          price: ticket.price.toString(), // Convert BigNumber to string
+          purchaseTime: convertUnixTimestampToDateTime(
+            ticket.purchaseTime.toNumber()
+          ), // Convert BigNumber to number and then to date/time
+          ticketsOwned: ticket.ticketsOwned.toNumber(), // Convert BigNumber to number
+        }));
+        // console.log(reportDetails);
+        const details = await Promise.all(
           ticketDetails.map(async (ticket) => {
             const detail = await retrieveFromIPFS(ticket.eventName);
             return {
-              ...ticket,
-              details: detail,
+              detail,
             };
           })
         );
-        console.log(reportDetails);
-        // console.log(ticketDetails);
+        // console.log(details);
         const ticketHolder = ticketHolderAddress[i];
         const eventType = "TicketPurchased";
         const reportName = "Ticket Purchased";
@@ -197,6 +205,7 @@ const AppProvider = ({ children, template, accounts, account, state }) => {
           eventType,
           reportName,
           reportDetails,
+          details,
           ticketHolder,
         }; // Combine data
         fetchedReports.push(combinedData);
@@ -219,7 +228,7 @@ const AppProvider = ({ children, template, accounts, account, state }) => {
 
       return fetchedReports;
     } catch (error) {
-      console.error("Error fetching reports from localStorage:", error);
+      console.error("Error fetching reports:", error);
       return [];
     }
   };

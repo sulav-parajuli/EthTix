@@ -15,7 +15,6 @@ const Reports = ({ state }) => {
   const {
     formatTime,
     reports,
-    events,
     setReports,
     fetchReports,
     fetchEvents,
@@ -173,19 +172,22 @@ const Reports = ({ state }) => {
             </p>
             <p>Report Name: {reports[selectedReportIndex].reportName}</p>
             {/* date and time to know when was the event being subscribed. */}
-            <p>
-              Created Time:{" "}
-              {new Date(
-                reports[selectedReportIndex].reportDetails.currentTime
-              ).toLocaleString()}
-            </p>
-            {reports[selectedReportIndex].eventType === "TicketPurchased" ||
+            {reports[selectedReportIndex].eventType === "EventCreated" ||
+            reports[selectedReportIndex].eventType === "OrganizerRegistered" ? (
+              <p>
+                Created Time:{" "}
+                {new Date(
+                  reports[selectedReportIndex].reportDetails.currentTime
+                ).toLocaleString()}
+              </p>
+            ) : null}
+            {/* {reports[selectedReportIndex].eventType === "TicketPurchased" ||
             reports[selectedReportIndex].eventType === "EventCreated" ? (
               <p>
                 Event ID:{" "}
                 {parseInt(reports[selectedReportIndex].reportDetails.eventId)}
               </p>
-            ) : null}
+            ) : null} */}
             {reports[selectedReportIndex].eventType === "EventCreated" ? (
               <>
                 <p>
@@ -220,30 +222,26 @@ const Reports = ({ state }) => {
             {reports[selectedReportIndex].eventType === "TicketPurchased" ? (
               <>
                 <p>
+                  Created Time:{" "}
+                  {reports[selectedReportIndex].reportDetails[0].purchaseTime}
+                </p>
+                <p>
                   Event Name:{" "}
-                  {
-                    reports[selectedReportIndex]?.reportDetails?.details
-                      ?.eventName
-                  }
+                  {reports[selectedReportIndex].details[0].detail.eventName}
                 </p>
                 <p>
                   Ticket Bought:{" "}
-                  {reports[selectedReportIndex].reportDetails.ticketsOwned}
+                  {reports[selectedReportIndex].reportDetails[0].ticketsOwned}
                 </p>
                 <p> Buyer: {reports[selectedReportIndex].ticketHolder}</p>
                 {/* <p> Buyer: {reports[selectedReportIndex].reportDetails[0].userAddress}</p> */}
-                {/* <p>
-                  Price Paid:&nbsp;
-                  {reports[
-                    selectedReportIndex
-                  ].reportDetails.ticketsOwned.toNumber() *
-                    ethers.utils
-                      .formatEther(
-                        reports[selectedReportIndex].reportDetails.details.price
-                      )
-                      .toString()}
+                <p>
+                  Price Paid: &nbsp;{" "}
+                  {ethers.utils.formatEther(
+                    reports[selectedReportIndex].reportDetails[0].price
+                  )}
                   &nbsp;ETH
-                </p> */}
+                </p>
               </>
             ) : null}
             {reports[selectedReportIndex].eventType ===
@@ -376,14 +374,23 @@ const Reports = ({ state }) => {
                                 style={{ fontSize: "70%" }}
                               />
                               &nbsp;
-                              <p
-                                className="text-muted mb-0"
-                                style={{ fontSize: "70%" }}
-                              >
-                                {new Date(
-                                  report.reportDetails.currentTime
-                                ).toLocaleString()}
-                              </p>
+                              {report.eventType === "TicketPurchased" ? (
+                                <p
+                                  className="text-muted mb-0"
+                                  style={{ fontSize: "70%" }}
+                                >
+                                  {report.reportDetails[0].purchaseTime}
+                                </p>
+                              ) : (
+                                <p
+                                  className="text-muted mb-0"
+                                  style={{ fontSize: "70%" }}
+                                >
+                                  {new Date(
+                                    report.reportDetails.currentTime
+                                  ).toLocaleString()}
+                                </p>
+                              )}
                             </div>
                           </div>
                           <FontAwesomeIcon
@@ -424,14 +431,23 @@ const Reports = ({ state }) => {
                               style={{ fontSize: "70%" }}
                             />
                             &nbsp;
-                            <p
-                              className="text-muted mb-0"
-                              style={{ fontSize: "70%" }}
-                            >
-                              {new Date(
-                                report.reportDetails.currentTime
-                              ).toLocaleString()}
-                            </p>
+                            {report.eventType === "TicketPurchased" ? (
+                              <p
+                                className="text-muted mb-0"
+                                style={{ fontSize: "70%" }}
+                              >
+                                {report.reportDetails[0].purchaseTime}
+                              </p>
+                            ) : (
+                              <p
+                                className="text-muted mb-0"
+                                style={{ fontSize: "70%" }}
+                              >
+                                {new Date(
+                                  report.reportDetails.currentTime
+                                ).toLocaleString()}
+                              </p>
+                            )}
                           </div>
                         </div>
                         <FontAwesomeIcon

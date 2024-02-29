@@ -42,7 +42,9 @@ const EventDetail = ({ index, event, state }) => {
 
           {/* Event Details */}
           <div className="col-lg-6">
-            <h2>{event.eventName.toString()}</h2>
+            <h2 style={{ textAlign: "justify", padding: "0px" }}>
+              {event.eventName.toString()}
+            </h2>
             <p>Price: {ethers.utils.formatEther(event.price).toString()} ETH</p>
             <p>
               Available Tickets:&nbsp;
