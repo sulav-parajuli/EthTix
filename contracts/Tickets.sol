@@ -7,6 +7,7 @@ contract Tickets{
         uint256 remTickets;
         uint256 price;
         address payable creator;
+        uint256 creationFee;
         
         
     }
@@ -98,7 +99,8 @@ contract Tickets{
        totalTickets: _totalTickets,
        remTickets: _totalTickets,
        price: _price,
-    creator:payable(msg.sender)
+    creator:payable(msg.sender),
+    creationFee:eventCreationFee
        
     }
    
