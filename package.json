@@ -14,7 +14,6 @@
   },
   "dependencies": {
     "@openzeppelin/contracts": "^5.0.1",
-    "dotenv": "^16.0.3",
-    "react-qr-code": "^2.0.12"
+    "dotenv": "^16.0.3"
   }
 }
