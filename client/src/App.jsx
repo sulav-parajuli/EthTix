@@ -4,9 +4,6 @@ import ReactDOM from "react-dom/client";
 import "./App.css"; //Import App css
 
 // Import the contract ABI
-//import accessControlAbi from "./artifacts/contracts/AccessControl.sol/AccessControl.json";
-//import userAbi from "./artifacts/contracts/User.sol/User.json";
-//import eventOrganizerAbi from "./artifacts/contracts/EventOrganizer.sol/EventOrganizer.json";
 import ticketAbi from "./artifacts/contracts/Tickets.sol/Tickets.json";
 
 // Import the contract addresses from the JSON file
@@ -54,15 +51,6 @@ function App() {
     //if we want to change the state of blockchain then we need to pay certain amount
 
     try {
-      // const accessAddress = contractAddresses.accessControl;
-      // const accessContractABI = accessControlAbi.abi;
-
-      // const userContractAddress = contractAddresses.user;
-      // const userContractABI = userAbi.abi;
-
-      // const organizerContractAddress = contractAddresses.eventOrganizer;
-      // const organizerContractABI = eventOrganizerAbi.abi;
-
       const ticketContractAddress = contractAddresses.tickets;
       const ticketContractABI = ticketAbi.abi;
 
@@ -94,30 +82,13 @@ function App() {
       //changing account address
       window.ethereum.on("accountsChanged", () => {
         window.location.reload();
+        localStorage.removeItem("notifications");
       });
       //signer will help us in doing transaction that will change the state of blockchain
       //provider will help us in reading the state of blockchain
       const provider = new ethers.providers.Web3Provider(ethereum);
       const signer = provider.getSigner();
       //instance of the contract
-      // const accessControlInstance = new ethers.Contract(
-      //   accessAddress,
-      //   accessContractABI, //abi is the interface of the contract
-      //   signer
-      // );
-
-      // const userContractInstance = new ethers.Contract(
-      //   userContractAddress,
-      //   userContractABI,
-      //   signer
-      // );
-
-      // const ticketsContractInstance = new ethers.Contract(
-      //   organizerContractAddress,
-      //   organizerContractABI,
-      //   signer
-      // );
-
       const ticketsContractInstance = new ethers.Contract(
         ticketContractAddress,
         ticketContractABI,
@@ -128,9 +99,6 @@ function App() {
       setState({
         provider,
         signer,
-        // accessControlContract: accessControlInstance,
-        //userContract: userContractInstance,
-        // ticketsContract: ticketsContractInstance,
         ticketsContract: ticketsContractInstance,
       });
     } catch (error) {
