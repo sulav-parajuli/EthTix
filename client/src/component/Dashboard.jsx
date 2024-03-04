@@ -118,6 +118,7 @@ const Dashboard = ({ state }) => {
         // Calculate ticketSold, pendingTickets and totalTickets
         let rem = 0;
         let total = 0;
+        let eventCreated = 0;
         initialEvents.forEach((event) => {
           if (isAdmin) {
             rem += event.remTickets.toNumber();
@@ -127,7 +128,8 @@ const Dashboard = ({ state }) => {
             if (event.creator.toLowerCase() === account) {
               rem += event.remTickets.toNumber();
               total += event.totalTickets.toNumber();
-              setEventCreated(initialEvents.length); // Update eventCreated with the length of initialEvents
+              eventCreated += 1;
+              setEventCreated(eventCreated); // Update eventCreated with the length of events created by the account
             }
           }
         });

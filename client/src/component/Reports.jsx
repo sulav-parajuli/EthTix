@@ -126,10 +126,14 @@ const Reports = ({ state }) => {
                 }
               } else {
                 // Verify if the report type is "Ticket Purchased" and if the creator of the event, for which the ticket was purchased, matches the current account.
-                if (
-                  report.details[0].detail.creator.toLowerCase() === account
-                ) {
-                  organizerReports.push(report);
+                for (let i = 0; i < report.details.length; i++) {
+                  // console.log("Creator:", report.details[i].detail[0].creator);
+                  if (
+                    report.details[i].detail[0].creator.toLowerCase() ===
+                    account
+                  ) {
+                    organizerReports.push(report);
+                  }
                 }
               }
             });
@@ -329,7 +333,7 @@ const Reports = ({ state }) => {
                   Event Name:{" "}
                   {isAdmin
                     ? reports[selectedReportIndex].details[0].detail.eventName
-                    : organizerreports[selectedReportIndex].details[0].detail
+                    : organizerreports[selectedReportIndex].details[0].detail[0]
                         .eventName}
                 </p>
                 <p>
