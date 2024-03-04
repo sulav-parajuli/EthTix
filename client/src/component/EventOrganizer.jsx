@@ -5,6 +5,17 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; // Import the default styles
 import { signData, uploadToIPFS } from "../utils/ipfsUtils";
+import OrganizerTerms from "./OrganizerTerms";
+
+const Popup = ({ isOpen, onClose, onConfirm }) => {
+  return isOpen ? (
+    <div className="popup popuptop">
+      <div className="card mb-5">
+        <OrganizerTerms onConfirm={onConfirm} />
+      </div>
+    </div>
+  ) : null;
+};
 
 const EventOrganizer = ({ state }) => {
   const [nextpage, setNextpage] = useState(false);
@@ -24,6 +35,7 @@ const EventOrganizer = ({ state }) => {
   const [organizationEmail, setOrganizationEmail] = useState("");
   const { signer, ticketsContract } = state;
   const [agreetermsconditions, setagreetermsconditions] = useState(false);
+  const [showTerms, setShowTerms] = useState(false);
   // Define state variables for date and time
   const [currentTime, setCurrentTime] = useState(new Date());
   const navigate = useNavigate(); //to redirect to another page
@@ -42,6 +54,15 @@ const EventOrganizer = ({ state }) => {
   const opendashboard = () => {
     document.body.classList.remove("popup-open"); // Allow scrolling
     navigate("/dashboard");
+  };
+  const handleTermsConditions = () => {
+    setShowTerms(true);
+  };
+
+  const handlePopupConfirm = () => {
+    setShowTerms(false);
+
+    setagreetermsconditions(true);
   };
 
   function NavigateOrganizerTerms() {
@@ -311,9 +332,8 @@ const EventOrganizer = ({ state }) => {
                           type="checkbox"
                           value={agreetermsconditions}
                           id="flexCheckDefault"
-                          onChange={(e) =>
-                            setagreetermsconditions(e.target.checked)
-                          }
+                          onChange={handleTermsConditions}
+                          disabled={agreetermsconditions}
                         />
                         <label
                           className="form-check-label"
@@ -366,6 +386,11 @@ const EventOrganizer = ({ state }) => {
               </>
             )}
           </div>
+          <Popup
+            isOpen={showTerms}
+            onClose={() => setShowTerms(false)}
+            onConfirm={handlePopupConfirm}
+          />
         </div>
       )}
     </div>
