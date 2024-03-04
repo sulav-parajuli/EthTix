@@ -58,6 +58,12 @@ const BrowseEvent = ({ state }) => {
     setFilteredEvents(filterEvents);
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleSearchButton();
+    }
+  };
+
   useEffect(() => {
     if (ticketsContract) {
       ticketsContract.on("EventCreated", handleEventCreated);
@@ -100,6 +106,7 @@ const BrowseEvent = ({ state }) => {
               className="search-input"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={handleKeyDown}
             />
             <button className="search-button" onClick={handleSearchButton}>
               <img src={search} alt="Search" />

@@ -191,7 +191,9 @@ const AppProvider = ({ children, template, accounts, account, state }) => {
         // console.log(reportDetails);
         const details = await Promise.all(
           ticketDetails.map(async (ticket) => {
-            const detail = await retrieveFromIPFS(ticket.eventName);
+            const detail = events.filter(
+              (event) => event.eventCID === ticket.eventName
+            );
             return {
               detail,
             };
