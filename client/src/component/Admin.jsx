@@ -393,7 +393,7 @@ const Admin = ({ state }) => {
                       ) : isSelected === "dashboard" ? (
                         <>
                           <FontAwesomeIcon icon={faGauge} />
-                          &nbsp; Dash Board
+                          &nbsp; DashBoard
                         </>
                       ) : isSelected === "tools" ? (
                         <>
@@ -460,14 +460,14 @@ const Admin = ({ state }) => {
                         </div>
                       </a>
                     </li>
-                    <li className="nav-item px-3 d-flex align-items-center">
+                    {/* <li className="nav-item px-3 d-flex align-items-center">
                       <a
                         className="nav-link text-body p-0"
                         onClick={handleOpenSetting}
                       >
                         <FontAwesomeIcon icon={faGear} />
                       </a>
-                    </li>
+                    </li> */}
                     <li className="nav-item dropdown pe-2 d-flex align-items-center">
                       <a
                         className="nav-link text-body p-0"

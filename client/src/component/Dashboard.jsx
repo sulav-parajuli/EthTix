@@ -526,9 +526,9 @@ const Dashboard = ({ state }) => {
           </div>
           {/* Date and time section */}
           <div className="row mt-4">
-            <div className="col-md-9 mb-5">
-              {/* Placeholder for Unix Date and Time Converter */}
-              <div className="card mb-4">
+            {/* <div className="col-md-9 mb-5"> */}
+            {/* Placeholder for Unix Date and Time Converter */}
+            {/* <div className="card mb-4">
                 <div className="card-body">
                   <h5 className="card-title">Unix Date and Time Converter</h5>
                   <div className="col-auto">
@@ -537,32 +537,34 @@ const Dashboard = ({ state }) => {
                       className="form-control mb-2"
                       id="fromUnixTime"
                       placeholder="Enter Unix Timestamp to convert"
-                    />
-                    {/* <div className="col-auto"> */}
-                    <button
+                    /> */}
+            {/* <div className="col-auto"> */}
+            {/* <button
                       className="main-button btn btn-primary btn-sm"
                       onClick={handleUnixConversion}
                     >
                       Convert
-                    </button>
-                    {/* </div> */}
-                    {/* </div> */}
-                    <p className="finalTime"> </p>
+                    </button> */}
+            {/* </div> */}
+            {/* </div> */}
+            {/* <p className="finalTime"> </p>
                   </div>
                 </div>
               </div>
-            </div>
-            <div className="col-md-3">
+            </div> */}
+            <div className="col-md-12">
               {/* Date and Time */}
               <div className="card">
                 <div className="card-body text-center">
                   <h5 className="card-title">Current Date and Time</h5>
-                  <p className="text-muted mb-0">
-                    Date: {currentTime.toLocaleDateString()}
-                  </p>
-                  <p className="text-muted mb-0">
-                    Time: {currentTime.toLocaleTimeString()}
-                  </p>
+                  <div className="justify-content-between">
+                    <p className="text-muted mb-0">
+                      Date: {currentTime.toLocaleDateString()}
+                    </p>
+                    <p className="text-muted mb-0">
+                      Time: {currentTime.toLocaleTimeString()}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>

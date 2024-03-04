@@ -3,6 +3,7 @@ import { ethers } from "ethers";
 import { useAppContext } from "./AppContext";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify"; // Import toastify for displaying notifications
+import ethtix from "../assets/images/abstract.png";
 
 const BuyTicket = ({ eventIndex, event, state }) => {
   const { ticketsContract, signer } = state;
@@ -84,6 +85,29 @@ const BuyTicket = ({ eventIndex, event, state }) => {
   return (
     <div className="container">
       <div className="row py-2">
+        {/* Image Slider */}
+        <div className="col-lg-6 mb-4">
+          <div className="card shadow-lg mt-4">
+            {/* <div
+              id="eventImageCarousel"
+              className="carousel slide"
+              data-ride="carousel"
+            > */}
+            <div className="carousel-inner">
+              <div className="carousel-item active">
+                <img
+                  src={ethtix}
+                  className="img-fluid"
+                  alt="Event"
+                  style={{ maxHeight: "300px", objectFit: "cover" }}
+                />
+              </div>
+              {/* Add more carousel items if you have multiple images */}
+            </div>
+            {/* </div> */}
+          </div>
+        </div>
+
         {/* Display Ticket Purchase Form */}
         <div className="col-lg-6">
           <h2 style={{ textAlign: "justify", padding: "0px" }}>Buy Ticket</h2>
