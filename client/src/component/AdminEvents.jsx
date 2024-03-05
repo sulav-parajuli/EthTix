@@ -303,12 +303,12 @@ const AdminEvents = ({ state }) => {
               >
                 Go Back
               </button>
-              <button
+              {/* <button
                 className="main-button color-white"
                 onClick={handleGoBack}
               >
                 View Event Analytics
-              </button>
+              </button> */}
             </div>
           </div>
         </div>

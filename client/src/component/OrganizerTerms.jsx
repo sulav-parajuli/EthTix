@@ -6,36 +6,49 @@ const OrganizerTerms = ({ onConfirm }) => {
   };
   return (
     <>
-      <h2> Event Organizer Registration and Event Creation Fees</h2>
       <div className="card text-start">
-        <p>
-          By using our platform as an event organizer, you agree to the
-          following fees:
-        </p>
+        <h2 class="card-header" style={{ color: "#008eb0" }}>
+          {" "}
+          Event Organizer Registration and Event Creation Fees
+        </h2>
+        <div
+          class="card-body"
+          style={{ color: "#5a5a5a", maxHeight: "400px", overflowY: "auto" }}
+        >
+          <p class="card-text">
+            By using our platform as an event organizer, you agree to the
+            following fees:
+          </p>
 
-        <ul>
-          <li>
-            <strong>Event Organizer Registration Fee:</strong> A one-time gas
-            fee is required for organizer registration. The gas fee varies
-            according to the current gas price and network congestion.
-          </li>
-          <li>
-            <strong>Event Creation Fee:</strong> When creating an event, a fee
-            equivalent to 3% of the total ticket price will be charged.
-            Additionally, a gas fee will be incurred for processing the
-            transaction.
-          </li>
-        </ul>
+          <ul class="list-group">
+            <li class="list-group-item" style={{ color: "#5a5a5a" }}>
+              <strong>Event Organizer Registration Fee:</strong> A one-time gas
+              fee is required for organizer registration. The gas fee varies
+              according to the current gas price and network congestion.
+            </li>
+            <li class="list-group-item" style={{ color: "#5a5a5a" }}>
+              <strong>Event Creation Fee:</strong> When creating an event, a fee
+              equivalent to 3% of the total ticket price will be charged.
+              Additionally, a gas fee will be incurred for processing the
+              transaction.
+            </li>
+          </ul>
 
-        <p>
-          If you are comfortable with these fees and would like to proceed,
-          please click "I agree" button to continue with the registration
-          process.
-        </p>
+          <p class="card-text">
+            If you are comfortable with these fees and would like to proceed,
+            please click "I agree" button to continue with the registration
+            process.
+          </p>
 
-        <button className="sub-button" onClick={handleAcceptTerms}>
-          I Agree
-        </button>
+          <div className="text-center">
+            <button
+              className="sub-button text-center"
+              onClick={handleAcceptTerms}
+            >
+              I Agree
+            </button>
+          </div>
+        </div>
       </div>
     </>
   );

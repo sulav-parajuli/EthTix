@@ -17,9 +17,9 @@ const Reports = ({ state }) => {
     reports,
     setReports,
     fetchReports,
-    retrieveAllTransactionsFromLocalStorage,
-    getTransactionDetails,
-    viewTransactionOnEtherscan,
+    // retrieveAllTransactionsFromLocalStorage,
+    // getTransactionDetails,
+    // viewTransactionOnEtherscan,
     isEventOrganizer,
     account,
     isAdmin,
@@ -81,22 +81,22 @@ const Reports = ({ state }) => {
     }
   };
 
-  const handletransactionDetails = () => {
-    const transactions = retrieveAllTransactionsFromLocalStorage();
-    // console.log("transaction hash", transactions[selectedReportIndex]);
-    // const transactionDetails = getTransactionDetails(
-    //   transactions[selectedReportIndex]
-    // );
-    // console.log("transaction details", transactionDetails);
-    const transactionPromise = viewTransactionOnEtherscan(
-      transactions[selectedReportIndex]
-    );
+  // const handletransactionDetails = () => {
+  //   const transactions = retrieveAllTransactionsFromLocalStorage();
+  //   // console.log("transaction hash", transactions[selectedReportIndex]);
+  //   // const transactionDetails = getTransactionDetails(
+  //   //   transactions[selectedReportIndex]
+  //   // );
+  //   // console.log("transaction details", transactionDetails);
+  //   const transactionPromise = viewTransactionOnEtherscan(
+  //     transactions[selectedReportIndex]
+  //   );
 
-    transactionPromise.then((transactionUrl) => {
-      // console.log("transaction url", transactionUrl);
-      window.open(transactionUrl, "_self"); // Open the transaction url in a same page if written as "_self" and in a new tab if written as "_blank"
-    });
-  };
+  //   transactionPromise.then((transactionUrl) => {
+  //     // console.log("transaction url", transactionUrl);
+  //     window.open(transactionUrl, "_self"); // Open the transaction url in a same page if written as "_self" and in a new tab if written as "_blank"
+  //   });
+  // };
 
   useEffect(() => {
     try {
@@ -437,12 +437,12 @@ const Reports = ({ state }) => {
               >
                 Go Back
               </button>
-              <button
+              {/* <button
                 className="main-button color-white"
                 onClick={handletransactionDetails}
               >
                 View transaction details
-              </button>
+              </button> */}
             </div>
           </div>
         </div>

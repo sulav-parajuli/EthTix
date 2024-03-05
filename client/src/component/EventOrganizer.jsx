@@ -10,9 +10,9 @@ import OrganizerTerms from "./OrganizerTerms";
 const Popup = ({ isOpen, onClose, onConfirm }) => {
   return isOpen ? (
     <div className="popup popuptop">
-      <div className="card mb-5">
-        <OrganizerTerms onConfirm={onConfirm} />
-      </div>
+      {/* <div className="card mb-5"> */}
+      <OrganizerTerms onConfirm={onConfirm} />
+      {/* </div> */}
     </div>
   ) : null;
 };
@@ -238,7 +238,7 @@ const EventOrganizer = ({ state }) => {
           wrapperClass=""
         />
       ) : (
-        <div className="row">
+        <div>
           <div className="col-md-8 offset-md-2">
             {nextpage ? (
               <>
@@ -270,7 +270,7 @@ const EventOrganizer = ({ state }) => {
                   </>
                 ) : (
                   <div>
-                    <h2 className="text-center mb-4">
+                    <h2 className="text-center mb-4" style={{ padding: "0px" }}>
                       Enter your organization details.
                     </h2>
                     <form>
@@ -365,8 +365,11 @@ const EventOrganizer = ({ state }) => {
                   <p>
                     Before you take the next step, we highly recommend carefully
                     reading our{" "}
-                    <strong onClick={NavigateOrganizerTerms}>
-                      Terms and Conditions
+                    <strong
+                      onClick={NavigateOrganizerTerms}
+                      style={{ cursor: "pointer" }}
+                    >
+                      Terms of Service
                     </strong>{" "}
                     . Understanding these guidelines is crucial for a smooth
                     event organization process.
