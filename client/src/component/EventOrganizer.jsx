@@ -68,7 +68,7 @@ const EventOrganizer = ({ state }) => {
   function NavigateOrganizerTerms() {
     document.body.classList.remove("popup-open"); // Allow scrolling
     document.querySelector(".topnav").style.background = "transparent";
-    navigate("/organizerterms");
+    navigate("/terms");
   }
 
   const handleEventOrganizer = async (event) => {
@@ -371,12 +371,11 @@ const EventOrganizer = ({ state }) => {
                     . Understanding these guidelines is crucial for a smooth
                     event organization process.
                   </p>
-                  <p>
+                  {/* <p>
                     Should you encounter any questions or face challenges, don't
                     hesitate to reach out to our support team. We're here to
                     assist you every step of the way.
-                  </p>
-                  {/* Add more disclaimer content as needed */}
+                  </p> */}
                 </div>
                 <div className="text-center mt-4">
                   <button className="sub-button" onClick={buttonPressed}>

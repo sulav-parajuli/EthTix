@@ -44,7 +44,7 @@ const MyTickets = ({ state }) => {
 
   const TicketHandle = async () => {
     const userTickets = await ticketsContract.getTicket(account);
-    console.log("userTickets", userTickets);
+    // console.log("userTickets", userTickets);
     const ticketDetails = await Promise.all(
       userTickets.map(async (ticket) => {
         const detail = await retrieveFromIPFS(ticket.eventName);
@@ -55,8 +55,8 @@ const MyTickets = ({ state }) => {
       })
     );
     setPurchasedTickets(ticketDetails);
-    console.log("purchasedTickets", purchasedTickets);
-    console.log("ticketDetails", ticketDetails);
+    // console.log("purchasedTickets", purchasedTickets);
+    // console.log("ticketDetails", ticketDetails);
   };
   useEffect(() => {
     if (!ticketsContract) return;
