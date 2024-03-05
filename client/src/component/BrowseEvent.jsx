@@ -11,9 +11,7 @@ const Popup = ({ isOpen, onClose, event, state, selectedEventIndex }) => {
   return isOpen ? (
     <div className="popup popuptop">
       <div className="popup-inner">
-        <button className="close" onClick={onClose}>
-          Close
-        </button>
+        <button className="btn-close close m-3" onClick={onClose}></button>
         <EventDetail
           index={selectedEventIndex}
           event={event[selectedEventIndex]}

@@ -11,9 +11,7 @@ const Popup = ({ isOpen, onClose, state }) => {
   return isOpen ? (
     <div className="popup popuptop">
       <div className="popup-inner">
-        <button className="close" onClick={onClose}>
-          Close
-        </button>
+        <button className="btn-close close m-3" onClick={onClose}></button>
         <Login state={state} />
       </div>
     </div>
