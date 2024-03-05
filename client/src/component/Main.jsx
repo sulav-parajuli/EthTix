@@ -11,11 +11,11 @@ const Popup = ({ isOpen, onClose, state }) => {
   const { isUserConnected, isEventOrganizer, isAdmin } = useAppContext();
   return isOpen ? (
     <div className="popup popuptop">
-      <div className="card position-relative mb-5">
-        <button
-          className="btn-close position-absolute top-0 end-0 m-3"
-          onClick={onClose}
-        ></button>
+      <div className="popup-inner">
+        {/* <button className="close" onClick={onClose}>
+          Close
+        </button> */}
+        <button className="btn-close close m-3" onClick={onClose}></button>
         {(isUserConnected && !isEventOrganizer) ||
         (isUserConnected && isAdmin) ? (
           <EventOrganizer state={state} />

@@ -4,10 +4,31 @@ import ethtix from "../assets/images/abstract.png";
 import "bootstrap/dist/css/bootstrap.min.css"; // Import Bootstrap CSS
 import BuyTicket from "./BuyTicket";
 import { useAppContext } from "./AppContext";
+import UserTerm from "./UserTerm";
+const Popup = ({ isOpen, onClose, onConfirm }) => {
+  return isOpen ? (
+    <div className="popup popuptop">
+      <div className="card mb-5">
+        <UserTerm onConfirm={onConfirm} />
+      </div>
+    </div>
+  ) : null;
+};
 
 const EventDetail = ({ index, event, state }) => {
   const { formatTime } = useAppContext();
   const [buyticketpage, setbuyticketpage] = useState(false);
+  const [agreeTermsCondition, setAgreeTermsCondition] = useState(false);
+  const [showTerms, setShowTerms] = useState(false);
+
+  const handleTermsCondition = () => {
+    setShowTerms(true);
+  };
+  const handlePopupConfirm = () => {
+    setShowTerms(false);
+    setAgreeTermsCondition(true);
+  };
+
   const handlebuyticket = () => {
     setbuyticketpage(true);
   };
@@ -56,13 +77,33 @@ const EventDetail = ({ index, event, state }) => {
               Description:&nbsp;
               {event.description?.toString() || "No Description"}
             </p>
+            <p>
+              <input
+                type="checkbox"
+                value={agreeTermsCondition}
+                disabled={agreeTermsCondition}
+                onChange={handleTermsCondition}
+              />
+              <label>
+                {" "}
+                I agree to terms and condition
+                <span className="required">*</span>{" "}
+              </label>
+              <br></br>
+            </p>
             <button
               className="main-button color-white"
               onClick={handlebuyticket}
+              disabled={!agreeTermsCondition}
             >
               Buy Ticket
             </button>
           </div>
+          <Popup
+            isOpen={showTerms}
+            onClose={() => setShowTerms(false)}
+            onConfirm={handlePopupConfirm}
+          />
         </div>
       )}
     </div>
