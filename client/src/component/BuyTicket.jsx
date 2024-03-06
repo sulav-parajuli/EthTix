@@ -8,8 +8,12 @@ import ethtix from "../assets/images/abstract.png";
 const BuyTicket = ({ eventIndex, event, state }) => {
   const { ticketsContract, signer } = state;
   const [quantity, setQuantity] = useState(1);
-  const { savetransactionHashToLocalStorage, isEventOrganizer, isAdmin } =
-    useAppContext();
+  const {
+    savetransactionHashToLocalStorage,
+    isEventOrganizer,
+    isAdmin,
+    setLoading,
+  } = useAppContext();
   const navigate = useNavigate();
 
   const handlequantityChange = (event) => {
@@ -28,6 +32,7 @@ const BuyTicket = ({ eventIndex, event, state }) => {
 
   const handleBuyTicket = async () => {
     try {
+      setLoading(true);
       if (isEventOrganizer) {
         toast.info("You are the event organizer. You cannot buy tickets.");
         return;
@@ -79,77 +84,84 @@ const BuyTicket = ({ eventIndex, event, state }) => {
     } catch (error) {
       console.error("Error buying ticket:", error.message);
       // Handle errors or display an error message
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="container">
-      <div className="row py-2">
-        {/* Image Slider */}
-        <div className="col-lg-6 mb-4">
-          <div className="card shadow-lg mt-4">
-            {/* <div
+    <>
+      <div className="container">
+        <div className="row py-2">
+          {/* Image Slider */}
+          <div className="col-lg-6 mb-4">
+            <div className="card shadow-lg mt-4">
+              {/* <div
               id="eventImageCarousel"
               className="carousel slide"
               data-ride="carousel"
             > */}
-            <div className="carousel-inner">
-              <div className="carousel-item active">
-                <img
-                  src={ethtix}
-                  className="img-fluid"
-                  alt="Event"
-                  style={{ maxHeight: "300px", objectFit: "cover" }}
-                />
+              <div className="carousel-inner">
+                <div className="carousel-item active">
+                  <img
+                    src={ethtix}
+                    className="img-fluid"
+                    alt="Event"
+                    style={{ maxHeight: "300px", objectFit: "cover" }}
+                  />
+                </div>
+                {/* Add more carousel items if you have multiple images */}
               </div>
-              {/* Add more carousel items if you have multiple images */}
+              {/* </div> */}
             </div>
-            {/* </div> */}
+          </div>
+
+          {/* Display Ticket Purchase Form */}
+          <div className="col-lg-6">
+            <h2 style={{ textAlign: "justify", padding: "0px" }}>Buy Ticket</h2>
+            {event ? (
+              <>
+                <p>
+                  Event: {event.eventName ? event.eventName.toString() : "N/A"}
+                </p>
+                <p>
+                  Price per Ticket:{" "}
+                  {event.price
+                    ? ethers.utils.formatEther(event.price).toString()
+                    : "N/A"}{" "}
+                  ETH
+                </p>
+              </>
+            ) : (
+              <p>Event information not available</p>
+            )}
+            <label htmlFor="quantity">Quantity:</label>
+            <input
+              type="number"
+              id="quantity"
+              name="quantity"
+              min="1"
+              max="10"
+              value={quantity}
+              onChange={handlequantityChange}
+            />
+            <p>
+              Total Price:
+              {event && event.price
+                ? ethers.utils.formatEther(event.price.mul(quantity)).toString()
+                : "N/A"}{" "}
+              ETH
+            </p>
+            <button
+              className="main-button color-white"
+              onClick={handleBuyTicket}
+            >
+              Confirm Purchase
+            </button>
           </div>
         </div>
-
-        {/* Display Ticket Purchase Form */}
-        <div className="col-lg-6">
-          <h2 style={{ textAlign: "justify", padding: "0px" }}>Buy Ticket</h2>
-          {event ? (
-            <>
-              <p>
-                Event: {event.eventName ? event.eventName.toString() : "N/A"}
-              </p>
-              <p>
-                Price per Ticket:{" "}
-                {event.price
-                  ? ethers.utils.formatEther(event.price).toString()
-                  : "N/A"}{" "}
-                ETH
-              </p>
-            </>
-          ) : (
-            <p>Event information not available</p>
-          )}
-          <label htmlFor="quantity">Quantity:</label>
-          <input
-            type="number"
-            id="quantity"
-            name="quantity"
-            min="1"
-            max="10"
-            value={quantity}
-            onChange={handlequantityChange}
-          />
-          <p>
-            Total Price:
-            {event && event.price
-              ? ethers.utils.formatEther(event.price.mul(quantity)).toString()
-              : "N/A"}{" "}
-            ETH
-          </p>
-          <button className="main-button color-white" onClick={handleBuyTicket}>
-            Confirm Purchase
-          </button>
-        </div>
       </div>
-    </div>
+    </>
   );
 };
 

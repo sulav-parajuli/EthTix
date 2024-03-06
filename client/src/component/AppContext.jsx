@@ -19,6 +19,7 @@ const AppProvider = ({ children, template, accounts, account, state }) => {
   const [notifications, setNotifications] = useState([]);
   const [hasNotifications, setHasNotifications] = useState(false);
   const [isSelected, setIsSelected] = useState("dashboard"); // Initial selection, you can change it as needed
+  const [Loading, setLoading] = useState(false);
   // Function to fetch events from the smart contract
   const fetchEvents = async () => {
     try {
@@ -276,6 +277,8 @@ const AppProvider = ({ children, template, accounts, account, state }) => {
     savetransactionHashToLocalStorage,
     retrieveAllTransactionsFromLocalStorage,
     convertUnixTimestampToDateTime,
+    Loading,
+    setLoading,
   };
 
   const ticketContractAddress = contractAddresses.tickets;
