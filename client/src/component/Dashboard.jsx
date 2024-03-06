@@ -25,6 +25,7 @@ const Dashboard = ({ state }) => {
   const [pendingTickets, setPendingTickets] = useState(0);
   // Define state variables for date and time
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [organizerevents, setOrganizerEvents] = useState([]);
   const {
     events,
     setEvents,
@@ -119,7 +120,14 @@ const Dashboard = ({ state }) => {
         let rem = 0;
         let total = 0;
         let eventCreated = 0;
+        // Initialize organizer events array
+        const organizerEvents = [];
         initialEvents.forEach((event) => {
+          if (event.creator.toLowerCase() === account) {
+            organizerEvents.push(event);
+          }
+          // Set organizer events
+          setOrganizerEvents(organizerEvents);
           if (isAdmin) {
             rem += event.remTickets.toNumber();
             total += event.totalTickets.toNumber();
@@ -147,18 +155,18 @@ const Dashboard = ({ state }) => {
     }
   }, [ticketsContract]);
 
-  const handleUnixConversion = () => {
-    const inputTime = document.getElementById("fromUnixTime").value;
-    const actualTime = convertUnixTimestampToDateTime(inputTime);
-    const finalValueTime = document.querySelector(".finalTime");
-    if (finalValueTime) {
-      if (actualTime) {
-        finalValueTime.textContent = `Converted Date and Time: ${actualTime}`;
-      } else {
-        finalValueTime.textContent = `Invalid Unix Timestamp. Please enter a valid Unix Timestamp.`;
-      }
-    }
-  };
+  // const handleUnixConversion = () => {
+  //   const inputTime = document.getElementById("fromUnixTime").value;
+  //   const actualTime = convertUnixTimestampToDateTime(inputTime);
+  //   const finalValueTime = document.querySelector(".finalTime");
+  //   if (finalValueTime) {
+  //     if (actualTime) {
+  //       finalValueTime.textContent = `Converted Date and Time: ${actualTime}`;
+  //     } else {
+  //       finalValueTime.textContent = `Invalid Unix Timestamp. Please enter a valid Unix Timestamp.`;
+  //     }
+  //   }
+  // };
 
   //Currency Converter
   const handleNormalConversion = (currFrom, currTo, inputValue) => {
@@ -451,76 +459,149 @@ const Dashboard = ({ state }) => {
             <div className="col-md-4 mb-5 dashboardevent">
               {/* Placeholder for Events List */}
               <h5>Events List</h5>
-              <div className="event-blocks">
-                {events.length === 0 ? (
-                  <p>Events not available....</p>
-                ) : (
-                  <div className="row">
-                    {events.map((event, index) => (
-                      <div
-                        key={index}
-                        className="col-12 mb-4 card"
-                        style={{ padding: "0px" }}
-                      >
+              {isAdmin ? (
+                <div className="event-blocks">
+                  {events.length === 0 ? (
+                    <p>Events not available....</p>
+                  ) : (
+                    <div className="row">
+                      {events.map((event, index) => (
                         <div
-                          className="insection card-body"
-                          style={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                          }}
+                          key={index}
+                          className="col-12 mb-4 card"
+                          style={{ padding: "0px" }}
                         >
-                          <div>
-                            <h4 style={{ margin: "0px" }}>
-                              {event.eventName.toString()}{" "}
-                            </h4>
-                            <div className="d-flex align-items-center">
-                              <>
-                                <FontAwesomeIcon
-                                  icon={faClock}
-                                  className="mr-2"
-                                  style={{ fontSize: "70%" }}
-                                />
-                                &nbsp;
-                                <p
-                                  className="text-muted mb-0"
-                                  style={{ fontSize: "70%" }}
-                                >
-                                  {" "}
-                                  {event.date + ", " + formatTime(event.time)}
-                                </p>
-                              </>
-                              <div style={{ marginRight: "20px" }}></div>
-                              <>
-                                <FontAwesomeIcon
-                                  icon={faTicket}
-                                  className="mr-2"
-                                  style={{
-                                    fontSize: "70%",
-                                    marginLeft: "30px",
-                                  }}
-                                />
-                                &nbsp;
-                                <p
-                                  className="text-muted mb-0"
-                                  style={{
-                                    fontSize: "70%",
-                                    // marginLeft: "20px",
-                                  }}
-                                >
-                                  {" "}
-                                  Ticket Sold:{" "}
-                                  {event.totalTickets.toNumber() -
-                                    event.remTickets.toNumber()}
-                                </p>
-                              </>
+                          <div
+                            className="insection card-body"
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                            }}
+                          >
+                            <div>
+                              <h4 style={{ margin: "0px" }}>
+                                {event.eventName.toString()}{" "}
+                              </h4>
+                              <div className="d-flex align-items-center">
+                                <>
+                                  <FontAwesomeIcon
+                                    icon={faClock}
+                                    className="mr-2"
+                                    style={{ fontSize: "70%" }}
+                                  />
+                                  &nbsp;
+                                  <p
+                                    className="text-muted mb-0"
+                                    style={{ fontSize: "70%" }}
+                                  >
+                                    {" "}
+                                    {event.date + ", " + formatTime(event.time)}
+                                  </p>
+                                </>
+                                <div style={{ marginRight: "20px" }}></div>
+                                <>
+                                  <FontAwesomeIcon
+                                    icon={faTicket}
+                                    className="mr-2"
+                                    style={{
+                                      fontSize: "70%",
+                                      marginLeft: "30px",
+                                    }}
+                                  />
+                                  &nbsp;
+                                  <p
+                                    className="text-muted mb-0"
+                                    style={{
+                                      fontSize: "70%",
+                                      // marginLeft: "20px",
+                                    }}
+                                  >
+                                    {" "}
+                                    Ticket Sold:{" "}
+                                    {event.totalTickets.toNumber() -
+                                      event.remTickets.toNumber()}
+                                  </p>
+                                </>
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="event-blocks">
+                  {organizerevents.length === 0 ? (
+                    <p>Events not available....</p>
+                  ) : (
+                    <div className="row">
+                      {events.map((event, index) => (
+                        <div
+                          key={index}
+                          className="col-12 mb-4 card"
+                          style={{ padding: "0px" }}
+                        >
+                          <div
+                            className="insection card-body"
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                            }}
+                          >
+                            <div>
+                              <h4 style={{ margin: "0px" }}>
+                                {event.eventName.toString()}{" "}
+                              </h4>
+                              <div className="d-flex align-items-center">
+                                <>
+                                  <FontAwesomeIcon
+                                    icon={faClock}
+                                    className="mr-2"
+                                    style={{ fontSize: "70%" }}
+                                  />
+                                  &nbsp;
+                                  <p
+                                    className="text-muted mb-0"
+                                    style={{ fontSize: "70%" }}
+                                  >
+                                    {" "}
+                                    {event.date + ", " + formatTime(event.time)}
+                                  </p>
+                                </>
+                                <div style={{ marginRight: "20px" }}></div>
+                                <>
+                                  <FontAwesomeIcon
+                                    icon={faTicket}
+                                    className="mr-2"
+                                    style={{
+                                      fontSize: "70%",
+                                      marginLeft: "30px",
+                                    }}
+                                  />
+                                  &nbsp;
+                                  <p
+                                    className="text-muted mb-0"
+                                    style={{
+                                      fontSize: "70%",
+                                      // marginLeft: "20px",
+                                    }}
+                                  >
+                                    {" "}
+                                    Ticket Sold:{" "}
+                                    {event.totalTickets.toNumber() -
+                                      event.remTickets.toNumber()}
+                                  </p>
+                                </>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
               {/* Add your events list component here */}
             </div>
           </div>
