@@ -2,7 +2,6 @@ import axios from "axios"; //js library for making http requests from node.js
 import { toast } from "react-toastify"; // to notify users of axios network errors.
 import "react-toastify/dist/ReactToastify.css"; //toastify css
 
-//import signData from "./signerMetamask.js";
 async function signData(signer, data) {
   const signature = await signer.signMessage(data);
   return { data, signature };
