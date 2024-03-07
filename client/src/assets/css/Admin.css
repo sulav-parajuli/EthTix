@@ -3361,3 +3361,14 @@ hr.horizontal.light {
 .col-sm-6 {
   width: 50%;
 }
+svg.svg-inline--fa.fa-copy path {
+  color: white;
+}
+.con-add-sec {
+  display: flex;
+}
+@media (max-width: 700px) {
+  .con-add-sec {
+    display: block;
+  }
+}

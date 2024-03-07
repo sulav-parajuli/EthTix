@@ -124,7 +124,8 @@ const AppProvider = ({ children, template, accounts, account, state }) => {
     try {
       const network = await signer.provider.getNetwork();
       const networkName = network.name;
-      const etherscanUrl = `https://${networkName}.etherscan.io/tx/${transactionHash}`;
+      const etherscanUrl = `https://${networkName}.etherscan.io/address/${transactionHash}`;
+      window.open(etherscanUrl, "_self"); // Open the transaction url in a same page if written as "_self" and in a new tab if written as "_blank"
       return etherscanUrl;
     } catch (error) {
       console.error("Error fetching network details:", error);
