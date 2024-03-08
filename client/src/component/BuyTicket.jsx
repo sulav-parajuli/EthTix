@@ -119,54 +119,10 @@ const BuyTicket = ({ eventIndex, event, state }) => {
               {/* </div> */}
             </div>
           </div>
-
-          {/* Display Ticket Purchase Form */}
-          <div className="col-lg-6">
-            <h2 style={{ textAlign: "justify", padding: "0px" }}>Buy Ticket</h2>
-            {event ? (
-              <>
-                <p>
-                  Event: {event.eventName ? event.eventName.toString() : "N/A"}
-                </p>
-                <p>
-                  Price per Ticket:{" "}
-                  {event.price
-                    ? ethers.utils.formatEther(event.price).toString()
-                    : "N/A"}{" "}
-                  ETH
-                </p>
-              </>
-            ) : (
-              <p>Event information not available</p>
-            )}
-            <label htmlFor="quantity">Quantity:</label>
-            <input
-              type="number"
-              id="quantity"
-              name="quantity"
-              min="1"
-              max="10"
-              value={quantity}
-              onChange={handlequantityChange}
-            />
-            <p>
-              Total Price:
-              {event && event.price
-                ? ethers.utils.formatEther(event.price.mul(quantity)).toString()
-                : "N/A"}{" "}
-              ETH
-            </p>
-            <button
-              className="main-button color-white"
-              onClick={handleBuyTicket}
-            >
-              Confirm Purchase
-            </button>
-          </div>
         </div>
 
         {/* Display Ticket Purchase Form */}
-        <div className="col-lg-6">
+        <div className="col-lg-6 ">
           <h2 style={{ textAlign: "justify", padding: "0px" }}>Buy Ticket</h2>
           {event ? (
             <>
