@@ -23,8 +23,10 @@ const FAQs = () => {
                     type="button"
                     data-bs-toggle="collapse"
                     data-bs-target="#faq-content-1"
+                    aria-expanded="false"
+                    aria-controls="faq-content-1"
                   >
-                    Non consectetur a erat nam at lectus urna duis?
+                    What is EthTix?
                   </button>
                 </h2>
                 <div
@@ -33,10 +35,10 @@ const FAQs = () => {
                   data-bs-parent="#faqlist1"
                 >
                   <div className="accordion-body">
-                    Feugiat pretium nibh ipsum consequat. Tempus iaculis urna id
-                    volutpat lacus laoreet non curabitur gravida. Venenatis
-                    lectus magna fringilla urna porttitor rhoncus dolor purus
-                    non.
+                    EthTix is a decentralized event management system built on
+                    blockchain technology, allowing event organizers to create
+                    events, users to buy tickets, and administrators to oversee
+                    the platform's operations.
                   </div>
                 </div>
               </div>
@@ -48,9 +50,10 @@ const FAQs = () => {
                     type="button"
                     data-bs-toggle="collapse"
                     data-bs-target="#faq-content-2"
+                    aria-expanded="false"
+                    aria-controls="faq-content-2"
                   >
-                    Feugiat scelerisque varius morbi enim nunc faucibus a
-                    pellentesque?
+                    How does EthTix work?
                   </button>
                 </h2>
                 <div
@@ -59,11 +62,10 @@ const FAQs = () => {
                   data-bs-parent="#faqlist1"
                 >
                   <div className="accordion-body">
-                    Dolor sit amet consectetur adipiscing elit pellentesque
-                    habitant morbi. Id interdum velit laoreet id donec ultrices.
-                    Fringilla phasellus faucibus scelerisque eleifend donec
-                    pretium. Est pellentesque elit ullamcorper dignissim. Mauris
-                    ultrices eros in cursus turpis massa tincidunt dui.
+                    EthTix utilizes smart contracts on the Ethereum blockchain
+                    to facilitate the creation of events, purchase of tickets,
+                    and management of event-related activities in a transparent
+                    and decentralized manner.
                   </div>
                 </div>
               </div>
@@ -75,9 +77,10 @@ const FAQs = () => {
                     type="button"
                     data-bs-toggle="collapse"
                     data-bs-target="#faq-content-3"
+                    aria-expanded="false"
+                    aria-controls="faq-content-3"
                   >
-                    Dolor sit amet consectetur adipiscing elit pellentesque
-                    habitant morbi?
+                    Why should I use EthTix?
                   </button>
                 </h2>
                 <div
@@ -86,12 +89,38 @@ const FAQs = () => {
                   data-bs-parent="#faqlist1"
                 >
                   <div className="accordion-body">
-                    Eleifend mi in nulla posuere sollicitudin aliquam ultrices
-                    sagittis orci. Faucibus pulvinar elementum integer enim. Sem
-                    nulla pharetra diam sit amet nisl suscipit. Rutrum tellus
-                    pellentesque eu tincidunt. Lectus urna duis convallis
-                    convallis tellus. Urna molestie at elementum eu facilisis
-                    sed odio morbi quis
+                    EthTix as a fully decentralized platform offers
+                    transparency, security, and immutability through blockchain
+                    technology, ensuring that event transactions are secure and
+                    tamper-proof. Additionally, it eliminates the need for
+                    intermediaries, reducing costs and increasing efficiency.
+                  </div>
+                </div>
+              </div>
+
+              <div className="accordion-item">
+                <h2 className="accordion-header">
+                  <button
+                    className="accordion-button collapsed"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#faq-content-4"
+                    aria-expanded="false"
+                    aria-controls="faq-content-4"
+                  >
+                    How do I buy tickets for an event on EthTix?
+                  </button>
+                </h2>
+                <div
+                  id="faq-content-4"
+                  className="accordion-collapse collapse"
+                  data-bs-parent="#faqlist1"
+                >
+                  <div className="accordion-body">
+                    Users can buy tickets for events listed on EthTix by
+                    accessing the platform, browsing available events, selecting
+                    desired tickets, and completing the purchase using ethereum
+                    cryptocurrency.
                   </div>
                 </div>
               </div>
@@ -108,8 +137,10 @@ const FAQs = () => {
                     type="button"
                     data-bs-toggle="collapse"
                     data-bs-target="#faq2-content-1"
+                    aria-expanded="false"
+                    aria-controls="faq2-content-1"
                   >
-                    Ac odio tempor orci dapibus. Aliquam eleifend mi in nulla?
+                    How do I create an event on EthTix?
                   </button>
                 </h2>
                 <div
@@ -118,11 +149,11 @@ const FAQs = () => {
                   data-bs-parent="#faqlist2"
                 >
                   <div className="accordion-body">
-                    Dolor sit amet consectetur adipiscing elit pellentesque
-                    habitant morbi. Id interdum velit laoreet id donec ultrices.
-                    Fringilla phasellus faucibus scelerisque eleifend donec
-                    pretium. Est pellentesque elit ullamcorper dignissim. Mauris
-                    ultrices eros in cursus turpis massa tincidunt dui.
+                    Event organizers can create events on EthTix by accessing
+                    the platform, providing necessary event details and setting
+                    ticket prices to manage ticket sales and event logistics.
+                    Users needs to register as an event organizer to create
+                    events.
                   </div>
                 </div>
               </div>
@@ -134,9 +165,10 @@ const FAQs = () => {
                     type="button"
                     data-bs-toggle="collapse"
                     data-bs-target="#faq2-content-2"
+                    aria-expanded="false"
+                    aria-controls="faq-content-2"
                   >
-                    Tempus quam pellentesque nec nam aliquam sem et tortor
-                    consequat?
+                    Can I trust EthTix with my personal and payment information?
                   </button>
                 </h2>
                 <div
@@ -145,10 +177,10 @@ const FAQs = () => {
                   data-bs-parent="#faqlist2"
                 >
                   <div className="accordion-body">
-                    Molestie a iaculis at erat pellentesque adipiscing commodo.
-                    Dignissim suspendisse in est ante in. Nunc vel risus commodo
-                    viverra maecenas accumsan. Sit amet nisl suscipit adipiscing
-                    bibendum est. Purus gravida quis blandit turpis cursus in
+                    EthTix leverages blockchain technology to secure user data
+                    and transactions, providing a high level of trust and
+                    security. However, users should always exercise caution and
+                    follow best practices for online security.
                   </div>
                 </div>
               </div>
@@ -160,8 +192,11 @@ const FAQs = () => {
                     type="button"
                     data-bs-toggle="collapse"
                     data-bs-target="#faq2-content-3"
+                    aria-expanded="false"
+                    aria-controls="faq-content-3"
                   >
-                    Varius vel pharetra vel turpis nunc eget lorem dolor?
+                    What cryptocurrencies are accepted for purchasing tickets on
+                    EthTix?
                   </button>
                 </h2>
                 <div
@@ -170,13 +205,38 @@ const FAQs = () => {
                   data-bs-parent="#faqlist2"
                 >
                   <div className="accordion-body">
-                    Laoreet sit amet cursus sit amet dictum sit amet justo.
-                    Mauris vitae ultricies leo integer malesuada nunc vel.
-                    Tincidunt eget nullam non nisi est sit amet. Turpis nunc
-                    eget lorem dolor sed. Ut venenatis tellus in metus vulputate
-                    eu scelerisque. Pellentesque diam volutpat commodo sed
-                    egestas egestas fringilla phasellus faucibus. Nibh tellus
-                    molestie nunc non blandit massa enim nec.
+                    EthTix currently accepts Ether (ETH) for purchasing tickets.
+                    Additional cryptocurrencies may be supported in the future,
+                    depending on platform developments and user demand
+                  </div>
+                </div>
+              </div>
+
+              <div className="accordion-item">
+                <h2 className="accordion-header">
+                  <button
+                    className="accordion-button collapsed"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#faq2-content-4"
+                    aria-expanded="false"
+                    aria-controls="faq-content-4"
+                  >
+                    Is there customer support available for EthTix users?
+                  </button>
+                </h2>
+                <div
+                  id="faq2-content-4"
+                  className="accordion-collapse collapse"
+                  data-bs-parent="#faqlist2"
+                >
+                  <div className="accordion-body">
+                    EthTix does not have official customer support channels such
+                    as email or phone. However, users can directly reach out to
+                    the developers for assistance with any inquiries, technical
+                    issues, or concerns related to the platform and its
+                    services. Developers are committed to providing support and
+                    addressing user needs promptly.
                   </div>
                 </div>
               </div>

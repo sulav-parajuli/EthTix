@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useAppContext } from "./AppContext";
 import { Triangle } from "react-loader-spinner";
+//import contract addresses from contractAddresses.json
+import contractAddresses from "../../../contractAddresses.json";
 
 //Import fontawesome icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -8,6 +10,7 @@ import {
   faClock,
   faTicket,
   faCalendarCheck,
+  faCopy,
 } from "@fortawesome/free-solid-svg-icons";
 import line from "../assets/images/line.png";
 import pendingticket from "../assets/images/pendingticket.png";
@@ -33,8 +36,11 @@ const Dashboard = ({ state }) => {
     isAdmin,
     formatTime,
     account,
-    convertUnixTimestampToDateTime,
+    // convertUnixTimestampToDateTime,
+    viewTransactionOnEtherscan,
   } = useAppContext();
+  const contractAddress = contractAddresses.tickets;
+  const [isCopied, setIsCopied] = useState(false);
   // Array of currency options
   const currencyOptions = [
     "ETH",
@@ -277,6 +283,16 @@ const Dashboard = ({ state }) => {
   // 	document.getElementsByClassName("finalValue").innerHTML = "";
   // };
 
+  const copyToClipboard = (text) => {
+    navigator.clipboard
+      .writeText(text)
+      .then(() => {
+        setIsCopied(true);
+        setTimeout(() => setIsCopied(false), 2000); // Hide notification after 2 seconds
+      })
+      .catch((error) => console.error("Failed to copy:", error));
+  };
+
   return (
     <>
       {isLoading ? (
@@ -383,10 +399,48 @@ const Dashboard = ({ state }) => {
               </div>
             </div>
           </div>
+          {/* Contract Address Section */}
+          {isAdmin ? (
+            <div className="row mt-4 pb-3">
+              <div className="col-md-12 ">
+                {/* Date and Time */}
+                <div className="card">
+                  <div className="con-add-sec justify-content-between align-items-center">
+                    <div>
+                      <p className="mb-2">
+                        Contract Address: {contractAddress}
+                      </p>
+                    </div>
+                    <div>
+                      <button
+                        className="main-button btn btn-primary btn-sm mr-2"
+                        onClick={() => copyToClipboard(contractAddress)}
+                      >
+                        <FontAwesomeIcon
+                          icon={faCopy}
+                          style={{ color: "white !important" }}
+                        />
+                      </button>
+                      {isCopied && <div className="alt-message">Copied!</div>}
+                      {/* button to view contract on etherscan */}
+                      <button
+                        className="main-button btn btn-primary btn-sm"
+                        onClick={() =>
+                          viewTransactionOnEtherscan(contractAddress)
+                        }
+                      >
+                        View on Block Explorer
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ) : null}
 
           {/* Converter Section */}
           <div className="row mt-4">
-            <div className="col-md-8 mb-5">
+            <div className="col-md-8 mb-4">
               {/* Placeholder for Price Converter */}
               <div className="card">
                 <div className="card-body">
@@ -456,7 +510,7 @@ const Dashboard = ({ state }) => {
                 </div>
               </div>
             </div>
-            <div className="col-md-4 mb-5 dashboardevent">
+            <div className="col-md-4 mb-4 dashboardevent">
               {/* Placeholder for Events List */}
               <h5>Events List</h5>
               {isAdmin ? (
@@ -536,7 +590,7 @@ const Dashboard = ({ state }) => {
                     <p>Events not available....</p>
                   ) : (
                     <div className="row">
-                      {events.map((event, index) => (
+                      {organizerevents.map((event, index) => (
                         <div
                           key={index}
                           className="col-12 mb-4 card"

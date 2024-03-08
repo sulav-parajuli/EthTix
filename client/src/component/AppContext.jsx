@@ -19,6 +19,7 @@ const AppProvider = ({ children, template, accounts, account, state }) => {
   const [notifications, setNotifications] = useState([]);
   const [hasNotifications, setHasNotifications] = useState(false);
   const [isSelected, setIsSelected] = useState("dashboard"); // Initial selection, you can change it as needed
+  const [Loading, setLoading] = useState(false);
   // Function to fetch events from the smart contract
   const fetchEvents = async () => {
     try {
@@ -123,7 +124,8 @@ const AppProvider = ({ children, template, accounts, account, state }) => {
     try {
       const network = await signer.provider.getNetwork();
       const networkName = network.name;
-      const etherscanUrl = `https://${networkName}.etherscan.io/tx/${transactionHash}`;
+      const etherscanUrl = `https://${networkName}.etherscan.io/address/${transactionHash}`;
+      window.open(etherscanUrl, "_self"); // Open the transaction url in a same page if written as "_self" and in a new tab if written as "_blank"
       return etherscanUrl;
     } catch (error) {
       console.error("Error fetching network details:", error);
@@ -276,6 +278,8 @@ const AppProvider = ({ children, template, accounts, account, state }) => {
     savetransactionHashToLocalStorage,
     retrieveAllTransactionsFromLocalStorage,
     convertUnixTimestampToDateTime,
+    Loading,
+    setLoading,
   };
 
   const ticketContractAddress = contractAddresses.tickets;

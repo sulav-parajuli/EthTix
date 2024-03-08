@@ -7,17 +7,41 @@ import EventDetail from "./EventDetail";
 import { useAppContext } from "./AppContext";
 import { Triangle } from "react-loader-spinner";
 
-const Popup = ({ isOpen, onClose, event, state, selectedEventIndex }) => {
+const Popup = ({
+  isOpen,
+  Loading,
+  onClose,
+  event,
+  state,
+  selectedEventIndex,
+}) => {
   return isOpen ? (
     <div className="popup popuptop">
-      <div className="popup-inner">
-        <button className="btn-close close m-3" onClick={onClose}></button>
-        <EventDetail
-          index={selectedEventIndex}
-          event={event[selectedEventIndex]}
-          state={state}
+      {Loading ? (
+        <Triangle
+          visible={true}
+          height="80"
+          width="80"
+          color="#008eb0"
+          ariaLabel="triangle-loading"
+          wrapperStyle={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100vh", // 100% of the viewport height
+          }}
+          wrapperClass=""
         />
-      </div>
+      ) : (
+        <div className="popup-inner">
+          <button className="btn-close close m-3" onClick={onClose}></button>
+          <EventDetail
+            index={selectedEventIndex}
+            event={event[selectedEventIndex]}
+            state={state}
+          />
+        </div>
+      )}
     </div>
   ) : null;
 };
@@ -30,6 +54,7 @@ const BrowseEvent = ({ state }) => {
     fetchEvents,
     handleEventCreated,
     account,
+    Loading,
   } = useAppContext();
   const [isLoading, setIsLoading] = useState(true);
   const [selectedEventIndex, setSelectedEventIndex] = useState(null);
@@ -213,6 +238,7 @@ const BrowseEvent = ({ state }) => {
                         </div>
                         <Popup
                           isOpen={isPopupOpen && selectedEventIndex === index}
+                          Loading={Loading}
                           onClose={() => {
                             setPopupOpen(false);
                             document.body.classList.remove("popup-open");
@@ -279,6 +305,7 @@ const BrowseEvent = ({ state }) => {
                       </div>
                       <Popup
                         isOpen={isPopupOpen && selectedEventIndex === index}
+                        Loading={Loading}
                         onClose={() => {
                           setPopupOpen(false);
                           document.body.classList.remove("popup-open");
