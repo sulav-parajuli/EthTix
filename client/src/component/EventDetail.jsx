@@ -55,7 +55,6 @@ const EventDetail = ({ index, event, state }) => {
                     style={{ maxHeight: "300px", objectFit: "cover" }}
                   />
                 </div>
-                {/* Add more carousel items if you have multiple images */}
               </div>
               {/* </div> */}
             </div>

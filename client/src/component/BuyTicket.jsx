@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { ethers } from "ethers";
 import { useAppContext } from "./AppContext";
 import { useNavigate } from "react-router-dom";
@@ -7,9 +7,10 @@ import ethtix from "../assets/images/abstract.png";
 
 const BuyTicket = ({ eventIndex, event, state }) => {
   const { ticketsContract, signer } = state;
+
   const [quantity, setQuantity] = useState(1);
-  const { savetransactionHashToLocalStorage, isEventOrganizer, isAdmin } =
-    useAppContext();
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+  const { isEventOrganizer, isAdmin } = useAppContext();
   const navigate = useNavigate();
 
   const handlequantityChange = (event) => {
@@ -28,6 +29,7 @@ const BuyTicket = ({ eventIndex, event, state }) => {
 
   const handleBuyTicket = async () => {
     try {
+      setIsButtonDisabled(true);
       if (isEventOrganizer) {
         toast.info("You are the event organizer. You cannot buy tickets.");
         return;
@@ -36,8 +38,6 @@ const BuyTicket = ({ eventIndex, event, state }) => {
         toast.info("You are the owner. You cannot buy tickets.");
         return;
       }
-      // Check the structure of the event being passed
-      console.log("Event Structure:", event);
 
       if (
         !ticketsContract ||
@@ -67,17 +67,19 @@ const BuyTicket = ({ eventIndex, event, state }) => {
 
       // Wait for the transaction to be mined
       await transaction.wait();
-      const TransactionHash = await transaction.hash;
-      savetransactionHashToLocalStorage(TransactionHash);
-      // console.log("Transaction Hash:", TransactionHash);
+      // const TransactionHash = await transaction.hash;
+      // savetransactionHashToLocalStorage(TransactionHash);
+      // // console.log("Transaction Hash:", TransactionHash);
 
       // Handle success or show a confirmation message
       console.log("Ticket purchase successful!");
+
       navigate("/mytickets");
       document.body.classList.remove("popup-open"); // Remove the class that is added to the body when the popup is open
       document.querySelector(".topnav").style.background = "transparent"; // Change the background color of the topnav
     } catch (error) {
       console.error("Error buying ticket:", error.message);
+      setIsButtonDisabled(false);
       // Handle errors or display an error message
     }
   };
@@ -144,7 +146,11 @@ const BuyTicket = ({ eventIndex, event, state }) => {
               : "N/A"}{" "}
             ETH
           </p>
-          <button className="main-button color-white" onClick={handleBuyTicket}>
+          <button
+            className="main-button color-white"
+            onClick={handleBuyTicket}
+            disabled={isButtonDisabled}
+          >
             Confirm Purchase
           </button>
         </div>
