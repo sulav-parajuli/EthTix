@@ -16,8 +16,10 @@ const OrganizerTerms = ({ onConfirm }) => {
           style={{ color: "#5a5a5a", maxHeight: "400px", overflowY: "auto" }}
         >
           <p class="card-text">
-            By using our platform as an event organizer, you agree to the
-            following fees:
+            <b>
+              By using our platform as an event organizer, you agree to the
+              following fees:
+            </b>
           </p>
 
           <ul class="list-group">
@@ -35,9 +37,11 @@ const OrganizerTerms = ({ onConfirm }) => {
           </ul>
 
           <p class="card-text">
-            If you are comfortable with these fees and would like to proceed,
-            please click "I agree" button to continue with the registration
-            process.
+            <b>
+              If you are comfortable with these fees and would like to proceed,
+              please click "I agree" button to continue with the registration
+              process.
+            </b>
           </p>
 
           <div className="text-center">
