@@ -122,6 +122,7 @@ const About = () => {
                           <img
                             src={member.imgSrc}
                             alt={member.name}
+                            title={member.name}
                             className="img-fluid shadow border-radius-lg"
                           />
                           <div className="sociall">

@@ -132,7 +132,7 @@ const BrowseEvent = ({ state }) => {
               onKeyDown={handleKeyDown}
             />
             <button className="search-button" onClick={handleSearchButton}>
-              <img src={search} alt="Search" />
+              <img src={search} alt="Search" title="Search" />
             </button>
           </div>
         </div>

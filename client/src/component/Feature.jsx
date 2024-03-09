@@ -17,7 +17,12 @@ const Feature = () => {
 
         <div className="row">
           <div className="col-lg-6">
-            <img src={features} className="img-fluid" alt="features" />
+            <img
+              src={features}
+              className="img-fluid"
+              alt="features"
+              title="features"
+            />
           </div>
 
           <div className="col-lg-6 mt-5 mt-lg-0 d-flex">

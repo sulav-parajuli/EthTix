@@ -52,6 +52,7 @@ const EventDetail = ({ index, event, state }) => {
                     src={ethtix}
                     className="img-fluid"
                     alt="Event"
+                    title="Event"
                     style={{ maxHeight: "300px", objectFit: "cover" }}
                   />
                 </div>
@@ -68,7 +69,11 @@ const EventDetail = ({ index, event, state }) => {
             <p>Price: {ethers.utils.formatEther(event.price).toString()} ETH</p>
             <p>
               Available Tickets:&nbsp;
-              {event.remTickets.toNumber()}
+              {event.remTickets.toNumber() === 0 ? (
+                <span className="required">No tickets available</span>
+              ) : (
+                event.remTickets.toNumber()
+              )}
             </p>
             <p>Location: {event.location.toString()}</p>
             <p>Date: {event.date + ", " + formatTime(event.time)}</p>
@@ -93,7 +98,9 @@ const EventDetail = ({ index, event, state }) => {
             <button
               className="main-button color-white"
               onClick={handlebuyticket}
-              disabled={!agreeTermsCondition}
+              disabled={
+                !agreeTermsCondition || event.remTickets.toNumber() === 0
+              }
             >
               Buy Ticket
             </button>

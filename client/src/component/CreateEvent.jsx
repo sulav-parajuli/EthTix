@@ -442,7 +442,11 @@ const CreateEvent = ({ state }) => {
         </div>
       ) : (
         <div className="createevent">
-          <img src={eventcreation} alt="Event Creation" />
+          <img
+            src={eventcreation}
+            alt="Event Creation"
+            title="Connect your wallet"
+          />
           <div>
             Begin by connecting your wallet as the event organizer to initiate
             the process.

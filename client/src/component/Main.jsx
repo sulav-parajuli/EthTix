@@ -107,7 +107,12 @@ const Main = ({ state }) => {
       </div>
       <Popup isOpen={isPopupOpen} onClose={handleClosePopup} state={state} />
       <div className="image-container">
-        <img src={mainimage} className="main-image" alt="Coming Soon" />
+        <img
+          src={mainimage}
+          className="main-image"
+          alt="EthTix"
+          title="EthTix Event"
+        />
       </div>
     </div>
   );
