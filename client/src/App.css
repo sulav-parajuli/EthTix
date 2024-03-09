@@ -242,9 +242,13 @@ body.popup-open {
   padding-bottom: 5%;
 }
 .profile-image {
-  border-radius: 10px;
-  border: 2px solid #008eb0;
+  border-radius: 50%;
+  border: 4px solid #5a5a5a;
   margin-right: 5%;
+  padding-top: 2%;
+  padding-left: 0.3%;
+  padding-right: 0.3%;
+  margin-bottom: 5%;
 }
 .name {
   font-size: large;

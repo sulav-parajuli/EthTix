@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useAppContext } from "./AppContext";
-import logo from "../assets/images/logo/etherTixLogo.png";
+// import logo from "../assets/images/logo/etherTixLogo.png";
+import user from "../assets/images/user.png";
 import ErrorPage from "./ErrorPage";
 import { retrieveFromIPFS } from "../utils/ipfsUtils";
 
@@ -73,11 +74,13 @@ const MyTickets = ({ state }) => {
             <div className="col-sm-5 pb-4">
               <div className="card">
                 <div>
-                  <img
-                    src={logo}
-                    className="img-fluid profile-image"
-                    width="70"
-                  />
+                  <div>
+                    <img
+                      src={user}
+                      className="img-fluid profile-image"
+                      width="100"
+                    />
+                  </div>
                   <p>{account}</p>
                 </div>
               </div>
