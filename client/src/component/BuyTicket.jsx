@@ -59,6 +59,11 @@ const BuyTicket = ({ eventIndex, event, state }) => {
         return;
       }
 
+      if (event.remTickets.toNumber() < quantity) {
+        toast.info("Not enough tickets available for purchase");
+        return;
+      }
+
       // Calculate total price
       const totalPrice = event.price.mul(quantity);
 
