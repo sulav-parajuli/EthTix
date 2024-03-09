@@ -35,7 +35,6 @@ const CreateEvent = ({ state }) => {
   const { ticketsContract } = state;
 
   useEffect(() => {
-    calculateFee();
     const timer = setInterval(() => {
       setCurrentTime(new Date());
     }, 1000);
@@ -81,9 +80,7 @@ const CreateEvent = ({ state }) => {
       // Convert gas price to ether
       const FeeData = await provider.getFeeData();
       const gasPrice = ethers.utils.formatUnits(FeeData.gasPrice, "wei");
-      //const gasPriceInEth = ethers.utils.formatEther(gasPrice);
-      console.log(gasPrice);
-      // Calculate total fee in ether
+
       const totalFeeInWei = feeWei.add(gasPrice);
       const totalFeeInEth = ethers.utils.formatEther(totalFeeInWei);
       setFee(totalFeeInEth);
@@ -436,24 +433,24 @@ const CreateEvent = ({ state }) => {
               <button
                 type="submit"
                 className="btn btn-danger"
+                data-bs-toggle="modal"
+                data-bs-target="#confirmModal"
                 onClick={() => setShowModal(true)}
               >
-                {userConfirmed ? "Confirm Event Creation" : "Create Event"}
+                Confirm Event Creation
               </button>
-              {/* {console.log("userConfirmed", userConfirmed)}
-              {console.log("showModal", showModal)} */}
 
               {/* Bootstrap Modal for Confirmation */}
+
               {showModal && (
                 <div
-                  className="model fade show"
-                  id="confirmationModal"
+                  className="modal fade"
+                  id="confirmModal"
                   tabIndex="-1"
-                  role="dialog"
                   aria-labelledby="confirmationModalLabel"
                   aria-hidden="true"
                 >
-                  <div className="modal-dialog" role="document">
+                  <div className="modal-dialog">
                     <div className="modal-content">
                       <div className="modal-header">
                         <h5 className="modal-title" id="confirmModal">
@@ -464,7 +461,6 @@ const CreateEvent = ({ state }) => {
                           className="close"
                           data-dismiss="modal"
                           aria-label="Close"
-                          onClick={() => setShowModal(false)}
                         ></button>
                       </div>
                       <div className="modal-body">
@@ -482,7 +478,7 @@ const CreateEvent = ({ state }) => {
                         <button
                           type="button"
                           className="btn btn-secondary"
-                          data-dismiss="modal"
+                          data-bs-dismiss="modal"
                           onClick={() => setShowModal(false)}
                         >
                           Cancel
@@ -490,7 +486,11 @@ const CreateEvent = ({ state }) => {
                         <button
                           type="button"
                           className="btn btn-primary"
-                          onClick={() => setUserConfirmed(true)}
+                          onClick={() => {
+                            setUserConfirmed(true);
+                            setShowModal(false);
+                            handleConfirmation;
+                          }}
                         >
                           Confirm
                         </button>
