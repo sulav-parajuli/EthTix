@@ -108,7 +108,12 @@ const Login = ({ state }) => {
                 ? "Wallet connected!"
                 : "Connect your wallet to get started"}
             </div>
-            <img src={walletImage} alt="Wallet" className="wallet-image" />
+            <img
+              src={walletImage}
+              alt="Wallet"
+              className="wallet-image"
+              title="Wallet Connection"
+            />
           </div>
           <div className="right-section">
             <form className="login-form">

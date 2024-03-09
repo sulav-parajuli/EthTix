@@ -23,7 +23,12 @@ const WhyEthTix = () => {
         <div className="row">
           <div className="col-lg-4">
             <div className="box">
-              <img src={value1} className="img-fluid" alt="" />
+              <img
+                src={value1}
+                className="img-fluid"
+                alt="Transparency"
+                title="Transparency"
+              />
               <h3>Authenticity and Transparency</h3>
               <p>
                 EthTix leverages blockchain technology to ensure the
@@ -35,7 +40,12 @@ const WhyEthTix = () => {
 
           <div className="col-lg-4 mt-4 mt-lg-0">
             <div className="box">
-              <img src={value2} className="img-fluid" alt="" />
+              <img
+                src={value2}
+                className="img-fluid"
+                alt="Immutable Records"
+                title="Immutable Records"
+              />
               <h3>Immutable Records</h3>
               <p>
                 All ticket transactions are recorded on the Ethereum blockchain,
@@ -47,7 +57,12 @@ const WhyEthTix = () => {
 
           <div className="col-lg-4 mt-4 mt-lg-0">
             <div className="box">
-              <img src={value3} className="img-fluid" alt="" />
+              <img
+                src={value3}
+                className="img-fluid"
+                alt="Decentralization"
+                title="Decentralization"
+              />
               <h3>Decentralized Platform</h3>
               <p>
                 EthTix operates on a decentralized platform, eliminating the
@@ -60,7 +75,12 @@ const WhyEthTix = () => {
 
           <div className="col-lg-4 mt-4 mt-lg-0">
             <div className="box">
-              <img src={value4} className="img-fluid" alt="" />
+              <img
+                src={value4}
+                className="img-fluid"
+                alt="Security"
+                title="Security"
+              />
               <h3>Enhanced Security</h3>
               <p>
                 Blockchain technology used by EthTix offers enhanced security
@@ -71,7 +91,12 @@ const WhyEthTix = () => {
           </div>
           <div className="col-lg-4 mt-4 mt-lg-0">
             <div className="box">
-              <img src={value5} className="img-fluid" alt="" />
+              <img
+                src={value5}
+                className="img-fluid"
+                alt="Ticket Transfer"
+                title="Ticket Transfer"
+              />
               <h3>Seamless Ticket Transfer</h3>
               <p>
                 EthTix facilitates seamless ticket transfers between users,
@@ -83,7 +108,12 @@ const WhyEthTix = () => {
           </div>
           <div className="col-lg-4 mt-4 mt-lg-0">
             <div className="box">
-              <img src={value6} className="img-fluid" alt="" />
+              <img
+                src={value6}
+                className="img-fluid"
+                alt="EventOrganizer Support"
+                title="EventOrganizer Support"
+              />
               <h3>Support for Event Organizers</h3>
               <p>
                 EthTix provides comprehensive support for event organizers,

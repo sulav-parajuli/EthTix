@@ -115,6 +115,7 @@ const BuyTicket = ({ eventIndex, event, state }) => {
                     src={ethtix}
                     className="img-fluid"
                     alt="Event"
+                    title="Event"
                     style={{ maxHeight: "300px", objectFit: "cover" }}
                   />
                 </div>

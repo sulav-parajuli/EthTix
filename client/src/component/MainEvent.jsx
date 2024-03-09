@@ -6,7 +6,12 @@ const MainEvent = () => {
   return (
     <div className="wow animate__animated animate__fadeInUp animate__duration-1s main-event">
       <div className="maine image-container">
-        <img src={ticketcounter} className="ticketcounter" />
+        <img
+          src={ticketcounter}
+          className="ticketcounter"
+          alt="Ticket Solution"
+          title="Ticket Solution"
+        />
       </div>
       <div className="text-container" style={{ justifyContent: "center" }}>
         <div className="maine text-block">

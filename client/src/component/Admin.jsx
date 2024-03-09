@@ -212,7 +212,8 @@ const Admin = ({ state }) => {
                 <img
                   src={etherTixLogo}
                   className="navbar-brand-img h-100"
-                  alt="main_logo"
+                  alt="EthTix"
+                  title="EthTix"
                 />
                 {/*<span className="ms-1 font-weight-bold text-white"
         >EthTix</span

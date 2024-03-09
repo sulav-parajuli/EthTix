@@ -135,6 +135,7 @@ const AdminEvents = ({ state }) => {
                     src={ethtix}
                     className="img-fluid"
                     alt="Event"
+                    title="Event"
                     style={{ maxHeight: "300px", objectFit: "cover" }}
                   />
                 </div>
@@ -357,7 +358,7 @@ const AdminEvents = ({ state }) => {
                 onKeyDown={handleKeyDown}
               />
               <button className="search-button" onClick={handleSearchButton}>
-                <img src={search} alt="Search" />
+                <img src={search} alt="Search" title="Search" />
               </button>
             </div>
           </div>

@@ -59,7 +59,7 @@ const Navbar = ({ state }) => {
       <nav className="navbar topnav navbar-expand-lg fixed-top mb-5">
         <div className="container-fluid">
           <Link to="/" className="navbar-brand ms-5 logo">
-            <img src={etherTixLogo} alt="EtherTix Logo" />
+            <img src={etherTixLogo} alt="EthTix Logo" title="EthTix" />
             {/* <div className="ethtix">EthTix</div> */}
           </Link>
           <button

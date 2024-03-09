@@ -18,7 +18,12 @@ const HowToUse = () => {
         <div className="row feature-icons">
           <div className="row">
             <div className="col-xl-4 text-center">
-              <img src={userflow} className="img-fluid p-4" alt="" />
+              <img
+                src={userflow}
+                className="img-fluid p-4"
+                alt="usingethtix"
+                title="How to Use EthTix?"
+              />
             </div>
 
             <div className="col-xl-8 d-flex content">
