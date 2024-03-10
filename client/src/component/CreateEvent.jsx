@@ -189,6 +189,7 @@ const CreateEvent = ({ state }) => {
   const handleModel = () => {
     setShowModal(false);
     document.body.classList.remove("popup-open"); // Allow scrolling
+    document.body.classList.remove("popuptop"); // Allow scrolling
     document.querySelector(".topnav").style.backgroundColor = "transparent";
   };
 
@@ -291,6 +292,9 @@ const CreateEvent = ({ state }) => {
       console.log(error);
     } finally {
       setIsLoading(false);
+      document.body.classList.remove("popup-open"); // Allow scrolling
+      document.body.classList.remove("popuptop"); // Allow scrolling
+      document.querySelector(".topnav").style.backgroundColor = "transparent";
     }
   };
 
@@ -472,7 +476,8 @@ const CreateEvent = ({ state }) => {
                         <button
                           type="button"
                           className="btn-close"
-                          data-dismiss="modal"
+                          data-bs-dismiss="modal"
+                          // data-dismiss="modal"
                           aria-label="Close"
                           onClick={handleModel}
                         ></button>
