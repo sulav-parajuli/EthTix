@@ -482,16 +482,29 @@ const CreateEvent = ({ state }) => {
                           onClick={handleModel}
                         ></button>
                       </div>
-                      <div className="modal-body">
+                      <div className="modal-body text-start">
                         <p>
-                          Event Name: {eventName} <br />
-                          Price: {priceInEther} ETH <br />
-                          Date: {date} <br />
-                          Time: {time} <br />
-                          Location: {location} <br />
-                          Total Tickets: {totalTickets} <br />
-                          You will be charged a {fee}ETH fee for creating the
-                          event.
+                          <b>Event Name: {eventName}</b> <br />
+                          <b>
+                            Price: {priceInEther} ETH <br />
+                          </b>
+                          <b>
+                            Date: {date} <br />
+                          </b>
+                          <b>
+                            Time: {time} <br />
+                          </b>
+                          <b>
+                            Location: {location} <br />
+                          </b>
+                          <b>
+                            Total Tickets: {totalTickets} <br />
+                          </b>
+                          <b>
+                            You will be charged with {fee}ETH fee for creating
+                            the event. The fee is included with gas fees but it
+                            may vary based on the network congestion.
+                          </b>
                         </p>
                       </div>
                       <div className="modal-footer">
