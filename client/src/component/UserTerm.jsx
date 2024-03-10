@@ -20,6 +20,10 @@ const UserTerm = ({ onConfirm }) => {
           attend an event. It covers the value of the event itself, and it's set
           by the event organizer.
         </p>
+        <p>
+          <strong>Ticket Purchase Limit</strong> The user can purchase a maximum
+          of 10 tickets at a time.
+        </p>
 
         <p>
           <strong>Gas Fees:</strong> Gas fees are associated with blockchain
