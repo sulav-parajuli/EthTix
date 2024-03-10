@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { Triangle } from "react-loader-spinner";
 import error from "../assets/images/404.png";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faRotateRight } from "@fortawesome/free-solid-svg-icons";
+
 const ErrorPage = () => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -14,9 +17,14 @@ const ErrorPage = () => {
     // document.title = "404: Page Not Found";
   }, []);
 
-  const handleGoBack = () => {
-    // Use the navigate function to go back to the previous page
-    navigate(-1); // or navigate("back")
+  // const handleGoBack = () => {
+  //   // Use the navigate function to go back to the previous page
+  //   navigate(-1); // or navigate("back")
+  // };
+
+  const handleReload = () => {
+    // Reload the current page
+    window.location.reload();
   };
 
   return (
@@ -48,9 +56,10 @@ const ErrorPage = () => {
           <p>Sorry, the page you are looking for does not exist.</p>
           <button
             className="icon-move-right main-button color-white"
-            onClick={handleGoBack}
+            onClick={handleReload}
           >
-            Go Back
+            Reload {""}
+            <FontAwesomeIcon icon={faRotateRight} />
             {/* <i className="fas fa-arrow-right text-xs ms-1" aria-hidden="true"></i> */}
           </button>
         </>

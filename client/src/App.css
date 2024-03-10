@@ -381,3 +381,7 @@ button.btn.btn-danger {
     margin-left: 20px !important;
   }
 }
+
+svg.svg-inline--fa.fa-rotate-right path {
+  color: white;
+}
