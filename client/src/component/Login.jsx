@@ -53,7 +53,7 @@ const Login = ({ state }) => {
       const isAlreadyOrganizer = await ticketsContract.isOrganizers(
         signer.getAddress()
       );
-      console.log(isAlreadyOrganizer);
+      // console.log(isAlreadyOrganizer);
       if (isAlreadyOrganizer) {
         setEventOrganizer(true);
       } else {
@@ -61,19 +61,19 @@ const Login = ({ state }) => {
       }
     } catch (error) {
       console.error("Error connecting to wallet:", error);
-      toast.error("Error connecting to wallet.", error, {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-      });
-      const newToastMessage = {
-        notificationName: "Error connecting to wallet.",
-      };
+      // toast.error("Error connecting to wallet.", error, {
+      //   position: "top-right",
+      //   autoClose: 5000,
+      //   hideProgressBar: false,
+      //   closeOnClick: true,
+      //   pauseOnHover: true,
+      //   draggable: true,
+      // });
+      // const newToastMessage = {
+      //   notificationName: "Error connecting to wallet.",
+      // };
 
-      createNotification(newToastMessage);
+      // createNotification(newToastMessage);
     } finally {
       setIsLoading(false);
       document.querySelector(".topnav").style.background = "transparent";
