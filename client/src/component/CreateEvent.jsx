@@ -16,7 +16,10 @@ const CreateEvent = ({ state }) => {
   const [totalTickets, setTotalTickets] = useState("");
   const [location, setLocation] = useState("");
   const [allvalueverified, setAllvalueverified] = useState(false);
-  // Define state variables for date and time
+  const [showModal, setShowModal] = useState(false);
+  const [userConfirmed, setUserConfirmed] = useState(false);
+  const [fee, setFee] = useState(0);
+
   const [currentTime, setCurrentTime] = useState(new Date());
   const {
     isUserConnected,
@@ -25,18 +28,25 @@ const CreateEvent = ({ state }) => {
     createNotification,
     savetransactionHashToLocalStorage,
   } = useAppContext();
-  const [confirmationNeeded, setConfirmationNeeded] = useState(false);
+
   const [description, setDescription] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate(); //to redirect to another page
   const { ticketsContract } = state;
 
   useEffect(() => {
+    const fetchFee = async () => {
+      const calculatedFee = await calculateFee();
+      setFee(calculatedFee);
+    };
+    if (priceInEther && totalTickets) {
+      fetchFee();
+    }
     const timer = setInterval(() => {
       setCurrentTime(new Date());
     }, 1000);
     return () => clearInterval(timer);
-  }, [ticketsContract]);
+  }, [ticketsContract, priceInEther, totalTickets]);
 
   const handleEventNameChange = (event) => {
     setEventName(event.target.value);
@@ -77,9 +87,7 @@ const CreateEvent = ({ state }) => {
       // Convert gas price to ether
       const FeeData = await provider.getFeeData();
       const gasPrice = ethers.utils.formatUnits(FeeData.gasPrice, "wei");
-      //const gasPriceInEth = ethers.utils.formatEther(gasPrice);
-      console.log(gasPrice);
-      // Calculate total fee in ether
+
       const totalFeeInWei = feeWei.add(gasPrice);
       const totalFeeInEth = ethers.utils.formatEther(totalFeeInWei);
 
@@ -174,20 +182,21 @@ const CreateEvent = ({ state }) => {
     }
 
     if (allvalueverified) {
-      setConfirmationNeeded(true);
+      setShowModal(true);
     }
+  };
+
+  const handleModel = () => {
+    setShowModal(false);
+    document.body.classList.remove("popup-open"); // Allow scrolling
+    document.querySelector(".topnav").style.backgroundColor = "transparent";
   };
 
   const handleConfirmation = async (event) => {
     event.preventDefault();
-
-    const fee = await calculateFee();
-    const confirmationMessage = `Event Name: ${eventName}\nPrice: ${priceInEther} ETH\nDate: ${date}\nTime: ${time}\nLocation: ${location}\nTotal Tickets: ${totalTickets}\n
-    You will be charged ${fee} ETH for creating this event. Are you sure you want to continue?`;
-    if (window.confirm(confirmationMessage)) {
-      createEvent();
-      setConfirmationNeeded(false);
-    }
+    setUserConfirmed(true);
+    setShowModal(false);
+    createEvent();
   };
 
   const createEvent = async () => {
@@ -302,13 +311,11 @@ const CreateEvent = ({ state }) => {
                 alignItems: "center",
                 height: "100vh", // 100% of the viewport height
               }}
-              wrapperClass=""
+              wrapperclassName=""
             />
           ) : (
             <form
-              onSubmit={
-                confirmationNeeded ? handleConfirmation : handleFormSubmit
-              }
+              onSubmit={userConfirmed ? handleConfirmation : handleFormSubmit}
             >
               <div className="mb-4">
                 <label htmlFor="eventName" className="form-label">
@@ -434,19 +441,81 @@ const CreateEvent = ({ state }) => {
                 <div className="errorindescription"></div>
               </div>
 
-              <button type="submit" className="btn btn-danger">
-                {confirmationNeeded ? "Confirm Event Creation" : "Create Event"}
+              <button
+                type="button"
+                className="btn btn-danger"
+                data-bs-toggle="modal"
+                data-bs-target="#confirmModal"
+                onClick={() => setShowModal(true)}
+              >
+                Confirm
               </button>
+
+              {/* Bootstrap Modal for Confirmation */}
+
+              {showModal && (
+                <div
+                  className="modal fade"
+                  id="confirmModal"
+                  data-bs-backdrop="static"
+                  data-bs-keyboard="false"
+                  tabIndex="-1"
+                  aria-labelledby="confirmModalLabel"
+                  aria-hidden="true"
+                >
+                  <div className="modal-dialog">
+                    <div className="modal-content">
+                      <div className="modal-header">
+                        <h5 className="modal-title fs-5" id="confirmModalLabel">
+                          Confirm Event Creation
+                        </h5>
+                        <button
+                          type="button"
+                          className="btn-close"
+                          data-dismiss="modal"
+                          aria-label="Close"
+                          onClick={handleModel}
+                        ></button>
+                      </div>
+                      <div className="modal-body">
+                        <p>
+                          Event Name: {eventName} <br />
+                          Price: {priceInEther} ETH <br />
+                          Date: {date} <br />
+                          Time: {time} <br />
+                          Location: {location} <br />
+                          Total Tickets: {totalTickets} <br />
+                          You will be charged a {fee}ETH fee for creating the
+                          event.
+                        </p>
+                      </div>
+                      <div className="modal-footer">
+                        <button
+                          type="button"
+                          className="btn btn-secondary"
+                          data-bs-dismiss="modal"
+                          onClick={handleModel}
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          type="button"
+                          className="btn btn-primary"
+                          onClick={handleConfirmation}
+                        >
+                          Confirm
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
             </form>
           )}
         </div>
       ) : (
         <div className="createevent">
-          <img
-            src={eventcreation}
-            alt="Event Creation"
-            title="Connect your wallet"
-          />
+          <img src={eventcreation} alt="Event Creation" />
           <div>
             Begin by connecting your wallet as the event organizer to initiate
             the process.
