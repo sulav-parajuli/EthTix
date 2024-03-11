@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import ethtix from "../assets/images/abstract.png";
 import "bootstrap/dist/css/bootstrap.min.css"; // Import Bootstrap CSS
@@ -20,7 +20,7 @@ const EventDetail = ({ index, event, state }) => {
   const [buyticketpage, setbuyticketpage] = useState(false);
   const [agreeTermsCondition, setAgreeTermsCondition] = useState(false);
   const [showTerms, setShowTerms] = useState(false);
-
+  const [isEventDatePassed, setIsEventDatePassed] = useState(false);
   const handleTermsCondition = () => {
     setShowTerms(true);
   };
@@ -32,6 +32,12 @@ const EventDetail = ({ index, event, state }) => {
   const handlebuyticket = () => {
     setbuyticketpage(true);
   };
+  useEffect(() => {
+    const eventDate = new Date(event.date + " " + event.time);
+    const currentDate = new Date();
+    setIsEventDatePassed(eventDate < currentDate);
+  }, [event.date, event.time]);
+
   return (
     <div className="container">
       {buyticketpage ? (
@@ -99,7 +105,9 @@ const EventDetail = ({ index, event, state }) => {
               className="main-button color-white"
               onClick={handlebuyticket}
               disabled={
-                !agreeTermsCondition || event.remTickets.toNumber() === 0
+                !agreeTermsCondition ||
+                event.remTickets.toNumber() === 0 ||
+                isEventDatePassed
               }
             >
               Buy Ticket
