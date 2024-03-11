@@ -98,7 +98,7 @@ const CreateEvent = ({ state }) => {
     }
   };
 
-  const handleFormSubmit = (event) => {
+  const handleFormSubmit = async (event) => {
     event.preventDefault();
 
     //handling eventName validation
@@ -186,11 +186,8 @@ const CreateEvent = ({ state }) => {
     }
   };
 
-  const handleModel = () => {
+  const handleModel = async () => {
     setShowModal(false);
-    document.body.classList.remove("popup-open"); // Allow scrolling
-    document.body.classList.remove("popuptop"); // Allow scrolling
-    document.querySelector(".topnav").style.backgroundColor = "transparent";
   };
 
   const handleConfirmation = async (event) => {
@@ -292,9 +289,6 @@ const CreateEvent = ({ state }) => {
       console.log(error);
     } finally {
       setIsLoading(false);
-      document.body.classList.remove("popup-open"); // Allow scrolling
-      document.body.classList.remove("popuptop"); // Allow scrolling
-      document.querySelector(".topnav").style.backgroundColor = "transparent";
     }
   };
 
@@ -448,36 +442,42 @@ const CreateEvent = ({ state }) => {
               <button
                 type="button"
                 className="btn btn-danger"
-                data-bs-toggle="modal"
-                data-bs-target="#confirmModal"
-                onClick={() => setShowModal(true)}
+                // data-bs-toggle="modal"
+                // data-bs-target="#confirmModal"
+                onClick={handleFormSubmit}
               >
                 Confirm
               </button>
 
               {/* Bootstrap Modal for Confirmation */}
 
-              {showModal && (
+              {showModal ? (
+                // <div
+                //   aria-modal="true"
+                //   className="modal fade"
+                //   id="confirmModal"
+                //   data-bs-backdrop="static"
+                //   data-bs-keyboard="false"
+                //   tabIndex="-1"
+                //   aria-labelledby="confirmModalLabel"
+                //   aria-hidden="true"
+                // >
                 <div
-                  className="modal fade"
-                  id="confirmModal"
-                  data-bs-backdrop="static"
-                  data-bs-keyboard="false"
+                  className={`modal fade${showModal ? " popup show" : ""}`}
+                  style={{ display: showModal ? "block" : "none" }}
                   tabIndex="-1"
-                  aria-labelledby="confirmModalLabel"
-                  aria-hidden="true"
+                  role="dialog"
                 >
-                  <div className="modal-dialog">
+                  <div className="modal-dialog" role="document">
                     <div className="modal-content">
                       <div className="modal-header">
-                        <h5 className="modal-title fs-5" id="confirmModalLabel">
+                        <h5 className="modal-title fs-5">
                           Confirm Event Creation
                         </h5>
                         <button
                           type="button"
                           className="btn-close"
-                          data-bs-dismiss="modal"
-                          // data-dismiss="modal"
+                          // data-bs-dismiss="modal"
                           aria-label="Close"
                           onClick={handleModel}
                         ></button>
@@ -527,7 +527,7 @@ const CreateEvent = ({ state }) => {
                     </div>
                   </div>
                 </div>
-              )}
+              ) : null}
             </form>
           )}
         </div>
