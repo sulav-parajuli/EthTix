@@ -138,6 +138,35 @@ const Reports = ({ state }) => {
               }
             });
 
+            // console.log("Organizer Reports:", organizerReports);
+
+            // Loop through each report in organizerReports
+            for (let i = 0; i < organizerReports.length; i++) {
+              // Check if the eventType is "TicketPurchased"
+              if (organizerReports[i].eventType === "TicketPurchased") {
+                // Get the purchaseTime of the current report
+                const currentPurchaseTime =
+                  organizerReports[i].reportDetails[0].purchaseTime;
+
+                // Look for other reports with the same purchaseTime starting from the next index
+                for (let j = i + 1; j < organizerReports.length; j++) {
+                  // Check if the eventType is "TicketPurchased" and the purchaseTime matches
+                  if (
+                    organizerReports[j].eventType === "TicketPurchased" &&
+                    organizerReports[j].reportDetails[0].purchaseTime ===
+                      currentPurchaseTime
+                  ) {
+                    // Remove the current report with the matching purchaseTime
+                    organizerReports.splice(j, 1);
+                    // Decrement j to adjust for the removed element
+                    j--;
+                  }
+                }
+              }
+            }
+
+            // console.log("Updated Organizer Reports:", organizerReports);
+
             setOrganizerReports(organizerReports);
           }
           setIsLoading(false); // Set loading to false once reports are fetched

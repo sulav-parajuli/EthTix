@@ -27,6 +27,7 @@ const CreateEvent = ({ state }) => {
     isAdmin,
     createNotification,
     savetransactionHashToLocalStorage,
+    formatTime,
   } = useAppContext();
 
   const [description, setDescription] = useState("");
@@ -183,11 +184,13 @@ const CreateEvent = ({ state }) => {
 
     if (allvalueverified) {
       setShowModal(true);
+      document.querySelector("body").style.overflow = "hidden"; //to disable scrolling
     }
   };
 
   const handleModel = async () => {
     setShowModal(false);
+    document.querySelector("body").style.overflow = "visible"; //to enable scrolling
   };
 
   const handleConfirmation = async (event) => {
@@ -284,6 +287,7 @@ const CreateEvent = ({ state }) => {
       // Redirect to a events route when event created successfully
       navigate("/events");
       document.querySelector(".topnav").style.display = "flex";
+      document.querySelector("body").style.overflow = "visible";
       document.querySelector(".footer-container").style.display = "block";
     } catch (error) {
       console.log(error);
@@ -492,7 +496,7 @@ const CreateEvent = ({ state }) => {
                             Date: {date} <br />
                           </b>
                           <b>
-                            Time: {time} <br />
+                            Time: {formatTime(time)} <br />
                           </b>
                           <b>
                             Location: {location} <br />
