@@ -418,6 +418,7 @@ const Dashboard = ({ state }) => {
                       >
                         <FontAwesomeIcon
                           icon={faCopy}
+                          title="Copy to clipboard"
                           style={{ color: "white !important" }}
                         />
                       </button>
