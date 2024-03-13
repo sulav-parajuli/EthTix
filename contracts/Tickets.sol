@@ -76,8 +76,9 @@ contract Tickets{
     uint256 _totalTickets,
     uint256 _price
      ) public  payable  {
-    require(bytes(_eventCid).length > 0, "Event CID should not be empty");
     require(isOrganizers(msg.sender),"Only organizer can create event");
+    require(bytes(_eventCid).length > 0, "Event CID should not be empty");
+    
    // require(bytes(_eventImageCid).length > 0, "Event Image CID should not be empty");
     require(_totalTickets > 0, "Total tickets should be greater than 0");
     require(!isOwner(),"Owner cannot create event");
