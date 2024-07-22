@@ -14,4 +14,4 @@ npx hardhat run scripts/deploy.js
 
 # Project Documentation
 
-https://docs.google.com/document/d/1f_dW43jvRrhiDzwbg8rPUkq1Mxm6TEjS/edit?usp=drive_link&ouid=100296108779452796004&rtpof=true&sd=true
+https://drive.google.com/file/d/1ZSDAsY2AQz2u2sSshMjQjUr4ICTuYXQn/view?usp=sharing
